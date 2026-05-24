@@ -27,8 +27,8 @@
         <!-- Mobile -->
         <div class="md:hidden h-[72px] flex items-center justify-between">
             <a href="/" class="flex items-center gap-2.5 flex-1 min-w-0">
-                <div class="h-12 w-12 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-2xl">
-                    🏛️
+                <div class="h-12 w-12 rounded-full overflow-hidden flex-shrink-0 bg-white/5 flex items-center justify-center">
+                    <img src="/images/Copilot_20260525_013855.png" alt="ועדי שכונות ארצי" class="max-h-[70%] max-w-[70%] object-contain" />
                 </div>
                 <div class="min-w-0 flex-1">
                     <h1 class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-lg font-black text-transparent leading-tight truncate">
@@ -72,8 +72,8 @@
         <div class="hidden md:flex flex-col items-center pt-2 pb-2">
             <div class="flex items-center justify-between w-full">
                 <a href="/" class="flex items-center gap-4 group">
-                    <div class="h-20 w-20 animate-pulse-slow rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl shadow-lg group-hover:scale-105 transition-transform">
-                        🏛️
+                    <div class="h-20 w-20 animate-pulse-slow rounded-2xl overflow-hidden bg-white/5 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                        <img src="/images/Copilot_20260525_013855.png" alt="ועדי שכונות ארצי" class="max-h-[70%] max-w-[70%] object-contain" />
                     </div>
                     <div>
                         <h1 class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-3xl font-bold text-transparent">

@@ -35,8 +35,8 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="col-span-2 md:col-span-1">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="h-14 w-14 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-2xl">
-                        🏛️
+                    <div class="h-14 w-14 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center">
+                        <img src="/images/Copilot_20260525_013855.png" alt="ועדי שכונות ארצי" class="max-h-[70%] max-w-[70%] object-contain" />
                     </div>
                     <h3 class="text-xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                         ועדי שכונות ארצי

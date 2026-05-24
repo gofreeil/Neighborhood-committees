@@ -1,14 +1,6 @@
 <script lang="ts">
-    const features = [
-        { href: '/news', icon: '📰', title: 'חדשות', desc: 'עדכונים מכל שכונה בארץ — מקובץ אוטומטית ממקורות שונים' },
-        { href: '/votes', icon: '🗳️', title: 'הצבעות', desc: 'הצביעו בנושאים שמשפיעים עליכם — כל קול נשמע' },
-        { href: '/discussions', icon: '💬', title: 'דיונים', desc: 'פורום פתוח לדיון בין ועדי שכונות' },
-        { href: '/struggles', icon: '✊', title: 'מאבקים משותפים', desc: 'מאבקים נגד החלטות רשויות המדינה' },
-        { href: '/rights', icon: '⚖️', title: 'מיצוי זכויות', desc: 'מדריך מלא לזכויות התושב והשכונה' },
-        { href: '/status', icon: '📊', title: 'סטטוס', desc: 'מעקב אחר התקדמות מאבקים ופניות' },
-        { href: '/sync', icon: '🔄', title: 'סינכרונים', desc: 'תיאום פעולות בין ועדי שכונות שונים' },
-        { href: '/ratings', icon: '🏆', title: 'דירוג עצמאות ערים', desc: 'מדד אוטומטי לעצמאות הרשויות המקומיות' }
-    ];
+    import NewsTicker from '$lib/components/NewsTicker.svelte';
+    import StackedWindows from '$lib/components/StackedWindows.svelte';
 
     const stats = [
         { value: '247', label: 'ועדי שכונות' },
@@ -45,7 +37,7 @@
 </section>
 
 <!-- Stats -->
-<section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+<section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
     {#each stats as s}
         <div class="rounded-2xl bg-white/5 border border-white/10 p-4 text-center">
             <div class="text-2xl md:text-3xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -56,25 +48,12 @@
     {/each}
 </section>
 
-<!-- Features Grid -->
+<!-- News Ticker -->
+<NewsTicker />
+
+<!-- Chat + Polls (stacked 3D windows) -->
 <section class="mb-10">
-    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">מה תמצאו כאן</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {#each features as f}
-            <a
-                href={f.href}
-                class="group rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/50 p-5 transition-all"
-            >
-                <div class="flex items-start gap-4">
-                    <div class="text-4xl">{f.icon}</div>
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">{f.title}</h3>
-                        <p class="text-sm text-gray-400 mt-1">{f.desc}</p>
-                    </div>
-                </div>
-            </a>
-        {/each}
-    </div>
+    <StackedWindows />
 </section>
 
 <!-- Community Connection -->
