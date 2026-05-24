@@ -8,13 +8,52 @@
         { value: '4', label: 'מאבקים פעילים' },
         { value: '156', label: 'ניצחונות' }
     ];
+
+    const cityRanking = [
+        {
+            rank: 1,
+            name: 'ירושלים',
+            score: 92,
+            gradient: 'from-yellow-400 via-orange-400 to-pink-500',
+            traits: [
+                { label: 'סולידריות קהילתית', value: 96 },
+                { label: 'גמ"חים פעילים', value: 94 },
+                { label: 'שקיפות עירונית', value: 88 },
+                { label: 'מעורבות תושבים', value: 90 }
+            ]
+        },
+        {
+            rank: 2,
+            name: 'חיפה',
+            score: 84,
+            gradient: 'from-emerald-400 via-teal-400 to-cyan-500',
+            traits: [
+                { label: 'דו-קיום ושכנות טובה', value: 92 },
+                { label: 'איכות סביבה', value: 86 },
+                { label: 'ועדי שכונות פעילים', value: 82 },
+                { label: 'מיצוי זכויות', value: 76 }
+            ]
+        },
+        {
+            rank: 3,
+            name: 'תל אביב',
+            score: 78,
+            gradient: 'from-blue-400 via-indigo-400 to-purple-500',
+            traits: [
+                { label: 'יוזמות אזרחיות', value: 88 },
+                { label: 'נגישות שירותים', value: 84 },
+                { label: 'חיי קהילה', value: 72 },
+                { label: 'יוקר מחיה (הפוך)', value: 68 }
+            ]
+        }
+    ];
 </script>
 
 <svelte:head><title>ועדי שכונות ארצי — קול התושב</title></svelte:head>
 
 <!-- Hero -->
 <section
-    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-8 md:p-12 mb-8"
+    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-8 md:p-12 mb-8 min-h-[420px] md:min-h-[560px]"
     style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%), url('/images/Fewer%20buildings_%20varied%20sky.png');"
 >
     <div class="relative">
@@ -53,6 +92,46 @@
 
 <!-- Chat + Polls (stacked 3D windows) -->
 <section class="mb-10">
+    <h2 class="text-2xl md:text-4xl font-black text-center mb-2 bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 bg-clip-text text-transparent">
+        העיר העצמאית והסולידרית ביותר
+    </h2>
+    <div class="h-px bg-gradient-to-r from-transparent via-orange-400/40 to-transparent mb-4"></div>
+
+    <!-- Mockup: City ranking -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {#each cityRanking as city}
+            <div class="relative rounded-2xl bg-white/5 border border-white/10 p-5 overflow-hidden hover:bg-white/10 transition-colors">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r {city.gradient}"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br {city.gradient} flex items-center justify-center font-black text-slate-900 text-lg">
+                            {city.rank}
+                        </div>
+                        <h3 class="text-xl font-black text-white">{city.name}</h3>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-2xl font-black bg-gradient-to-r {city.gradient} bg-clip-text text-transparent">{city.score}</div>
+                        <div class="text-[10px] text-gray-400 uppercase tracking-wider">ניקוד</div>
+                    </div>
+                </div>
+                <ul class="space-y-2">
+                    {#each city.traits as t}
+                        <li>
+                            <div class="flex items-center justify-between text-xs text-gray-300 mb-1">
+                                <span>{t.label}</span>
+                                <span class="font-bold text-white">{t.value}</span>
+                            </div>
+                            <div class="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                                <div class="h-full bg-gradient-to-r {city.gradient}" style="width: {t.value}%"></div>
+                            </div>
+                        </li>
+                    {/each}
+                </ul>
+                <div class="mt-3 text-[10px] text-gray-500 text-center">מוקאפ — נתונים לדוגמה</div>
+            </div>
+        {/each}
+    </div>
+
     <StackedWindows />
 </section>
 
@@ -80,14 +159,16 @@
 
 <style>
     .hero-parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-size: cover;
+        background-attachment: scroll;
+        background-position: center center;
+        background-size: 100% auto;
         background-repeat: no-repeat;
+        background-color: #0b1226;
     }
     @media (max-width: 768px) {
-        /* iOS/Safari לא תומך טוב ב-fixed; משאירים cover רגיל */
-        .hero-parallax { background-attachment: scroll; }
+        .hero-parallax {
+            background-size: auto 100%;
+        }
     }
     .hero-title {
         text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.45);

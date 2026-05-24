@@ -53,7 +53,7 @@
 <div class="stack-wrap relative w-full max-w-md mx-auto overflow-hidden md:overflow-visible {noAnim ? 'no-anim' : ''}" style="perspective: 1400px;">
     <div class="text-center mt-4 md:mt-8 mb-3 md:mb-4">
         <h2 class="text-base md:text-3xl font-black bg-gradient-to-r from-purple-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent">
-            שיח פתוח ומשאלי עם בשכונה
+            שיח פתוח ומשאלי עם ארצי
         </h2>
         <div class="h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent mt-2 md:mt-3"></div>
     </div>
