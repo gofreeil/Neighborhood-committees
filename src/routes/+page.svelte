@@ -53,7 +53,7 @@
 
 <!-- Hero -->
 <section
-    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-8 md:p-12 mb-8 min-h-[420px] md:min-h-[560px]"
+    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[260px] md:min-h-[320px]"
     style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%), url('/images/Fewer%20buildings_%20varied%20sky.png');"
 >
     <div class="relative">
@@ -132,55 +132,55 @@
         {/each}
     </div>
 
-    <StackedWindows />
-</section>
+    <!-- Current Struggles (above polls) -->
+    <div class="mb-6">
+        <h3 class="text-xl md:text-2xl font-black text-center mb-2 bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
+            המאבקים הנוכחיים
+        </h3>
+        <div class="h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent mb-4"></div>
 
-<!-- Current Struggles -->
-<section class="mb-10">
-    <h2 class="text-2xl md:text-4xl font-black text-center mb-2 bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
-        המאבקים הנוכחיים
-    </h2>
-    <div class="h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent mb-4"></div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="relative rounded-2xl bg-gradient-to-br from-emerald-900/40 to-slate-900/60 border border-emerald-500/30 p-5 overflow-hidden hover:scale-[1.01] transition-transform">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-green-500"></div>
-            <div class="flex items-center gap-3 mb-3">
-                <div class="text-4xl">💵</div>
-                <div>
-                    <h3 class="text-xl font-black text-white">מלחמה על המזומן</h3>
-                    <div class="text-xs text-emerald-300">חופש כלכלי · פרטיות פיננסית</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="relative rounded-2xl bg-gradient-to-br from-emerald-900/40 to-slate-900/60 border border-emerald-500/30 p-5 overflow-hidden hover:scale-[1.01] transition-transform">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-green-500"></div>
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="text-4xl">💵</div>
+                    <div>
+                        <h4 class="text-xl font-black text-white">מלחמה על המזומן</h4>
+                        <div class="text-xs text-emerald-300">חופש כלכלי · פרטיות פיננסית</div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-300 leading-relaxed mb-3">
+                    שמירה על הזכות לשלם במזומן — נגד חוקים שמגבילים שימוש בכסף פיזי
+                    ודוחפים לעולם דיגיטלי במעקב מלא.
+                </p>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-400">תומכים: <span class="text-white font-bold">3,420</span></span>
+                    <a href="#" class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30">הצטרפו</a>
                 </div>
             </div>
-            <p class="text-sm text-gray-300 leading-relaxed mb-3">
-                שמירה על הזכות לשלם במזומן — נגד חוקים שמגבילים שימוש בכסף פיזי
-                ודוחפים לעולם דיגיטלי במעקב מלא.
-            </p>
-            <div class="flex items-center justify-between text-xs">
-                <span class="text-gray-400">תומכים: <span class="text-white font-bold">3,420</span></span>
-                <a href="#" class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30">הצטרפו</a>
-            </div>
-        </div>
 
-        <div class="relative rounded-2xl bg-gradient-to-br from-indigo-900/40 to-slate-900/60 border border-indigo-500/30 p-5 overflow-hidden hover:scale-[1.01] transition-transform">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-violet-500"></div>
-            <div class="flex items-center gap-3 mb-3">
-                <div class="text-4xl">🛡️</div>
-                <div>
-                    <h3 class="text-xl font-black text-white">המאבק על הפרטיות</h3>
-                    <div class="text-xs text-indigo-300">מאגרי מידע · מעקב דיגיטלי</div>
+            <div class="relative rounded-2xl bg-gradient-to-br from-indigo-900/40 to-slate-900/60 border border-indigo-500/30 p-5 overflow-hidden hover:scale-[1.01] transition-transform">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-violet-500"></div>
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="text-4xl">🛡️</div>
+                    <div>
+                        <h4 class="text-xl font-black text-white">המאבק על הפרטיות</h4>
+                        <div class="text-xs text-indigo-300">מאגרי מידע · מעקב דיגיטלי</div>
+                    </div>
                 </div>
-            </div>
-            <p class="text-sm text-gray-300 leading-relaxed mb-3">
-                התנגדות להעברת נתונים אישיים בלי הסכמה, מצלמות בכל פינה, וזיהוי
-                ביומטרי כפוי — שמירה על הזכות הבסיסית לאנונימיות.
-            </p>
-            <div class="flex items-center justify-between text-xs">
-                <span class="text-gray-400">תומכים: <span class="text-white font-bold">2,815</span></span>
-                <a href="#" class="px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-200 hover:bg-indigo-500/30">הצטרפו</a>
+                <p class="text-sm text-gray-300 leading-relaxed mb-3">
+                    התנגדות להעברת נתונים אישיים בלי הסכמה, מצלמות בכל פינה, וזיהוי
+                    ביומטרי כפוי — שמירה על הזכות הבסיסית לאנונימיות.
+                </p>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-400">תומכים: <span class="text-white font-bold">2,815</span></span>
+                    <a href="#" class="px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-200 hover:bg-indigo-500/30">הצטרפו</a>
+                </div>
             </div>
         </div>
     </div>
+
+    <StackedWindows />
 </section>
 
 <!-- Community Connection -->
@@ -209,12 +209,12 @@
     .hero-parallax {
         background-attachment: fixed;
         background-position: center center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
         background-color: #0b1226;
     }
     @media (max-width: 768px) {
-        /* iOS/Safari לא תומך טוב ב-fixed; אבל נשמור scroll עם cover */
+        /* iOS/Safari לא תומך טוב ב-fixed */
         .hero-parallax {
             background-attachment: scroll;
             background-size: cover;
