@@ -2,7 +2,7 @@ import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
 register('he', () => Promise.resolve({
     site_title: "ועדי שכונות ארצי",
-    site_subtitle: "פלטפורמה ארצית לקול התושב",
+    site_subtitle: "הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל",
     nav_home: "בית",
     nav_news: "חדשות",
     nav_votes: "הצבעות",

@@ -13,7 +13,7 @@
     const stats = [
         { value: '247', label: 'ועדי שכונות' },
         { value: '12,500+', label: 'תושבים פעילים' },
-        { value: '38', label: 'מאבקים פעילים' },
+        { value: '4', label: 'מאבקים פעילים' },
         { value: '156', label: 'ניצחונות' }
     ];
 </script>
@@ -21,14 +21,15 @@
 <svelte:head><title>ועדי שכונות ארצי — קול התושב</title></svelte:head>
 
 <!-- Hero -->
-<section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-pink-900/30 border border-white/10 p-8 md:p-12 mb-8">
-    <div class="absolute -top-20 -right-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
+<section
+    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-8 md:p-12 mb-8"
+    style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%), url('/images/Fewer%20buildings_%20varied%20sky.png');"
+>
     <div class="relative">
-        <h1 class="text-3xl md:text-5xl font-black bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent leading-tight mb-4">
-            קול אחד מאוחד.<br />כוח שכונתי אמיתי.
+        <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+            אחד ומשול
         </h1>
-        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mb-6">
+        <p class="hero-sub text-lg md:text-xl text-white max-w-2xl mb-6">
             פלטפורמה ארצית לחיבור של ועדי שכונות מכל הארץ — מאבקים משותפים,
             מיצוי זכויות, דירוג אוטומטי של עצמאות הרשויות ומסד נתונים פתוח לכל תושב.
         </p>
@@ -38,9 +39,6 @@
             </a>
             <a href="/action-plan" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors border border-white/20">
                 תוכנית הפעולה
-            </a>
-            <a href="/coordinators" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors border border-white/20">
-                רכזי שכונות
             </a>
         </div>
     </div>
@@ -100,3 +98,22 @@
         </a>
     </div>
 </section>
+
+<style>
+    .hero-parallax {
+        background-attachment: fixed;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    @media (max-width: 768px) {
+        /* iOS/Safari לא תומך טוב ב-fixed; משאירים cover רגיל */
+        .hero-parallax { background-attachment: scroll; }
+    }
+    .hero-title {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.45);
+    }
+    .hero-sub {
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+</style>

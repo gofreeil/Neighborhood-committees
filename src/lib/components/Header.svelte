@@ -34,7 +34,7 @@
                     <h1 class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-lg font-black text-transparent leading-tight truncate">
                         ועדי שכונות ארצי
                     </h1>
-                    <p class="text-xs text-gray-400 leading-tight truncate">קול התושב במדינה</p>
+                    <p class="text-xs text-gray-400 leading-tight truncate">הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל</p>
                 </div>
             </a>
             <button
@@ -79,7 +79,7 @@
                         <h1 class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-3xl font-bold text-transparent">
                             ועדי שכונות ארצי
                         </h1>
-                        <p class="text-base text-gray-200 font-bold">פלטפורמה ארצית לקול התושב</p>
+                        <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל</p>
                     </div>
                 </a>
                 <a
