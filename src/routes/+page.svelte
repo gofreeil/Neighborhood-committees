@@ -84,38 +84,34 @@
 
 <!-- Hero text (מעל התמונה) -->
 <div class="mb-4 md:mb-6 px-1 text-center">
-    <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-3">
-        אחד ומשול
+    <h1 class="hero-title text-3xl md:text-5xl font-black leading-tight mb-3 inline-block" style="text-shadow: 0 0 14px rgba(74, 222, 128, 0.7), 0 0 24px rgba(56, 189, 248, 0.5);">
+        <!-- ימין לשמאל: ירוק-מנטה → תורכיז → תכלת-כחול -->
+        <span style="color: #7eedb0;">א</span><span style="color: #6ce7c0;">ח</span><span style="color: #5eead4;">ד</span>
+        <span style="color: #4ad8e0;">ו</span><span style="color: #38bdf8;">מ</span><span style="color: #3b82f6;">ש</span><span style="color: #2563eb;">ו</span><span style="color: #1d4ed8;">ל</span>
     </h1>
-    <p class="hero-sub text-lg md:text-xl text-white max-w-3xl mx-auto">
-        ניהול ועדי השכונות בארץ - שיח מעגלי והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.
+    <p class="hero-sub text-lg md:text-xl font-bold max-w-3xl mx-auto" style="text-shadow: 0 0 10px rgba(74, 222, 128, 0.55), 0 0 20px rgba(56, 189, 248, 0.4);">
+        <span style="color: #7eedb0;">ניהול ועדי השכונות בארץ</span>{' '}<span style="color: #5eead4;">-שיתופי פעולה בין השכונות,</span>{' '}<span style="color: #38bdf8;">מעגלי שיח והצבעות,</span>{' '}<span style="color: #3b82f6;">שימוש במומחים</span>{' '}<span style="color: #2563eb;">ומאבקים למיצוי זכויות משותפות.</span>
     </p>
 </div>
 
-<!-- Hero image -->
-<section
+<!-- Hero image (קישור לחזון) -->
+<a
+    href="/vision"
     bind:this={heroEl}
-    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[35vh] md:min-h-[45vh] bg-[#0b1226]"
+    class="hero-parallax block relative overflow-hidden rounded-3xl border border-white/10 mb-8 min-h-[35vh] md:min-h-[45vh] bg-[#0b1226] group"
 >
     <img
         bind:this={parallaxImg}
-        src="/images/Fewer%20buildings_%20varied%20sky.png"
-        alt=""
-        aria-hidden="true"
+        src="/images/Gemini_Generated_Image_6ev05q6ev05q6ev0.png"
+        alt="החזון שלנו ותוכנית הפעולה"
         class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover object-left pointer-events-none select-none will-change-transform"
     />
-    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%);"></div>
-    <div class="relative flex items-end h-full min-h-[30vh] md:min-h-[40vh]">
-        <div class="flex flex-wrap gap-3">
-            <a href="/vision" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg hover:scale-105 transition-transform">
-                החזון שלנו
-            </a>
-            <a href="/action-plan" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors border border-white/20">
-                תוכנית הפעולה
-            </a>
-        </div>
+    <div class="relative p-6 md:p-8 text-center">
+        <h2 class="text-2xl md:text-4xl font-black text-white" style="text-shadow: 0 0 6px rgba(0,0,0,1), 0 0 14px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,1), 0 4px 18px rgba(0,0,0,0.85);">
+            החזון שלנו ותוכנית הפעולה
+        </h2>
     </div>
-</section>
+</a>
 
 <!-- Stats -->
 <section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
