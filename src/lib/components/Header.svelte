@@ -9,7 +9,7 @@
         { href: '/successes', label: 'הניצחונות שלנו' },
         { href: '/experts', label: 'צוות המומחים' },
         { href: '/marketplace', label: 'מוצרים להפצה' },
-        { href: '/status', label: 'סטטוס שכונות' }
+        { href: '/ratings', label: 'סטטוס שכונות' }
     ];
 
     let mobileOpen = $state(false);
