@@ -69,8 +69,8 @@
         <!-- Desktop -->
         <div class="hidden md:flex flex-col items-center pt-2 pb-2">
             <div class="flex items-center justify-between w-full">
-                <a href="/" class="flex items-center gap-4 group">
-                    <div class="h-20 w-20 animate-pulse-slow rounded-full overflow-hidden bg-white/5 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <a href="/" class="logo-link flex items-center gap-4">
+                    <div class="logo-circle h-20 w-20 animate-pulse-slow rounded-full overflow-hidden bg-white/5 flex items-center justify-center shadow-lg">
                         <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                     </div>
                     <div>
@@ -109,5 +109,15 @@
     }
     :global(.animate-pulse-slow) {
         animation: pulse-slow 11s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    .logo-circle {
+        transition: scale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: top right;
+    }
+    .logo-link:hover .logo-circle {
+        scale: 2;
+        opacity: 1 !important;
+        animation: none;
+        background-color: rgb(17, 24, 39);
     }
 </style>
