@@ -59,7 +59,7 @@
         return interpolate(titleAnchors, compressed);
     }
     const heroTitle = 'אחד ומשול';
-    const heroSubtitle = 'ניהול ועדי השכונות בארץ -שיתופי פעולה בין השכונות, מעגלי שיח והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.';
+    const heroSubtitle = 'ניהול ועדי השכונות בארץ - שיתופי פעולה בין השכונות, מעגלי שיח והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.';
 
     let heroTitleEl: HTMLElement | undefined = $state();
     let heroSubEl: HTMLElement | undefined = $state();

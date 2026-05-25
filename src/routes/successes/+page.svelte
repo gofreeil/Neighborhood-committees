@@ -59,11 +59,11 @@
     ];
 </script>
 
-<svelte:head><title>הצלחות — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>נצחונות — ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero
     icon="🏆"
-    title="הצלחות"
+    title="נצחונות"
     subtitle="מה שכבר השגנו יחד — סיפורי הצלחה של ועדי שכונות שהובילו לשינוי אמיתי"
     gradient="from-green-900/40 to-emerald-900/40"
 />
@@ -72,7 +72,7 @@
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
     <div class="rounded-2xl bg-white/5 border border-white/10 p-4 text-center">
         <div class="text-2xl md:text-3xl font-black bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">156</div>
-        <div class="text-xs md:text-sm text-gray-400 mt-1">הצלחות סה"כ</div>
+        <div class="text-xs md:text-sm text-gray-400 mt-1">נצחונות סה"כ</div>
     </div>
     <div class="rounded-2xl bg-white/5 border border-white/10 p-4 text-center">
         <div class="text-2xl md:text-3xl font-black bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">₪4.2M</div>
