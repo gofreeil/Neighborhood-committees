@@ -7,9 +7,8 @@
         { href: '/discussions', label: 'דיונים והצבעות' },
         { href: '/struggles', label: 'מאבקים וסטטוס' },
         { href: '/rights', label: 'מיצוי זכויות' },
-        { href: '/ratings', label: 'דירוג ערים' },
-        { href: '/vision', label: 'חזון' },
-        { href: '/action-plan', label: 'תוכנית פעולה' }
+        { href: '/marketplace', label: 'מוצרים למכירה' },
+        { href: '/ratings', label: 'דירוג ערים' }
     ];
 
     let mobileOpen = $state(false);
