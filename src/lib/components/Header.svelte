@@ -6,7 +6,7 @@
         { href: '/successes', label: 'הצלחות' },
         { href: '/discussions', label: 'דיונים והצבעות' },
         { href: '/struggles', label: 'מאבקים וסטטוס' },
-        { href: '/rights', label: 'מיצוי זכויות' },
+        { href: '/experts', label: 'מומחים לייעוץ' },
         { href: '/marketplace', label: 'מוצרים למכירה' },
         { href: '/ratings', label: 'דירוג ערים' }
     ];

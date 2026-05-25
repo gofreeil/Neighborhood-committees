@@ -8,7 +8,6 @@ register('he', () => Promise.resolve({
     nav_votes: "הצבעות",
     nav_discussions: "דיונים",
     nav_struggles: "מאבקים משותפים",
-    nav_rights: "מיצוי זכויות",
     nav_status: "סטטוס",
     nav_sync: "סינכרונים",
     nav_vision: "חזון",

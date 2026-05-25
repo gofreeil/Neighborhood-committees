@@ -6,6 +6,133 @@
     let heroEl: HTMLElement | undefined = $state();
     let parallaxImg: HTMLElement | undefined = $state();
 
+    // Smooth per-character gradient (RTL: right = green, left = purple)
+    const heroAnchors = [
+        '#7cff7a', // ירוק לימון
+        '#5eff8a', // ירוק
+        '#52ff9c', // ירוק-מנטה
+        '#4effae', // ירוק-בוהק
+        '#52ffc0', // ירוק-תורכיז
+        '#5cffd0', // מנטה
+        '#5cffe0', // מנטה-תכלת
+        '#5fffe6', // אקווה
+        '#5ff5fa', // ציאן-בהיר
+        '#5fe0ff', // ציאן
+        '#5ccdff', // תכלת בהיר
+        '#5cb6ff', // תכלת
+        '#5ca0ff', // תכלת-כחול
+        '#5e90ff', // כחול-בהיר
+        '#6582ff', // כחול
+        '#7a82ff'  // כחול עם רמז עדין מאוד של לבנדר (שמאל)
+    ];
+    // עוגנים כהים יותר לכותרת (ופחות גוונים → פחות הדרגתיות)
+    const titleAnchors = [
+        '#4ade80', // ירוק 400
+        '#14b8a6', // תורכיז 500
+        '#0ea5e9', // תכלת 500
+        '#2563eb'  // כחול 600
+    ];
+    function interpolate(anchors: string[], progress: number): string {
+        const p = Math.max(0, Math.min(1, progress));
+        const n = anchors.length - 1;
+        const seg = Math.min(Math.floor(p * n), n - 1);
+        const t = p * n - seg;
+        const parse = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+        const [r1, g1, b1] = parse(anchors[seg]);
+        const [r2, g2, b2] = parse(anchors[seg + 1]);
+        const r = Math.round(r1 + (r2 - r1) * t);
+        const g = Math.round(g1 + (g2 - g1) * t);
+        const b = Math.round(b1 + (b2 - b1) * t);
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+    function colorAt(progress: number): string {
+        return interpolate(heroAnchors, progress);
+    }
+    function titleColorAt(progress: number): string {
+        // דחיסת טווח: 0..1 → 0.125..0.875 (טווח הצבעים מ-ח עד 2nd ו, פרוס על כל האותיות)
+        const compressed = 0.125 + progress * 0.75;
+        return interpolate(titleAnchors, compressed);
+    }
+    const heroTitle = 'אחד ומשול';
+    const heroSubtitle = 'ניהול ועדי השכונות בארץ -שיתופי פעולה בין השכונות, מעגלי שיח והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.';
+
+    let heroTitleEl: HTMLElement | undefined = $state();
+    let heroSubEl: HTMLElement | undefined = $state();
+
+    function paintByXPosition(container: HTMLElement, fn: (p: number) => string = colorAt) {
+        const spans = Array.from(container.querySelectorAll('span[data-ch]')) as HTMLElement[];
+        if (!spans.length) return;
+        // קבץ אותיות לפי שורה (לפי Y)
+        const lines: { top: number; left: number; right: number; spans: HTMLElement[] }[] = [];
+        const TOL = 4; // px tolerance
+        spans.forEach((sp) => {
+            const r = sp.getBoundingClientRect();
+            if (r.width === 0 && r.height === 0) return;
+            const cy = (r.top + r.bottom) / 2;
+            let line = lines.find((l) => Math.abs(l.top - cy) < TOL);
+            if (!line) {
+                line = { top: cy, left: r.left, right: r.right, spans: [] };
+                lines.push(line);
+            } else {
+                line.left = Math.min(line.left, r.left);
+                line.right = Math.max(line.right, r.right);
+            }
+            line.spans.push(sp);
+        });
+        // לכל שורה — צבע על בסיס X יחסי לרוחב השורה (מימין לשמאל)
+        lines.forEach((line) => {
+            const w = line.right - line.left;
+            if (w <= 0) return;
+            line.spans.forEach((sp) => {
+                const r = sp.getBoundingClientRect();
+                const cx = (r.left + r.right) / 2;
+                const progress = Math.max(0, Math.min(1, (line.right - cx) / w));
+                sp.style.color = fn(progress);
+            });
+        });
+    }
+
+    function paintTitleWithLockedRight(container: HTMLElement) {
+        const spans = Array.from(container.querySelectorAll('span[data-ch]')) as HTMLElement[];
+        if (spans.length < 5) return;
+        const lineRect = container.getBoundingClientRect();
+        const w = lineRect.width;
+        if (w <= 0) return;
+        // ו הראשונה של "ומשול" = אינדקס 4 ב-"אחד ומשול"
+        const lockRect = spans[4].getBoundingClientRect();
+        const lockCx = (lockRect.left + lockRect.right) / 2;
+        const lockProgress = Math.max(0, Math.min(1, (lineRect.right - lockCx) / w));
+        const lockedColor = titleColorAt(lockProgress);
+        spans.forEach((sp) => {
+            const r = sp.getBoundingClientRect();
+            if (r.width === 0 && r.height === 0) return;
+            const cx = (r.left + r.right) / 2;
+            if (cx >= lockCx) {
+                // ימינה מ-ו (כולל ו עצמה) — צבע אחיד
+                sp.style.color = lockedColor;
+            } else {
+                // שמאלה מ-ו — גרדיאנט טבעי לפי X
+                const progress = Math.max(0, Math.min(1, (lineRect.right - cx) / w));
+                sp.style.color = titleColorAt(progress);
+            }
+        });
+    }
+
+    onMount(() => {
+        const paint = () => {
+            if (heroTitleEl) paintTitleWithLockedRight(heroTitleEl);
+            if (heroSubEl) paintByXPosition(heroSubEl);
+        };
+        paint();
+        // Re-paint on resize (line wrapping changes)
+        const ro = new ResizeObserver(paint);
+        if (heroTitleEl) ro.observe(heroTitleEl);
+        if (heroSubEl) ro.observe(heroSubEl);
+        // Also after fonts load
+        if ('fonts' in document) (document as any).fonts?.ready?.then(paint);
+        return () => ro.disconnect();
+    });
+
     onMount(() => {
         if (!heroEl || !parallaxImg) return;
         let raf = 0;
@@ -84,13 +211,11 @@
 
 <!-- Hero text (מעל התמונה) -->
 <div class="mb-4 md:mb-6 px-1 text-center">
-    <h1 class="hero-title text-3xl md:text-5xl font-black leading-tight mb-3 inline-block" style="text-shadow: 0 0 14px rgba(74, 222, 128, 0.7), 0 0 24px rgba(56, 189, 248, 0.5);">
-        <!-- ימין לשמאל: ירוק-מנטה → תורכיז → תכלת-כחול -->
-        <span style="color: #7eedb0;">א</span><span style="color: #6ce7c0;">ח</span><span style="color: #5eead4;">ד</span>
-        <span style="color: #4ad8e0;">ו</span><span style="color: #38bdf8;">מ</span><span style="color: #3b82f6;">ש</span><span style="color: #2563eb;">ו</span><span style="color: #1d4ed8;">ל</span>
+    <h1 bind:this={heroTitleEl} class="hero-title text-3xl md:text-5xl font-black leading-tight mb-3 inline-block">
+        {#each [...heroTitle] as ch}<span data-ch>{ch}</span>{/each}
     </h1>
-    <p class="hero-sub text-lg md:text-xl font-bold max-w-3xl mx-auto" style="text-shadow: 0 0 10px rgba(74, 222, 128, 0.55), 0 0 20px rgba(56, 189, 248, 0.4);">
-        <span style="color: #7eedb0;">ניהול ועדי השכונות בארץ</span>{' '}<span style="color: #5eead4;">-שיתופי פעולה בין השכונות,</span>{' '}<span style="color: #38bdf8;">מעגלי שיח והצבעות,</span>{' '}<span style="color: #3b82f6;">שימוש במומחים</span>{' '}<span style="color: #2563eb;">ומאבקים למיצוי זכויות משותפות.</span>
+    <p bind:this={heroSubEl} class="hero-sub text-lg md:text-xl font-bold max-w-3xl mx-auto">
+        {#each [...heroSubtitle] as ch}<span data-ch>{ch}</span>{/each}
     </p>
 </div>
 
