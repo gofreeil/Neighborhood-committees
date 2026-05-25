@@ -58,7 +58,7 @@
         <div class="h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent mt-2 md:mt-3"></div>
     </div>
 
-    <div bind:this={stackEl} class="relative h-[520px] md:h-[670px]" style="transform-style: preserve-3d;">
+    <div bind:this={stackEl} class="relative h-[580px] md:h-[750px]" style="transform-style: preserve-3d;">
         <button
             type="button"
             onclick={() => bringFront(active === 'vote' ? 'chat' : 'vote')}
