@@ -57,6 +57,13 @@
                         {item.label}
                     </a>
                 {/each}
+                <a
+                    href="/login"
+                    onclick={() => (mobileOpen = false)}
+                    class="col-span-2 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm text-center font-bold"
+                >
+                    🔐 התחבר
+                </a>
             </nav>
         {/if}
 
@@ -73,6 +80,13 @@
                         </h1>
                         <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל</p>
                     </div>
+                </a>
+                <a
+                    href="/login"
+                    class="rounded-lg px-4 py-2 font-bold text-white hover:scale-105 transition-transform"
+                    style="background:linear-gradient(135deg,#2563eb,#7c3aed); box-shadow:0 4px 15px rgba(124,58,237,0.4);"
+                >
+                    🔐 התחבר
                 </a>
             </div>
             <nav class="flex flex-wrap items-center justify-center gap-1 pt-3 w-full">
