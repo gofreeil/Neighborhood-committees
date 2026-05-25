@@ -4,12 +4,9 @@
 
     const nav = [
         { href: '/successes', label: 'הצלחות' },
-        { href: '/votes', label: 'הצבעות' },
-        { href: '/discussions', label: 'דיונים' },
-        { href: '/struggles', label: 'מאבקים' },
+        { href: '/discussions', label: 'דיונים והצבעות' },
+        { href: '/struggles', label: 'מאבקים וסטטוס' },
         { href: '/rights', label: 'מיצוי זכויות' },
-        { href: '/status', label: 'סטטוס' },
-        { href: '/sync', label: 'סינכרונים' },
         { href: '/ratings', label: 'דירוג ערים' },
         { href: '/vision', label: 'חזון' },
         { href: '/action-plan', label: 'תוכנית פעולה' }

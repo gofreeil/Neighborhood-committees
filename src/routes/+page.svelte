@@ -34,8 +34,8 @@
     });
 
     const stats = [
-        { value: '247', label: 'ועדי שכונות' },
-        { value: '12,500+', label: 'תושבים פעילים' },
+        { value: '60', label: 'ועדי שכונות' },
+        { value: '10,000+', label: 'תושבים פעילים' },
         { value: '4', label: 'מאבקים פעילים' },
         { value: '156', label: 'ניצחונות' }
     ];
@@ -82,7 +82,17 @@
 
 <svelte:head><title>ועדי שכונות ארצי — קול התושב</title></svelte:head>
 
-<!-- Hero -->
+<!-- Hero text (מעל התמונה) -->
+<div class="mb-4 md:mb-6 px-1 text-center">
+    <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-3">
+        אחד ומשול
+    </h1>
+    <p class="hero-sub text-lg md:text-xl text-white max-w-3xl mx-auto">
+        ניהול ועדי השכונות בארץ - שיח מעגלי והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.
+    </p>
+</div>
+
+<!-- Hero image -->
 <section
     bind:this={heroEl}
     class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[35vh] md:min-h-[45vh] bg-[#0b1226]"
@@ -95,14 +105,7 @@
         class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover object-left pointer-events-none select-none will-change-transform"
     />
     <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%);"></div>
-    <div class="relative">
-        <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-4" style="text-shadow: 0 2px 8px rgba(0,0,0,0.85), 0 4px 24px rgba(0,0,0,0.7);">
-            אחד ומשול
-        </h1>
-        <p class="hero-sub text-lg md:text-xl text-white max-w-2xl mb-6" style="text-shadow: 0 2px 6px rgba(0,0,0,0.9), 0 4px 16px rgba(0,0,0,0.75);">
-            הפלטפורמה לניהול ועדי השכונות בארץ:
-            שיח מעגלי והצבעות, מאבקים משותפים, שימוש במומחים, חדשות ועבודה משותפת.
-        </p>
+    <div class="relative flex items-end h-full min-h-[30vh] md:min-h-[40vh]">
         <div class="flex flex-wrap gap-3">
             <a href="/vision" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg hover:scale-105 transition-transform">
                 החזון שלנו
