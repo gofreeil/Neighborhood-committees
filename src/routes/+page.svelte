@@ -48,6 +48,11 @@
     function colorAt(progress: number): string {
         return interpolate(heroAnchors, progress);
     }
+    function subtitleColorAt(progress: number): string {
+        // טווח צר: רק בין הצבעים שהיו ב-ו (1/3) ל-פ (2/3) של הגרדיאנט המלא
+        const compressed = 0.333 + progress * 0.334;
+        return interpolate(heroAnchors, compressed);
+    }
     function titleColorAt(progress: number): string {
         // דחיסת טווח: 0..1 → 0.125..0.875 (טווח הצבעים מ-ח עד 2nd ו, פרוס על כל האותיות)
         const compressed = 0.125 + progress * 0.75;
@@ -92,26 +97,68 @@
         });
     }
 
+    function paintByXPositionPerWord(container: HTMLElement, fn: (p: number) => string = colorAt) {
+        const spans = Array.from(container.querySelectorAll('span[data-ch]')) as HTMLElement[];
+        if (!spans.length) return;
+        // קבץ למילים: רצף אותיות שאינו רווח
+        const words: HTMLElement[][] = [];
+        let cur: HTMLElement[] = [];
+        spans.forEach((sp) => {
+            const ch = sp.textContent ?? '';
+            if (/\s/.test(ch)) {
+                if (cur.length) { words.push(cur); cur = []; }
+            } else {
+                cur.push(sp);
+            }
+        });
+        if (cur.length) words.push(cur);
+        // לכל מילה — חשב bounding-box ופרוס גרדיאנט שלם מימין לשמאל
+        words.forEach((wordSpans) => {
+            let left = Infinity, right = -Infinity;
+            wordSpans.forEach((sp) => {
+                const r = sp.getBoundingClientRect();
+                if (r.width === 0 && r.height === 0) return;
+                left = Math.min(left, r.left);
+                right = Math.max(right, r.right);
+            });
+            const w = right - left;
+            if (w <= 0) return;
+            wordSpans.forEach((sp) => {
+                const r = sp.getBoundingClientRect();
+                const cx = (r.left + r.right) / 2;
+                const progress = Math.max(0, Math.min(1, (right - cx) / w));
+                sp.style.color = fn(progress);
+            });
+        });
+    }
+
     function paintTitleWithLockedRight(container: HTMLElement) {
         const spans = Array.from(container.querySelectorAll('span[data-ch]')) as HTMLElement[];
-        if (spans.length < 5) return;
+        if (spans.length < 7) return;
         const lineRect = container.getBoundingClientRect();
         const w = lineRect.width;
         if (w <= 0) return;
-        // ו הראשונה של "ומשול" = אינדקס 4 ב-"אחד ומשול"
-        const lockRect = spans[4].getBoundingClientRect();
-        const lockCx = (lockRect.left + lockRect.right) / 2;
-        const lockProgress = Math.max(0, Math.min(1, (lineRect.right - lockCx) / w));
-        const lockedColor = titleColorAt(lockProgress);
+        // טווח גרדיאנט: ד (אינדקס 2) ב-ימין → ש (אינדקס 6) ב-שמאל ב-"אחד ומשול"
+        const rightAnchorRect = spans[2].getBoundingClientRect(); // ד
+        const leftAnchorRect = spans[6].getBoundingClientRect();  // ש
+        const rightCx = (rightAnchorRect.left + rightAnchorRect.right) / 2;
+        const leftCx = (leftAnchorRect.left + leftAnchorRect.right) / 2;
+        const rightProgress = Math.max(0, Math.min(1, (lineRect.right - rightCx) / w));
+        const leftProgress = Math.max(0, Math.min(1, (lineRect.right - leftCx) / w));
+        const rightColor = titleColorAt(rightProgress);
+        const leftColor = titleColorAt(leftProgress);
         spans.forEach((sp) => {
             const r = sp.getBoundingClientRect();
             if (r.width === 0 && r.height === 0) return;
             const cx = (r.left + r.right) / 2;
-            if (cx >= lockCx) {
-                // ימינה מ-ו (כולל ו עצמה) — צבע אחיד
-                sp.style.color = lockedColor;
+            if (cx >= rightCx) {
+                // ימינה מ-ד (כולל ד) — צבע ד
+                sp.style.color = rightColor;
+            } else if (cx <= leftCx) {
+                // שמאלה מ-ש (כולל ש) — צבע ש
+                sp.style.color = leftColor;
             } else {
-                // שמאלה מ-ו — גרדיאנט טבעי לפי X
+                // בין ד ל-ש — גרדיאנט טבעי
                 const progress = Math.max(0, Math.min(1, (lineRect.right - cx) / w));
                 sp.style.color = titleColorAt(progress);
             }
@@ -121,7 +168,7 @@
     onMount(() => {
         const paint = () => {
             if (heroTitleEl) paintTitleWithLockedRight(heroTitleEl);
-            if (heroSubEl) paintByXPosition(heroSubEl);
+            if (heroSubEl) paintByXPositionPerWord(heroSubEl, subtitleColorAt);
         };
         paint();
         // Re-paint on resize (line wrapping changes)
