@@ -3,12 +3,13 @@
     import { get } from 'svelte/store';
 
     const nav = [
-        { href: '/successes', label: 'נצחונות' },
-        { href: '/discussions', label: 'דיונים והצבעות' },
-        { href: '/struggles', label: 'מאבקים וסטטוס' },
-        { href: '/experts', label: 'מומחים לייעוץ' },
-        { href: '/marketplace', label: 'מוצרים למכירה' },
-        { href: '/ratings', label: 'דירוג ערים' }
+        { href: '/tasks', label: 'משימות' },
+        { href: '/discussions', label: 'דיונים הצבעות' },
+        { href: '/struggles', label: 'מאבקים פתוחים' },
+        { href: '/successes', label: 'הניצחונות שלנו' },
+        { href: '/experts', label: 'צוות המומחים' },
+        { href: '/marketplace', label: 'מוצרים להפצה' },
+        { href: '/status', label: 'סטטוס שכונות' }
     ];
 
     let mobileOpen = $state(false);
