@@ -85,14 +85,14 @@
 <!-- Hero -->
 <section
     bind:this={heroEl}
-    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[55vh] md:min-h-[70vh] bg-[#0b1226]"
+    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[35vh] md:min-h-[45vh] bg-[#0b1226]"
 >
     <img
         bind:this={parallaxImg}
         src="/images/Fewer%20buildings_%20varied%20sky.png"
         alt=""
         aria-hidden="true"
-        class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover pointer-events-none select-none will-change-transform"
+        class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover object-left pointer-events-none select-none will-change-transform"
     />
     <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%);"></div>
     <div class="relative">
