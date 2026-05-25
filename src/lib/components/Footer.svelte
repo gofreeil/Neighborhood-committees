@@ -36,7 +36,7 @@
             <div class="col-span-2 md:col-span-1">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="h-14 w-14 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
-                        <img src="/images/%D7%95%D7%A2%D7%93%D7%99%20%D7%A9%D7%9B%D7%95%D7%A0%D7%95%D7%AA%20%D7%9C%D7%95%D7%92%D7%95.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
+                        <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                     </div>
                     <h3 class="text-xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                         ועדי שכונות ארצי
