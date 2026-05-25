@@ -57,14 +57,6 @@
                         {item.label}
                     </a>
                 {/each}
-                <a
-                    href="https://community-blush.vercel.app"
-                    target="_blank"
-                    rel="noopener"
-                    class="col-span-2 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm text-center font-bold"
-                >
-                    🏘️ קהילה בשכונה
-                </a>
             </nav>
         {/if}
 
@@ -81,15 +73,6 @@
                         </h1>
                         <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל</p>
                     </div>
-                </a>
-                <a
-                    href="https://community-blush.vercel.app"
-                    target="_blank"
-                    rel="noopener"
-                    class="rounded-lg px-4 py-2 font-bold text-white hover:scale-105 transition-transform"
-                    style="background:linear-gradient(135deg,#4f46e5,#7c3aed); box-shadow:0 4px 15px rgba(124,58,237,0.4);"
-                >
-                    🏘️ קהילה בשכונה
                 </a>
             </div>
             <nav class="flex flex-wrap items-center justify-center gap-1 pt-3 w-full">
