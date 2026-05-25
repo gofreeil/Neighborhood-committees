@@ -1,6 +1,37 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import NewsTicker from '$lib/components/NewsTicker.svelte';
     import StackedWindows from '$lib/components/StackedWindows.svelte';
+
+    let heroEl: HTMLElement | undefined = $state();
+    let parallaxImg: HTMLElement | undefined = $state();
+
+    onMount(() => {
+        if (!heroEl || !parallaxImg) return;
+        let raf = 0;
+        const update = () => {
+            raf = 0;
+            if (!heroEl || !parallaxImg) return;
+            const rect = heroEl.getBoundingClientRect();
+            const vh = window.innerHeight;
+            // progress: 0 when section's top is at bottom of viewport, 1 when section's bottom is at top of viewport
+            const progress = Math.max(0, Math.min(1, 1 - (rect.bottom / (vh + rect.height))));
+            // image is taller than container; translate it so progress 0 -> show top, progress 1 -> show bottom
+            const imgH = parallaxImg.offsetHeight;
+            const containerH = rect.height;
+            const maxShift = Math.max(0, imgH - containerH);
+            parallaxImg.style.transform = `translate3d(0, ${-progress * maxShift}px, 0)`;
+        };
+        const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+        update();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+            if (raf) cancelAnimationFrame(raf);
+        };
+    });
 
     const stats = [
         { value: '247', label: 'ועדי שכונות' },
@@ -53,9 +84,17 @@
 
 <!-- Hero -->
 <section
-    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[55vh] md:min-h-[80vh]"
-    style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%), url('/images/Fewer%20buildings_%20varied%20sky.png');"
+    bind:this={heroEl}
+    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[55vh] md:min-h-[70vh] bg-[#0b1226]"
 >
+    <img
+        bind:this={parallaxImg}
+        src="/images/Fewer%20buildings_%20varied%20sky.png"
+        alt=""
+        aria-hidden="true"
+        class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover pointer-events-none select-none will-change-transform"
+    />
+    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%);"></div>
     <div class="relative">
         <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-4">
             אחד ומשול
@@ -208,19 +247,8 @@
 </section>
 
 <style>
-    .hero-parallax {
-        background-attachment: fixed;
-        background-position: center center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: #0b1226;
-    }
-    @media (max-width: 768px) {
-        /* iOS/Safari לא תומך טוב ב-fixed */
-        .hero-parallax {
-            background-attachment: scroll;
-            background-size: cover;
-        }
+    .parallax-img {
+        transition: transform 0.05s linear;
     }
     .hero-title {
         text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.45);
