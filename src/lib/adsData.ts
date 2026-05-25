@@ -36,7 +36,7 @@ export const ads: Ad[] = [
         title: "קהילה בשכונה",
         description: "האתר השכונתי המוביל — חיבור תושבים, גמ\"חים, חוגים ועוד",
         cta: "כנס לקהילה השכונתית שלך",
-        href: "https://community-blush.vercel.app/",
+        href: "https://community-il.vercel.app/",
         image: "/images/community-neighborhood.png",
         color: "from-blue-500 to-purple-600"
     },
@@ -68,7 +68,7 @@ export const ads: Ad[] = [
         description: "הבע דעתך על הסוגיות האקטואליות",
         cta: "הבע דעתך על הסוגיות האקטואליות",
         hover: "הבע דעתך על הסוגיות האקטואליות",
-        href: "https://referendum-azure.vercel.app/",
+        href: "https://referendum-il.vercel.app/",
         image: "/images/referendum.png",
         color: "from-purple-600 to-indigo-700"
     },

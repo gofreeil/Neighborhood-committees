@@ -26,7 +26,7 @@
                     <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                 </div>
                 <div class="min-w-0 flex-1">
-                    <h1 class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-lg font-black text-transparent leading-tight truncate">
+                    <h1 class="bg-clip-text text-lg font-black text-transparent leading-tight truncate" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                         ועדי שכונות ארצי
                     </h1>
                     <p class="text-xs text-gray-400 leading-tight truncate">הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל</p>
@@ -70,7 +70,7 @@
                         <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                     </div>
                     <div>
-                        <h1 class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-3xl font-bold text-transparent">
+                        <h1 class="bg-clip-text text-3xl font-bold text-transparent" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                             ועדי שכונות ארצי
                         </h1>
                         <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לחיבור ועדי שכונות מכל עיר בישראל</p>

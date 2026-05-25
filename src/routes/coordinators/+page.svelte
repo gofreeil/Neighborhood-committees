@@ -24,7 +24,7 @@
                 גם הרשאת רכז כאן — אותם אישורים, אותם משתמשים, פעולה אחת מאוחדת.
             </p>
             <a
-                href="https://community-blush.vercel.app/coordinator"
+                href="https://community-il.vercel.app/coordinator"
                 target="_blank"
                 rel="noopener"
                 class="inline-block mt-3 px-4 py-2 rounded-lg bg-white text-purple-900 font-bold text-sm hover:scale-105 transition-transform"

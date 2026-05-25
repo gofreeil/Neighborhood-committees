@@ -407,7 +407,7 @@
             </p>
         </div>
         <a
-            href="https://community-blush.vercel.app"
+            href="https://community-il.vercel.app"
             target="_blank"
             rel="noopener"
             class="px-6 py-3 rounded-xl bg-white text-purple-900 font-bold hover:scale-105 transition-transform"
