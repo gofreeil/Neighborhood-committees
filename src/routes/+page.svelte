@@ -53,7 +53,7 @@
 
 <!-- Hero -->
 <section
-    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[260px] md:min-h-[320px]"
+    class="hero-parallax relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8 mb-8 min-h-[55vh] md:min-h-[80vh]"
     style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%), url('/images/Fewer%20buildings_%20varied%20sky.png');"
 >
     <div class="relative">
