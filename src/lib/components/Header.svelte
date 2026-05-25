@@ -3,8 +3,7 @@
     import { get } from 'svelte/store';
 
     const nav = [
-        { href: '/', label: 'בית' },
-        { href: '/news', label: 'חדשות' },
+        { href: '/successes', label: 'הצלחות' },
         { href: '/votes', label: 'הצבעות' },
         { href: '/discussions', label: 'דיונים' },
         { href: '/struggles', label: 'מאבקים' },

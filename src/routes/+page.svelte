@@ -96,12 +96,12 @@
     />
     <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.35) 100%);"></div>
     <div class="relative">
-        <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+        <h1 class="hero-title text-3xl md:text-5xl font-black text-white leading-tight mb-4" style="text-shadow: 0 2px 8px rgba(0,0,0,0.85), 0 4px 24px rgba(0,0,0,0.7);">
             אחד ומשול
         </h1>
-        <p class="hero-sub text-lg md:text-xl text-white max-w-2xl mb-6">
-            פלטפורמה ארצית לחיבור של ועדי שכונות מכל הארץ — מאבקים משותפים,
-            מיצוי זכויות, דירוג אוטומטי של עצמאות הרשויות ומסד נתונים פתוח לכל תושב.
+        <p class="hero-sub text-lg md:text-xl text-white max-w-2xl mb-6" style="text-shadow: 0 2px 6px rgba(0,0,0,0.9), 0 4px 16px rgba(0,0,0,0.75);">
+            הפלטפורמה לניהול ועדי השכונות בארץ:
+            שיח מעגלי והצבעות, מאבקים משותפים, שימוש במומחים, חדשות ועבודה משותפת.
         </p>
         <div class="flex flex-wrap gap-3">
             <a href="/vision" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg hover:scale-105 transition-transform">
