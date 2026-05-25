@@ -30,7 +30,7 @@
                     <h1 class="bg-clip-text text-lg font-black text-transparent leading-tight truncate" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                         ועדי שכונות ארצי
                     </h1>
-                    <p class="text-xs text-gray-400 leading-tight truncate">הפלטפורמה הארצית לפעילות ועדי שכונות בישראל</p>
+                    <p class="text-xs text-gray-400 leading-tight truncate">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                 </div>
             </a>
             <button
@@ -74,7 +74,7 @@
                         <h1 class="bg-clip-text text-3xl font-bold text-transparent" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                             ועדי שכונות ארצי
                         </h1>
-                        <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לפעילות ועדי שכונות בישראל</p>
+                        <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                     </div>
                 </a>
                 <a
