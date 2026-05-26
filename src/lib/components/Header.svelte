@@ -67,7 +67,7 @@
         <div class="hidden md:flex flex-col items-center pt-2 pb-2">
             <div class="flex items-center justify-between w-full">
                 <a href="/" class="logo-link flex items-center gap-4">
-                    <div class="logo-circle h-20 w-20 animate-pulse-slow rounded-full overflow-hidden bg-white/5 flex items-center justify-center shadow-lg">
+                    <div class="logo-circle h-20 w-20 rounded-full overflow-hidden bg-white/5 flex items-center justify-center shadow-lg">
                         <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                     </div>
                     <div>
