@@ -86,7 +86,10 @@
                 </a>
             </div>
             <nav class="flex flex-wrap items-center justify-center gap-1 pt-3 w-full">
-                {#each nav as item}
+                {#each nav as item, i}
+                    {#if i > 0}
+                        <span class="text-gray-500/60" aria-hidden="true">|</span>
+                    {/if}
                     <a
                         href={item.href}
                         class="px-3 py-1.5 rounded-md text-sm text-gray-200 hover:bg-white/10 hover:text-white transition-colors"
