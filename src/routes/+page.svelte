@@ -49,13 +49,13 @@
         return interpolate(heroAnchors, progress);
     }
     function subtitleColorAt(progress: number): string {
-        // טווח צר: רק בין הצבעים שהיו ב-ו (1/3) ל-פ (2/3) של הגרדיאנט המלא
-        const compressed = 0.333 + progress * 0.334;
+        // טווח גוונים מצד ימין של הגרדיאנט (ירוק/מנטה) — נוכחות מינימלית של כחול בצד שמאל
+        const compressed = 0.15 + progress * 0.25;
         return interpolate(heroAnchors, compressed);
     }
     function titleColorAt(progress: number): string {
-        // דחיסת טווח: 0..1 → 0.125..0.875 (טווח הצבעים מ-ח עד 2nd ו, פרוס על כל האותיות)
-        const compressed = 0.125 + progress * 0.75;
+        // טווח צבעים של האותיות מ→ל בגרדיאנט המקורי, פרוס על כל אותיות הכותרת
+        const compressed = 0.583 + progress * 0.25;
         return interpolate(titleAnchors, compressed);
     }
     const heroTitle = 'אחד ומשול';
@@ -132,42 +132,9 @@
         });
     }
 
-    function paintTitleWithLockedRight(container: HTMLElement) {
-        const spans = Array.from(container.querySelectorAll('span[data-ch]')) as HTMLElement[];
-        if (spans.length < 7) return;
-        const lineRect = container.getBoundingClientRect();
-        const w = lineRect.width;
-        if (w <= 0) return;
-        // טווח גרדיאנט: ד (אינדקס 2) ב-ימין → ש (אינדקס 6) ב-שמאל ב-"אחד ומשול"
-        const rightAnchorRect = spans[2].getBoundingClientRect(); // ד
-        const leftAnchorRect = spans[6].getBoundingClientRect();  // ש
-        const rightCx = (rightAnchorRect.left + rightAnchorRect.right) / 2;
-        const leftCx = (leftAnchorRect.left + leftAnchorRect.right) / 2;
-        const rightProgress = Math.max(0, Math.min(1, (lineRect.right - rightCx) / w));
-        const leftProgress = Math.max(0, Math.min(1, (lineRect.right - leftCx) / w));
-        const rightColor = titleColorAt(rightProgress);
-        const leftColor = titleColorAt(leftProgress);
-        spans.forEach((sp) => {
-            const r = sp.getBoundingClientRect();
-            if (r.width === 0 && r.height === 0) return;
-            const cx = (r.left + r.right) / 2;
-            if (cx >= rightCx) {
-                // ימינה מ-ד (כולל ד) — צבע ד
-                sp.style.color = rightColor;
-            } else if (cx <= leftCx) {
-                // שמאלה מ-ש (כולל ש) — צבע ש
-                sp.style.color = leftColor;
-            } else {
-                // בין ד ל-ש — גרדיאנט טבעי
-                const progress = Math.max(0, Math.min(1, (lineRect.right - cx) / w));
-                sp.style.color = titleColorAt(progress);
-            }
-        });
-    }
-
     onMount(() => {
         const paint = () => {
-            if (heroTitleEl) paintTitleWithLockedRight(heroTitleEl);
+            if (heroTitleEl) paintByXPosition(heroTitleEl, titleColorAt);
             if (heroSubEl) paintByXPositionPerWord(heroSubEl, subtitleColorAt);
         };
         paint();
@@ -212,6 +179,12 @@
         { value: '10,000+', label: 'תושבים פעילים' },
         { value: '4', label: 'מאבקים פעילים' },
         { value: '156', label: 'ניצחונות' }
+    ];
+
+    const featuredProducts = [
+        { title: 'בטריות דור 2', cat: 'אנרגיה' },
+        { title: 'כרטיסי החירות', cat: 'כלכלה' },
+        { title: 'ריח לעוררות התת מודע', cat: 'בריאות' }
     ];
 
     const cityRanking = [
@@ -299,10 +272,12 @@
 
 <!-- Chat + Polls (stacked 3D windows) -->
 <section class="mb-10">
-    <h2 class="text-2xl md:text-4xl font-black text-center mb-2 bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 bg-clip-text text-transparent">
-        העיר העצמאית והסולידרית ביותר
-    </h2>
-    <div class="h-px bg-gradient-to-r from-transparent via-orange-400/40 to-transparent mb-4"></div>
+    <a href="/ratings" class="section-title-link block">
+        <h2 class="text-2xl md:text-4xl font-black text-center mb-2 bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 bg-clip-text text-transparent">
+            העיר העצמאית והסולידרית ביותר
+        </h2>
+        <div class="h-px bg-gradient-to-r from-transparent via-orange-400/40 to-transparent mb-4"></div>
+    </a>
 
     <!-- Mockup: City ranking -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -341,10 +316,12 @@
 
     <!-- Current Struggles (above polls) -->
     <div class="mb-6">
-        <h3 class="text-xl md:text-2xl font-black text-center mb-2 bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
-            המאבקים הנוכחיים
-        </h3>
-        <div class="h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent mb-4"></div>
+        <a href="/struggles" class="section-title-link block">
+            <h3 class="text-xl md:text-2xl font-black text-center mb-2 bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
+                המאבקים הנוכחיים
+            </h3>
+            <div class="h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent mb-4"></div>
+        </a>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="relative rounded-2xl bg-gradient-to-br from-emerald-900/40 to-slate-900/60 border border-emerald-500/30 p-5 overflow-hidden hover:scale-[1.01] transition-transform">
@@ -395,25 +372,24 @@
     <StackedWindows />
 </section>
 
-<!-- Community Connection -->
-<section class="rounded-3xl bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-purple-500/30 p-6 md:p-8 mb-10">
-    <div class="flex flex-col md:flex-row items-center gap-6">
-        <div class="text-6xl">🏘️</div>
-        <div class="flex-1 text-center md:text-right">
-            <h3 class="text-xl md:text-2xl font-bold text-white mb-2">מחוברים לקהילה בשכונה</h3>
-            <p class="text-gray-300 text-sm md:text-base">
-                האתר משולב באופן מלא עם פלטפורמת "קהילה בשכונה". רכז שכונה שם —
-                הוא אוטומטית גם רכז כאן. אותם התושבים, אותה הקהילה, פעולה אחת מאוחדת.
-            </p>
-        </div>
-        <a
-            href="https://community-il.vercel.app"
-            target="_blank"
-            rel="noopener"
-            class="px-6 py-3 rounded-xl bg-white text-purple-900 font-bold hover:scale-105 transition-transform"
-        >
-            לאתר קהילה בשכונה
-        </a>
+<!-- Featured Marketplace Products Banner -->
+<section class="rounded-3xl bg-gradient-to-r from-emerald-900/50 to-teal-900/50 border border-emerald-500/30 p-6 md:p-8 mb-10">
+    <a href="/marketplace" class="section-title-link block mb-5">
+        <h2 class="text-2xl md:text-4xl font-black text-center bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
+            מוצרים מובילים להפצה
+        </h2>
+        <div class="h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent mt-3"></div>
+    </a>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+        {#each featuredProducts as p}
+            <a href="/marketplace" class="rounded-2xl bg-white/5 border border-white/10 p-5 hover:bg-white/10 transition-colors block">
+                <span class="inline-block text-[10px] md:text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mb-3">
+                    {p.cat}
+                </span>
+                <h3 class="text-white font-bold text-base md:text-lg leading-snug">{p.title}</h3>
+            </a>
+        {/each}
     </div>
 </section>
 
@@ -426,5 +402,12 @@
     }
     .hero-sub {
         text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    .section-title-link {
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .section-title-link:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
     }
 </style>
