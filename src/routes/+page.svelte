@@ -190,6 +190,7 @@
     const cityRanking = [
         {
             rank: 1,
+            medal: '🏆',
             name: 'ירושלים',
             score: 92,
             gradient: 'from-yellow-400 via-orange-400 to-pink-500',
@@ -202,6 +203,7 @@
         },
         {
             rank: 2,
+            medal: '🥈',
             name: 'חיפה',
             score: 84,
             gradient: 'from-emerald-400 via-teal-400 to-cyan-500',
@@ -214,6 +216,7 @@
         },
         {
             rank: 3,
+            medal: '🥉',
             name: 'תל אביב',
             score: 78,
             gradient: 'from-blue-400 via-indigo-400 to-purple-500',
@@ -289,7 +292,10 @@
                         <div class="w-10 h-10 rounded-full bg-gradient-to-br {city.gradient} flex items-center justify-center font-black text-slate-900 text-lg">
                             {city.rank}
                         </div>
-                        <h3 class="text-xl font-black text-white">{city.name}</h3>
+                        <h3 class="text-xl font-black text-white flex items-center gap-2">
+                            <span>{city.name}</span>
+                            <span class="victory-medal text-2xl md:text-3xl" aria-hidden="true">{city.medal}</span>
+                        </h3>
                     </div>
                     <div class="text-left">
                         <div class="text-2xl font-black bg-gradient-to-r {city.gradient} bg-clip-text text-transparent">{city.score}</div>
@@ -409,5 +415,21 @@
     .section-title-link:hover {
         opacity: 0.85;
         transform: translateY(-1px);
+    }
+    .victory-medal {
+        display: inline-block;
+        filter: drop-shadow(0 0 6px rgba(255, 200, 80, 0.55));
+        animation: victory-pulse 2.4s ease-in-out infinite;
+        transform-origin: center;
+    }
+    @keyframes victory-pulse {
+        0%, 100% {
+            transform: scale(1) rotate(-4deg);
+            filter: drop-shadow(0 0 6px rgba(255, 200, 80, 0.45));
+        }
+        50% {
+            transform: scale(1.12) rotate(4deg);
+            filter: drop-shadow(0 0 14px rgba(255, 215, 120, 0.85));
+        }
     }
 </style>
