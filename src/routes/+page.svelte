@@ -59,7 +59,7 @@
         return interpolate(titleAnchors, compressed);
     }
     const heroTitle = 'אחד ומשול';
-    const heroSubtitle = 'ניהול ועדי השכונות בארץ - שיתופי פעולה בין השכונות, מעגלי שיח והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.';
+    const heroSubtitle = 'ניהול ועדי השכונות בארץ - שיתופי פעולה בין השכונות והערים, מעגלי שיח והצבעות, שימוש במומחים ומאבקים למיצוי זכויות משותפות.';
 
     let heroTitleEl: HTMLElement | undefined = $state();
     let heroSubEl: HTMLElement | undefined = $state();
@@ -247,7 +247,7 @@
 >
     <img
         bind:this={parallaxImg}
-        src="/images/Gemini_Generated_Image_6ev05q6ev05q6ev0.png"
+        src="/images/Neighborhood-committees.png"
         alt="החזון שלנו ותוכנית הפעולה"
         class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover object-left pointer-events-none select-none will-change-transform"
     />
