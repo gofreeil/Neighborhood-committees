@@ -1,35 +1,45 @@
 <script lang="ts">
-    import PageHero from '$lib/components/PageHero.svelte';
+    import { onMount } from 'svelte';
+    import { teams } from '$lib/teamsData';
 
-    // עלי הכותרת של פרח המומחים — 8 סביב מרכז
-    // image: יוחלף בקובץ אמיתי כשיגיע (לדוגמה '/images/experts/law.png')
-    const flowerCenter = {
-        name: 'צוות מנהל',
-        desc: 'תיאום, ניהול והכוונה של שאר הצוותים והפעילות הארצית',
-        emoji: '👥',
-        image: '' as string,
-        color: '#f59e0b'
-    };
-    const flowerPetals = [
-        { name: 'צוות עורכי דין', desc: 'ייעוץ משפטי לתושבים ולוועדים — זכויות, מקרקעין ודיני שלטון מקומי', emoji: '⚖️', image: '', color: '#3b82f6' },
-        { name: 'צוות כלכלה', desc: 'ניתוח כלכלי, תקציבים וייעוץ פיננסי לקהילה ולוועדים', emoji: '💰', image: '', color: '#06b6d4' },
-        { name: 'צוות חינוך', desc: 'ועדי הורים, חינוך קהילתי ומאבקי זכויות חינוך', emoji: '🎓', image: '', color: '#22c55e' },
-        { name: 'צוות חקלאות', desc: 'חקלאות עירונית, גינות קהילתיות וביטחון תזונתי', emoji: '🌾', image: '', color: '#84cc16' },
-        { name: 'צוות טכנולוגיה', desc: 'פיתוח כלים דיגיטליים, אבטחת מידע ותשתיות לקהילה', emoji: '💻', image: '', color: '#8b5cf6' },
-        { name: 'צוות בריאות טבעית', desc: 'רפואה משלימה, אורח חיים בריא ומניעת מחלות', emoji: '🌿', image: '', color: '#10b981' },
-        { name: 'צוות מוסר', desc: 'הנחיה ערכית, יושרה ציבורית ושמירה על אמות מידה מוסריות', emoji: '🕊️', image: '', color: '#e2e8f0' },
-        { name: 'צוות כינון חוקה מטעם העם', desc: 'גיבוש חוקה אזרחית מבוססת קונצנזוס ציבורי רחב', emoji: '📜', image: '', color: '#ef4444' }
-    ];
+    let flowerEl: HTMLElement | undefined = $state();
+    let hasSpun = false;
+
+    function triggerSpin() {
+        if (hasSpun || !flowerEl) return;
+        hasSpun = true;
+        const flower = flowerEl;
+        flower.classList.add('spinning');
+        for (const p of flower.querySelectorAll('.petal')) p.classList.add('spinning');
+        setTimeout(() => {
+            flower.classList.remove('spinning');
+            for (const p of flower.querySelectorAll('.petal')) p.classList.remove('spinning');
+        }, 2200);
+    }
+
+    function isInView(el: HTMLElement) {
+        const r = el.getBoundingClientRect();
+        return r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
+    }
+
+    onMount(() => {
+        if (!flowerEl) return;
+        const startIfVisible = () => {
+            if (!flowerEl || hasSpun) return;
+            if (isInView(flowerEl)) triggerSpin();
+        };
+        const onScroll = () => startIfVisible();
+        setTimeout(startIfVisible, 250);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    });
+
+    // הפריט הראשון = מרכז הפרח, השאר = 8 העלים סביב
+    const flowerCenter = teams[0];
+    const flowerPetals = teams.slice(1);
 </script>
 
 <svelte:head><title>מומחים לייעוץ — ועדי שכונות ארצי</title></svelte:head>
-
-<PageHero
-    icon="🧠"
-    title="מומחים לייעוץ"
-    subtitle="רשת מומחים ארצית הזמינה לתושבי השכונה — חלקם מתנדבים, חלקם בתעריף מוזל לוועדי שכונות."
-    gradient="from-amber-900/40 to-orange-900/40"
-/>
 
 <!-- פרח המומחים -->
 <section class="my-8 sm:my-12">
@@ -39,37 +49,29 @@
     </div>
 
     <div class="flex justify-center">
-        <div class="expert-flower">
+        <div class="expert-flower" bind:this={flowerEl}>
             <!-- מרכז -->
-            <div class="petal petal-center" style="--c:{flowerCenter.color}">
+            <a class="petal petal-center" style="--c:{flowerCenter.color}" href="/experts/{flowerCenter.slug}" aria-label={flowerCenter.name}>
                 <div class="petal-face">
-                    {#if flowerCenter.image}
-                        <img src={flowerCenter.image} alt={flowerCenter.name} />
-                    {:else}
-                        <span class="petal-emoji">{flowerCenter.emoji}</span>
-                    {/if}
+                    <span class="petal-emoji">{flowerCenter.emoji}</span>
                 </div>
                 <div class="petal-text">
                     <div class="petal-title">{flowerCenter.name}</div>
                     <div class="petal-desc">{flowerCenter.desc}</div>
                 </div>
-            </div>
+            </a>
 
             <!-- 8 עלי כותרת -->
             {#each flowerPetals as p, i}
-                <div class="petal petal-{i}" style="--c:{p.color}">
+                <a class="petal petal-{i}" style="--c:{p.color}" href="/experts/{p.slug}" aria-label={p.name}>
                     <div class="petal-face">
-                        {#if p.image}
-                            <img src={p.image} alt={p.name} />
-                        {:else}
-                            <span class="petal-emoji">{p.emoji}</span>
-                        {/if}
+                        <span class="petal-emoji">{p.emoji}</span>
                     </div>
                     <div class="petal-text">
                         <div class="petal-title">{p.name}</div>
                         <div class="petal-desc">{p.desc}</div>
                     </div>
-                </div>
+                </a>
             {/each}
         </div>
     </div>
@@ -84,6 +86,9 @@
 
     .petal {
         position: absolute;
+        display: block;
+        text-decoration: none;
+        color: inherit;
         border-radius: 9999px;
         overflow: hidden;
         transform: translate(-50%, -50%);
@@ -107,8 +112,8 @@
 
     /* מרכז */
     .petal-center {
-        width: 30%;
-        height: 30%;
+        width: 24%;
+        height: 24%;
         top: 50%;
         left: 50%;
         z-index: 2;
@@ -116,19 +121,47 @@
 
     /* עלי-כותרת */
     .petal:not(.petal-center) {
-        width: 26%;
-        height: 26%;
+        width: 22%;
+        height: 22%;
     }
 
-    /* 8 מיקומים סביב המרכז בזוויות של 45° על מעגל ברדיוס ~35% */
-    .petal-0 { top: 15%;    left: 50%;    }
-    .petal-1 { top: 25.25%; left: 74.75%; }
-    .petal-2 { top: 50%;    left: 85%;    }
-    .petal-3 { top: 74.75%; left: 74.75%; }
-    .petal-4 { top: 85%;    left: 50%;    }
-    .petal-5 { top: 74.75%; left: 25.25%; }
-    .petal-6 { top: 50%;    left: 15%;    }
-    .petal-7 { top: 25.25%; left: 25.25%; }
+    /* 8 מיקומים סביב המרכז בזוויות של 45° על מעגל ברדיוס 38% — עם רווח בין העיגולים */
+    .petal-0 { top: 12%;    left: 50%;    }
+    .petal-1 { top: 22.86%; left: 77.14%; }
+    .petal-2 { top: 50%;    left: 88%;    }
+    .petal-3 { top: 77.14%; left: 77.14%; }
+    .petal-4 { top: 88%;    left: 50%;    }
+    .petal-5 { top: 77.14%; left: 22.86%; }
+    .petal-6 { top: 50%;    left: 12%;    }
+    .petal-7 { top: 22.86%; left: 22.86%; }
+
+    /* סיבוב חד-פעמי של כל הפרח עם הכניסה לתצוגה — כיוון השעון.
+       העיגולים מקיפים את המרכז, אבל התוכן בתוכם נשאר מאונך (counter-rotation). */
+    @keyframes flower-spin {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+    @keyframes petal-counter-spin {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to   { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+    .expert-flower.spinning {
+        animation: flower-spin 2s cubic-bezier(0.45, 0, 0.2, 1) 1;
+    }
+    .petal.spinning {
+        animation: petal-counter-spin 2s cubic-bezier(0.45, 0, 0.2, 1) 1;
+    }
+    /* בזמן הסיבוב נטרל את ה-hover scale כדי שלא יתערב באנימציה */
+    .petal.spinning:hover {
+        transform: translate(-50%, -50%);
+        animation: petal-counter-spin 2s cubic-bezier(0.45, 0, 0.2, 1) 1;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .expert-flower.spinning,
+        .petal.spinning {
+            animation: none;
+        }
+    }
 
     .petal-face,
     .petal-text {
@@ -181,6 +214,7 @@
         font-size: clamp(0.6rem, 1.2vw, 0.75rem);
         line-height: 1.2;
         opacity: 0.9;
+        white-space: pre-line;
     }
 
     .petal-center .petal-title {
