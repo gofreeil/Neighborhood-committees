@@ -28,43 +28,100 @@
 
 <PageHero icon="🌅" title="החזון שלנו" subtitle="עתיד שבו לקול התושב יש משקל אמיתי בקבלת החלטות" gradient="from-pink-900/40 to-purple-900/40" />
 
-<article class="prose prose-invert max-w-none">
-    <div class="rounded-2xl bg-white/5 border border-white/10 p-6 md:p-8 space-y-6">
-        <section>
-            <h2 class="text-2xl font-bold text-white mb-3">🎯 המטרה</h2>
-            <p class="text-gray-300 leading-relaxed">
-                להפוך כל ועד שכונה בישראל לכוח אזרחי משפיע, מאורגן ומחובר, שמסוגל להוביל
-                שינוי אמיתי ברמת השכונה, העיר והמדינה. שום שכונה אינה לבד.
+<article class="prose prose-invert max-w-none space-y-6">
+    <!-- החזון שלנו -->
+    <div class="rounded-2xl bg-white/5 border border-white/10 p-6 md:p-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">🎯 החזון שלנו</h2>
+        <div class="space-y-4 text-gray-300 leading-relaxed">
+            <p>
+                לתפקד כעיר עצמאית, שמסוגלת לספק לעצמה את כל מה שתושבים זקוקים על מנת לנהל שגרת חיים,
+                בשאיפה לפרק לבנה אחר לבנה את התלות של התושבים בחסדי הממשלה.
             </p>
-        </section>
+            <p>
+                הוועדים וחברי האסיפה, בעלי זכות חוקית להיות מעורבים בקבלת ההחלטות בכל מה שקשור לשכונה ולעיר שלהם.
+                ראשי מועצה וראשי עיריה לא רוצים להסתכסך עם ראשי וועדים, כיוון שלהם יש קשר ישיר לציבור!
+            </p>
+            <p class="border-r-4 border-amber-500 pr-4 text-white font-medium">
+                על ידי האחדות של הוועדים והחלפת מידע ותיאום עמדות תדיר, לכל וועד יהיה כח של כל הוועדים יחד!
+                על ידי זה נוכל להביא לתיקונים חסרי תקדים בזכויות התושב הן מול העיריות והן מול הממשלה!
+            </p>
+        </div>
+    </div>
 
-        <section>
-            <h2 class="text-2xl font-bold text-white mb-3">💡 העקרונות</h2>
+    <!-- עיר בת קיימה -->
+    <div class="rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
+        <div class="aspect-[16/6] bg-gradient-to-br from-emerald-900/40 to-green-700/30 flex items-center justify-center text-gray-500 text-sm border-b border-white/10">
+            <div class="text-center">
+                <div class="text-5xl mb-2">🌿</div>
+                <div>תמונה — עיר בת קיימה</div>
+            </div>
+        </div>
+        <div class="p-6 md:p-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">🏙️ מה נקראת בשבילנו עיר בת קיימה?</h2>
+            <p class="text-gray-300 mb-5">
+                תו תקן יינתן לעיר עצמאית אם יש בה לפחות את הקריטריונים הבאים:
+            </p>
             <ul class="space-y-3 text-gray-300">
-                <li class="flex gap-3"><span class="text-2xl flex-shrink-0">🤝</span><span><strong class="text-white">סולידריות שכונתית</strong> — מאבק של ועד אחד הוא מאבק של כולם</span></li>
-                <li class="flex gap-3"><span class="text-2xl flex-shrink-0">🔍</span><span><strong class="text-white">שקיפות מלאה</strong> — כל החלטה, כל תקציב, כל פעולה — פתוחים לציבור</span></li>
-                <li class="flex gap-3"><span class="text-2xl flex-shrink-0">⚖️</span><span><strong class="text-white">דמוקרטיה השתתפותית</strong> — כל תושב משפיע, לא רק מצביע</span></li>
-                <li class="flex gap-3"><span class="text-2xl flex-shrink-0">📊</span><span><strong class="text-white">החלטות מבוססות נתונים</strong> — לא תחושות, אלא עובדות</span></li>
-                <li class="flex gap-3"><span class="text-2xl flex-shrink-0">🌐</span><span><strong class="text-white">פלורליזם</strong> — מקום לכל קהילה, כל זרם, כל קול</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">1</span><span>גינות ירק למאכל בכל שכונה</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">2</span><span>הורדת יוקר המחיה על ידי מפגש שכונתי בין חקלאים לצרכנים</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">3</span><span>כיתת כוננות אזרחית</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">5</span><span>הקמת חמשת גמ"חים מרכזיים בכל שכונה: לאישה, לגבר, לעזרה ראשונה, לזקנים ולתינוקות</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">6</span><span>התערבות ההורים בתכני הלימוד בבתי הספר</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">7</span><span>פיקוח ושקיפות על כספי הציבור</span></li>
+                <li class="flex gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center text-sm">8</span><span>חוגים התומכים בעצמאות וידע לנוער</span></li>
             </ul>
-        </section>
+            <p class="text-sm text-amber-300 mt-5">📖 פרטים נוספים בתקנון</p>
+        </div>
+    </div>
 
-        <section>
-            <h2 class="text-2xl font-bold text-white mb-3">🚀 לאן אנחנו הולכים</h2>
-            <p class="text-gray-300 leading-relaxed">
-                אנו רואים עתיד שבו ועדי שכונות חזקים מהווים שכבת ממשל שלישית — אחרי הממשלה
-                והרשות המקומית — עם נציגות, תקציב וסמכות. עתיד שבו פלטפורמת
-                <strong class="text-white">"ועדי שכונות ארצי"</strong>
-                היא המוסד האזרחי המוביל לקבלת החלטות מקומיות, ושבו לא ניתן יותר להעביר
-                החלטה שמשפיעה על שכונה — בלי לדבר עם ועד השכונה.
+    <!-- טכנולוגיה -->
+    <div class="rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
+        <div class="aspect-[16/6] bg-gradient-to-br from-cyan-900/40 to-blue-700/30 flex items-center justify-center text-gray-500 text-sm border-b border-white/10">
+            <div class="text-center">
+                <div class="text-5xl mb-2">⚡</div>
+                <div>תמונה — טכנולוגיה</div>
+            </div>
+        </div>
+        <div class="p-6 md:p-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">⚙️ טכנולוגיה בשירות התושב</h2>
+            <p class="text-gray-300 mb-5">
+                אנו מקדמים פיתוח ושימוש למוצרי הטכנולוגיה הבאים:
             </p>
-        </section>
+            <ul class="space-y-4 text-gray-300">
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">1</span>
+                    <div>
+                        <strong class="text-white">מחוללי מים</strong> — מכשיר המייצר מים על ידי הפרשי אטמוספרות
+                    </div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">2</span>
+                    <div>
+                        <strong class="text-white">לורה (LoRa)</strong> — מכשירי קשר בפריסה ארצית שאינם תלויים באנטנות הרדיו, הלווינים או הקבלים בארץ.
+                        למעשה אפילו ניתן לתקשר ביניהם גם כשהטלפון על מצב טיסה.
+                    </div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">3</span>
+                    <div>
+                        <strong class="text-white">מחוללי חשמל</strong> — על ידי טכנולוגיות פירוק מימן. פרטים בקרוב.
+                    </div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">4</span>
+                    <div>
+                        <strong class="text-white">מכשיר זיהוי רעידות אדמה</strong> — מזהה רעידת אדמה ומתריע עליה חצי שעה לפני התרחשותה.
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-        <section class="border-t border-white/10 pt-6">
-            <p class="text-center text-lg font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                "השכונה היא הבית. הוועד הוא הקול. ביחד — אנחנו הכוח."
-            </p>
-        </section>
+    <!-- ציטוט סיום -->
+    <div class="rounded-2xl bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-white/10 p-6 md:p-8">
+        <p class="text-center text-lg md:text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            "השכונה היא הבית. הוועד הוא הקול. ביחד — אנחנו הכוח."
+        </p>
     </div>
 </article>
 
