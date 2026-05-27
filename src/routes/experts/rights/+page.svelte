@@ -2,7 +2,7 @@
     import PageHero from '$lib/components/PageHero.svelte';
     import { teamBySlug } from '$lib/teamsData';
 
-    const team = teamBySlug('constitution')!;
+    const team = teamBySlug('rights')!;
 </script>
 
 <svelte:head><title>{team.name} — ועדי שכונות ארצי</title></svelte:head>

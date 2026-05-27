@@ -58,9 +58,28 @@
     </div>
 
     <div class="flex justify-center">
-        <div class="expert-flower" style="rotate: {wheelAngle}deg" bind:this={flowerEl}>
-            <!-- מרכז — counter-rotation כדי שהתוכן יישאר מאונך -->
-            <a class="petal petal-center" style="--c:{flowerCenter.color}; rotate: {-wheelAngle}deg" href="/experts/{flowerCenter.slug}" aria-label={flowerCenter.name}>
+        <div class="flower-outer" bind:this={flowerEl}>
+            <!-- הגלגל המסתובב — רק 8 העלים -->
+            <div class="expert-flower" style="rotate: {wheelAngle}deg">
+                {#each flowerPetals as p, i}
+                    <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" aria-label={p.name}>
+                        <div class="petal-face">
+                            {#if p.image}
+                                <img src={p.image} alt={p.name} loading="lazy" />
+                            {:else}
+                                <span class="petal-emoji">{p.emoji}</span>
+                            {/if}
+                        </div>
+                        <div class="petal-text">
+                            <div class="petal-title">{p.name}</div>
+                            <div class="petal-desc">{p.desc}</div>
+                        </div>
+                    </a>
+                {/each}
+            </div>
+
+            <!-- המרכז — ציר קבוע, לא משתתף בסיבוב -->
+            <a class="petal petal-center" style="--c:{flowerCenter.color}" href="/experts/{flowerCenter.slug}" aria-label={flowerCenter.name}>
                 <div class="petal-face">
                     {#if flowerCenter.image}
                         <img src={flowerCenter.image} alt={flowerCenter.name} loading="lazy" />
@@ -73,32 +92,21 @@
                     <div class="petal-desc">{flowerCenter.desc}</div>
                 </div>
             </a>
-
-            <!-- 8 עלי כותרת -->
-            {#each flowerPetals as p, i}
-                <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" aria-label={p.name} onclick={(e) => handlePetalClick(i, e)}>
-                    <div class="petal-face">
-                        {#if p.image}
-                            <img src={p.image} alt={p.name} loading="lazy" />
-                        {:else}
-                            <span class="petal-emoji">{p.emoji}</span>
-                        {/if}
-                    </div>
-                    <div class="petal-text">
-                        <div class="petal-title">{p.name}</div>
-                        <div class="petal-desc">{p.desc}</div>
-                    </div>
-                </a>
-            {/each}
         </div>
     </div>
 </section>
 
 <style>
-    .expert-flower {
+    /* קונטיינר חיצוני שמכיל גם את הגלגל וגם את המרכז הקבוע */
+    .flower-outer {
         position: relative;
         width: min(95vw, 580px);
         aspect-ratio: 1 / 1;
+    }
+
+    .expert-flower {
+        position: absolute;
+        inset: 0;
         transition: rotate 0.9s cubic-bezier(0.45, 0, 0.2, 1);
     }
 
@@ -135,13 +143,13 @@
         }
     }
 
-    /* מרכז */
+    /* מרכז — ציר קבוע, יושב על ה-.flower-outer ולא משתתף בסיבוב */
     .petal-center {
         width: 24%;
         height: 24%;
         top: 50%;
         left: 50%;
-        z-index: 2;
+        z-index: 10;
     }
 
     /* עלי-כותרת */
