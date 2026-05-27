@@ -419,7 +419,7 @@
     .victory-medal {
         display: inline-block;
         filter: drop-shadow(0 0 6px rgba(255, 200, 80, 0.55));
-        animation: victory-pulse 2.4s ease-in-out infinite;
+        animation: victory-pulse 2.4s ease-in-out 1 both;
         transform-origin: center;
     }
     @keyframes victory-pulse {

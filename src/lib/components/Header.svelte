@@ -70,11 +70,11 @@
                     <div class="logo-circle h-20 w-20 rounded-full overflow-hidden bg-white/5 flex items-center justify-center shadow-lg">
                         <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                     </div>
-                    <div>
-                        <h1 class="bg-clip-text text-3xl font-bold text-transparent" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <div class="logo-text">
+                        <h1 class="bg-clip-text text-4xl font-black text-transparent tracking-tight drop-shadow-lg" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 8px rgba(15,162,233,0.35);">
                             ועדי שכונות ארצי
                         </h1>
-                        <p class="text-base text-gray-200 font-bold">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
+                        <p class="text-lg text-white font-extrabold drop-shadow">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                     </div>
                 </a>
                 <a
@@ -119,5 +119,11 @@
         opacity: 1 !important;
         animation: none;
         background-color: rgb(17, 24, 39);
+    }
+    .logo-text {
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .logo-link:hover .logo-text {
+        transform: translateX(-90px);
     }
 </style>
