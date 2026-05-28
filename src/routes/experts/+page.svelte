@@ -46,19 +46,21 @@
     <div class="flex justify-center">
         <div class="flower-outer">
             <!-- הגלגל המסתובב — רק 8 העלים -->
-            <div class="expert-flower" style="rotate: {wheelAngle}deg">
+            <div class="expert-flower" style="transform: rotate({wheelAngle}deg)">
                 {#each flowerPetals as p, i}
-                    <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" target="_blank" rel="noopener" aria-label={p.name} onclick={() => handlePetalClick(i)}>
-                        <div class="petal-face">
-                            {#if p.image}
-                                <img src={p.image} alt={p.name} loading="lazy" />
-                            {:else}
-                                <span class="petal-emoji">{p.emoji}</span>
-                            {/if}
-                        </div>
-                        <div class="petal-text">
-                            <div class="petal-title">{p.name}</div>
-                            <div class="petal-desc">{p.desc}</div>
+                    <a class="petal petal-{i}" style="--c:{p.color}" href="/experts/{p.slug}" target="_blank" rel="noopener" aria-label={p.name} onclick={() => handlePetalClick(i)}>
+                        <div class="petal-inner" style="transform: rotate({-wheelAngle}deg)">
+                            <div class="petal-face">
+                                {#if p.image}
+                                    <img src={p.image} alt={p.name} loading="lazy" />
+                                {:else}
+                                    <span class="petal-emoji">{p.emoji}</span>
+                                {/if}
+                            </div>
+                            <div class="petal-text">
+                                <div class="petal-title">{p.name}</div>
+                                <div class="petal-desc">{p.desc}</div>
+                            </div>
                         </div>
                     </a>
                 {/each}
@@ -93,7 +95,8 @@
     .expert-flower {
         position: absolute;
         inset: 0;
-        transition: rotate 0.9s cubic-bezier(0.45, 0, 0.2, 1);
+        transform-origin: 50% 50%;
+        transition: transform 0.9s cubic-bezier(0.45, 0, 0.2, 1);
     }
 
     .petal {
@@ -104,12 +107,13 @@
         border-radius: 9999px;
         overflow: hidden;
         transform: translate(-50%, -50%);
+        transform-origin: 50% 50%;
         box-shadow:
             0 8px 24px rgba(0, 0, 0, 0.4),
             0 0 0 3px rgba(0, 0, 0, 0.6),
             0 0 0 5px var(--c, #f59e0b);
         cursor: pointer;
-        transition: transform 0.35s ease, box-shadow 0.35s ease, rotate 0.9s cubic-bezier(0.45, 0, 0.2, 1);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
 
     .petal:hover {
@@ -122,9 +126,18 @@
             0 0 30px var(--c, #f59e0b);
     }
 
+    /* ה-inner מבצע את ה-counter-rotation שמשאיר את התוכן מאונך */
+    .petal-inner {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 50%;
+        transition: transform 0.9s cubic-bezier(0.45, 0, 0.2, 1);
+    }
+
     @media (prefers-reduced-motion: reduce) {
         .expert-flower,
-        .petal {
+        .petal,
+        .petal-inner {
             transition: none;
         }
     }

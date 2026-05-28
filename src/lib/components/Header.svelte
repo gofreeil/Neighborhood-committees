@@ -3,10 +3,10 @@
     import { get } from 'svelte/store';
 
     const nav = [
+        { href: '/vision', label: 'החזון' },
+        { href: '/struggles', label: 'מאבקים ונצחונות' },
         { href: '/tasks', label: 'משימות' },
         { href: '/discussions', label: 'דיונים הצבעות' },
-        { href: '/struggles', label: 'מאבקים פתוחים' },
-        { href: '/successes', label: 'הניצחונות שלנו' },
         { href: '/experts', label: 'צוות המומחים' },
         { href: '/marketplace', label: 'מוצרים להפצה' },
         { href: '/ratings', label: 'סטטוס שכונות' }
