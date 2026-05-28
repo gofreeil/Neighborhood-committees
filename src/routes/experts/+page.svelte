@@ -1,9 +1,20 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import { teams } from '$lib/teamsData';
 
-    // הגלגל יושב במקומו מהרגע הראשון. אין אנימציית כניסה. הסיבוב מופעל רק על קליק.
-    let wheelAngle = $state(0);
+    // הגלגל מתחיל בזווית 180°- ובכניסה לתצוגה מתגלגל ל-0°
+    // (חצי סיבוב עם כיוון השעון, סביב נקודת המרכז של העיגול האמצעי).
+    let wheelAngle = $state(-180);
     let currentTopIndex = $state(0);
+
+    onMount(() => {
+        // עיכוב קצר כדי שהמצב ההתחלתי -180° ייצבע פעם אחת,
+        // אחר כך שינוי ל-0 יפעיל את ה-CSS transition (חלק).
+        const id = setTimeout(() => {
+            wheelAngle = 0;
+        }, 80);
+        return () => clearTimeout(id);
+    });
 
     // קליק על עלה — מסובב את הגלגל כדי שהעלה הזה יעלה לראש,
     // ובמקביל ה-<a> מנווט לדף של הצוות (לא קוראים ל-preventDefault).
