@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
     import PageHero from '$lib/components/PageHero.svelte';
-    import { getCityBySlug, CATEGORIES, scoreColor, scoreHex, cities } from '$lib/citiesData';
+    import { getCityBySlug, CATEGORIES, scoreColor, scoreHex, cities, formatPopulation } from '$lib/citiesData';
 
     const slug = $derived(page.params.slug);
     const city = $derived(getCityBySlug(slug));
@@ -74,8 +74,16 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <!-- תרשים רדאר -->
         <div class="rounded-2xl bg-white/5 border border-white/10 p-5 lg:order-2">
-            <h2 class="text-white font-bold text-lg mb-3">פרופיל העיר</h2>
-            <p class="text-xs text-gray-400 mb-4">ההיקף הירוק = ממוצע ארצי · המילוי הצבעוני = {city.name}</p>
+            <div class="flex items-start justify-between mb-3 gap-3 flex-wrap">
+                <div>
+                    <h2 class="text-white font-bold text-lg">פרופיל העיר</h2>
+                    <p class="text-xs text-gray-400 mt-1">ההיקף הירוק = ממוצע ארצי · המילוי הצבעוני = {city.name}</p>
+                </div>
+                <div class="rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-center min-w-[110px]">
+                    <div class="text-[10px] text-gray-400 uppercase tracking-wider">👥 תושבים</div>
+                    <div class="text-xl font-black text-white leading-tight">{formatPopulation(city.population)}</div>
+                </div>
+            </div>
             <div class="flex justify-center" dir="ltr">
                 <svg width={RADAR_SIZE} height={RADAR_SIZE} viewBox="0 0 {RADAR_SIZE} {RADAR_SIZE}">
                     <!-- טבעות רקע -->
