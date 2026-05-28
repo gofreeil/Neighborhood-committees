@@ -5,7 +5,6 @@
     const nav = [
         { href: '/vision', label: 'החזון' },
         { href: '/struggles', label: 'מאבקים ונצחונות' },
-        { href: '/tasks', label: 'משימות' },
         { href: '/discussions', label: 'דיונים הצבעות' },
         { href: '/experts', label: 'צוות המומחים' },
         { href: '/marketplace', label: 'מוצרים להפצה' },
