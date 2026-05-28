@@ -30,10 +30,10 @@
         return () => window.removeEventListener('scroll', onScroll);
     });
 
-    // קליק על עלה — מסובב את הגלגל כדי שהעלה הזה יעלה לראש
-    function handlePetalClick(i: number, e: MouseEvent) {
-        if (currentTopIndex === i) return; // כבר למעלה — תן ל-<a> לנווט
-        e.preventDefault();
+    // קליק על עלה — מסובב את הגלגל כדי שהעלה הזה יעלה לראש,
+    // ובמקביל ה-<a> מנווט לדף של הצוות (לא קוראים ל-preventDefault)
+    function handlePetalClick(i: number) {
+        if (currentTopIndex === i) return;
         const targetMod = ((-i * 45) % 360 + 360) % 360;
         const currentMod = ((wheelAngle % 360) + 360) % 360;
         let delta = targetMod - currentMod;
@@ -62,7 +62,7 @@
             <!-- הגלגל המסתובב — רק 8 העלים -->
             <div class="expert-flower" style="rotate: {wheelAngle}deg">
                 {#each flowerPetals as p, i}
-                    <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" aria-label={p.name}>
+                    <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" aria-label={p.name} onclick={() => handlePetalClick(i)}>
                         <div class="petal-face">
                             {#if p.image}
                                 <img src={p.image} alt={p.name} loading="lazy" />
@@ -158,15 +158,16 @@
         height: 22%;
     }
 
-    /* 8 מיקומים סביב המרכז בזוויות של 45° על מעגל ברדיוס 38% — עם רווח בין העיגולים */
+    /* 8 מיקומים על מעגל מדויק ברדיוס 38% — אותו מרחק מהמרכז לכל העיגולים.
+       38% * cos(45°) = 38% * 0.7071 = 26.87% → אלכסונים ב-50% ± 26.87% = 23.13% / 76.87% */
     .petal-0 { top: 12%;    left: 50%;    }
-    .petal-1 { top: 22.86%; left: 77.14%; }
+    .petal-1 { top: 23.13%; left: 76.87%; }
     .petal-2 { top: 50%;    left: 88%;    }
-    .petal-3 { top: 77.14%; left: 77.14%; }
+    .petal-3 { top: 76.87%; left: 76.87%; }
     .petal-4 { top: 88%;    left: 50%;    }
-    .petal-5 { top: 77.14%; left: 22.86%; }
+    .petal-5 { top: 76.87%; left: 23.13%; }
     .petal-6 { top: 50%;    left: 12%;    }
-    .petal-7 { top: 22.86%; left: 22.86%; }
+    .petal-7 { top: 23.13%; left: 23.13%; }
 
     .petal-face,
     .petal-text {
