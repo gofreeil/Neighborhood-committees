@@ -93,7 +93,8 @@
     {/if}
 
     <p class="text-xs text-gray-500 mt-3">
-        מקורות: מבקר המדינה, משרד הפנים, אתר חופש המידע הממשלתי, סקרי תושבים אוטומטיים.
+        מקורות הנתונים: <a href="https://community.gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 hover:underline font-bold">קהילה בשכונה</a> —
+        הפלטפורמה הארצית של תושבים בשכונות, כולל ועדים, יוזמות, גמ"חים ומאבקים.
     </p>
 </div>
 

@@ -73,7 +73,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <!-- תרשים רדאר -->
-        <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+        <div class="rounded-2xl bg-white/5 border border-white/10 p-5 lg:order-2">
             <h2 class="text-white font-bold text-lg mb-3">פרופיל העיר</h2>
             <p class="text-xs text-gray-400 mb-4">ההיקף הירוק = ממוצע ארצי · המילוי הצבעוני = {city.name}</p>
             <div class="flex justify-center" dir="ltr">
@@ -135,7 +135,7 @@
         </div>
 
         <!-- ברים -->
-        <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+        <div class="rounded-2xl bg-white/5 border border-white/10 p-5 lg:order-1">
             <h2 class="text-white font-bold text-lg mb-4">פירוט קטגוריות</h2>
             <div class="space-y-4">
                 {#each CATEGORIES as cat}
@@ -173,9 +173,11 @@
     <!-- מקורות -->
     <div class="rounded-2xl bg-white/5 border border-white/10 p-5 text-sm">
         <h2 class="text-white font-bold mb-2">מקורות חישוב</h2>
-        <p class="text-gray-400 text-xs">
-            הציון מחושב אוטומטית מנתוני מבקר המדינה, משרד הפנים, אתר חופש המידע הממשלתי וסקרי תושבים.
-            חישוב מלא יוצג כאן לאחר הגדרת הכללים בבאקאנד.
+        <p class="text-gray-400 text-xs leading-relaxed">
+            הציון מחושב אוטומטית מנתוני
+            <a href="https://community.gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 hover:underline font-bold">קהילה בשכונה</a> —
+            הפלטפורמה הארצית של תושבים המאורגנים בשכונה: כמות חברים פעילים, ועדים רשומים, יוזמות מקומיות,
+            גמ"חים ומאבקים אזרחיים בעיר. ככל שיש יותר פעילות אזרחית עצמאית בעיר — הציון עולה.
         </p>
     </div>
 {/if}
