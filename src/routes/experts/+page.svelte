@@ -48,7 +48,7 @@
             <!-- הגלגל המסתובב — רק 8 העלים -->
             <div class="expert-flower" style="rotate: {wheelAngle}deg">
                 {#each flowerPetals as p, i}
-                    <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" aria-label={p.name} onclick={() => handlePetalClick(i)}>
+                    <a class="petal petal-{i}" style="--c:{p.color}; rotate: {-wheelAngle}deg" href="/experts/{p.slug}" target="_blank" rel="noopener" aria-label={p.name} onclick={() => handlePetalClick(i)}>
                         <div class="petal-face">
                             {#if p.image}
                                 <img src={p.image} alt={p.name} loading="lazy" />
@@ -65,7 +65,7 @@
             </div>
 
             <!-- המרכז — ציר קבוע, לא משתתף בסיבוב -->
-            <a class="petal petal-center" style="--c:{flowerCenter.color}" href="/experts/{flowerCenter.slug}" aria-label={flowerCenter.name}>
+            <a class="petal petal-center" style="--c:{flowerCenter.color}" href="/experts/{flowerCenter.slug}" target="_blank" rel="noopener" aria-label={flowerCenter.name}>
                 <div class="petal-face">
                     {#if flowerCenter.image}
                         <img src={flowerCenter.image} alt={flowerCenter.name} loading="lazy" />
