@@ -1,37 +1,12 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { teams } from '$lib/teamsData';
 
-    let flowerEl: HTMLElement | undefined = $state();
-    // זווית הסיבוב של כל הגלגל. -180 בהתחלה כדי שייסובב חצי סיבוב פנימה.
-    let wheelAngle = $state(-180);
+    // הגלגל יושב במקומו מהרגע הראשון. אין אנימציית כניסה. הסיבוב מופעל רק על קליק.
+    let wheelAngle = $state(0);
     let currentTopIndex = $state(0);
-    let hasEntered = false;
-
-    function isInView(el: HTMLElement) {
-        const r = el.getBoundingClientRect();
-        return r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
-    }
-
-    onMount(() => {
-        if (!flowerEl) return;
-        const startIfVisible = () => {
-            if (!flowerEl || hasEntered) return;
-            if (isInView(flowerEl)) {
-                hasEntered = true;
-                // טריגר: מאפסים את הזווית — CSS transition דואג לסיבוב החלק 180°
-                wheelAngle = 0;
-            }
-        };
-        const onScroll = () => startIfVisible();
-        // עיכוב קצר אחרי הטעינה — כדי שהמצב ההתחלתי -180° יספיק לעבור paint לפני שמתחילה האנימציה
-        setTimeout(startIfVisible, 200);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    });
 
     // קליק על עלה — מסובב את הגלגל כדי שהעלה הזה יעלה לראש,
-    // ובמקביל ה-<a> מנווט לדף של הצוות (לא קוראים ל-preventDefault)
+    // ובמקביל ה-<a> מנווט לדף של הצוות (לא קוראים ל-preventDefault).
     function handlePetalClick(i: number) {
         if (currentTopIndex === i) return;
         const targetMod = ((-i * 45) % 360 + 360) % 360;
@@ -58,7 +33,7 @@
     </div>
 
     <div class="flex justify-center">
-        <div class="flower-outer" bind:this={flowerEl}>
+        <div class="flower-outer">
             <!-- הגלגל המסתובב — רק 8 העלים -->
             <div class="expert-flower" style="rotate: {wheelAngle}deg">
                 {#each flowerPetals as p, i}
