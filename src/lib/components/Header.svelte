@@ -7,7 +7,7 @@
         { href: '/struggles', label: 'מאבקים ונצחונות' },
         { href: '/discussions', label: 'דיונים הצבעות' },
         { href: '/experts', label: 'צוות המומחים' },
-        { href: '/marketplace', label: 'מוצרים להפצה' },
+        { href: '/marketplace', label: 'נקודות איסוף' },
         { href: '/ratings', label: 'סטטוס שכונות' }
     ];
 
