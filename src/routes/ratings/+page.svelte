@@ -26,9 +26,9 @@
     const activeCategory = $derived(openCategory ? CATEGORIES.find(c => c.key === openCategory) : null);
 </script>
 
-<svelte:head><title>דירוג עצמאות ערים — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>דירוג עצמאות ערים - ועדי שכונות ארצי</title></svelte:head>
 
-<PageHero icon="🏆" title="דירוג עצמאות ערים" subtitle="מדד אוטומטי — חישוב חודשי ממקורות פתוחים" gradient="from-yellow-900/40 to-amber-900/40" />
+<PageHero icon="🏆" title="דירוג עצמאות ערים" subtitle="מדד אוטומטי - חישוב חודשי ממקורות פתוחים" gradient="from-yellow-900/40 to-amber-900/40" />
 
 <!-- קטגוריות כפתורים -->
 <div class="mb-6 rounded-2xl bg-white/5 border border-white/10 p-5">
@@ -93,7 +93,7 @@
     {/if}
 
     <p class="text-xs text-gray-500 mt-3">
-        מקורות הנתונים: <a href="https://community.gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 hover:underline font-bold">קהילה בשכונה</a> —
+        מקורות הנתונים: <a href="https://community.gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 hover:underline font-bold">קהילה בשכונה</a> -
         הפלטפורמה הארצית של תושבים בשכונות, כולל ועדים, יוזמות, גמ"חים ומאבקים.
     </p>
 </div>

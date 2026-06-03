@@ -5,7 +5,7 @@
     const team = teamBySlug('health')!;
 </script>
 
-<svelte:head><title>{team.name} — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>{team.name} - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero icon={team.emoji} title={team.name} subtitle={team.desc} gradient="from-emerald-900/40 to-teal-900/40" />
 

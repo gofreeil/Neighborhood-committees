@@ -18,9 +18,9 @@
     }
 </script>
 
-<svelte:head><title>חדשות — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>חדשות - ועדי שכונות ארצי</title></svelte:head>
 
-<PageHero icon="📰" title="חדשות" subtitle="עדכונים מכל הארץ — נאסף אוטומטית ממקורות חדשותיים" />
+<PageHero icon="📰" title="חדשות" subtitle="עדכונים מכל הארץ - נאסף אוטומטית ממקורות חדשותיים" />
 
 <div class="flex items-center gap-2 mb-4 text-sm">
     <span class="text-gray-400">סינון:</span>

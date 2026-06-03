@@ -32,7 +32,7 @@
 			OAuthCallback:         'שגיאה בחזרה מהספק. נסה שוב.',
 			OAuthAccountNotLinked: 'החשבון כבר קיים עם ספק אחר.',
 			Callback:              'שגיאה בתהליך ההתחברות.',
-			CredentialsSignin:     'אימייל או סיסמה שגויים. אם נרשמת לאחרונה — ודא שאישרת את האימייל.',
+			CredentialsSignin:     'אימייל או סיסמה שגויים. אם נרשמת לאחרונה - ודא שאישרת את האימייל.',
 			Default:               'שגיאה לא ידועה. נסה שוב.',
 		};
 		return map[code] ?? map['Default'];
@@ -40,7 +40,7 @@
 </script>
 
 <svelte:head>
-	<title>התחברות — ועדי שכונות ארצי</title>
+	<title>התחברות - ועדי שכונות ארצי</title>
 </svelte:head>
 
 <div

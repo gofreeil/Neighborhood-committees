@@ -5,7 +5,7 @@
     const team = teamBySlug('law')!;
 </script>
 
-<svelte:head><title>{team.name} — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>{team.name} - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero icon={team.emoji} title={team.name} subtitle={team.desc} gradient="from-blue-900/40 to-indigo-900/40" />
 

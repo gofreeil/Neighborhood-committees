@@ -59,12 +59,12 @@
     ];
 </script>
 
-<svelte:head><title>נצחונות — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>נצחונות - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero
     icon="🏆"
     title="נצחונות"
-    subtitle="מה שכבר השגנו יחד — סיפורי הצלחה של ועדי שכונות שהובילו לשינוי אמיתי"
+    subtitle="מה שכבר השגנו יחד - סיפורי הצלחה של ועדי שכונות שהובילו לשינוי אמיתי"
     gradient="from-green-900/40 to-emerald-900/40"
 />
 

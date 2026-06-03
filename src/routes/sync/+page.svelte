@@ -2,13 +2,13 @@
     import PageHero from '$lib/components/PageHero.svelte';
     const events = [
         { date: '2026-05-28', time: '20:00', title: 'ועידת רכזי המרכז', location: 'תל אביב + זום', attending: 47 },
-        { date: '2026-06-02', time: '19:30', title: 'הדרכת רכזים חדשים — מיצוי זכויות', location: 'זום', attending: 124 },
-        { date: '2026-06-10', time: '18:00', title: 'מפגש ארצי — תכנון אסטרטגי', location: 'ירושלים', attending: 89 },
+        { date: '2026-06-02', time: '19:30', title: 'הדרכת רכזים חדשים - מיצוי זכויות', location: 'זום', attending: 124 },
+        { date: '2026-06-10', time: '18:00', title: 'מפגש ארצי - תכנון אסטרטגי', location: 'ירושלים', attending: 89 },
         { date: '2026-06-15', time: '20:30', title: 'דיון: שיתוף נתונים בין ועדים', location: 'זום', attending: 56 }
     ];
 </script>
 
-<svelte:head><title>סינכרונים — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>סינכרונים - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero icon="🔄" title="סינכרונים" subtitle="פגישות, ועידות ותיאומים בין ועדי שכונות" gradient="from-teal-900/40 to-emerald-900/40" />
 

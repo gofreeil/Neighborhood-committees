@@ -2,7 +2,7 @@
     import PageHero from '$lib/components/PageHero.svelte';
 </script>
 
-<svelte:head><title>משימות — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>משימות - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero
     icon="📋"
@@ -12,5 +12,5 @@
 />
 
 <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center text-gray-300">
-    הדף בהקמה — בקרוב יוצגו כאן המשימות הפתוחות.
+    הדף בהקמה - בקרוב יוצגו כאן המשימות הפתוחות.
 </div>

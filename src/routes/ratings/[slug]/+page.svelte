@@ -22,7 +22,7 @@
     const RADAR_RADIUS = 130;
     const N = CATEGORIES.length;
 
-    // כל קטגוריה ב-360/6 = 60° — מתחילים מלמעלה
+    // כל קטגוריה ב-360/6 = 60° - מתחילים מלמעלה
     function polarPoint(value: number, index: number, maxRadius = RADAR_RADIUS) {
         const angle = (Math.PI * 2 * index) / N - Math.PI / 2;
         const r = (value / 100) * maxRadius;
@@ -45,7 +45,7 @@
     const labels = $derived(CATEGORIES.map((cat, i) => ({ ...polarPoint(118, i), ...cat })));
 </script>
 
-<svelte:head><title>{city ? `${city.name} — דירוג מפורט` : 'עיר לא נמצאה'}</title></svelte:head>
+<svelte:head><title>{city ? `${city.name} - דירוג מפורט` : 'עיר לא נמצאה'}</title></svelte:head>
 
 {#if !city}
     <div class="text-center py-20">
@@ -183,9 +183,9 @@
         <h2 class="text-white font-bold mb-2">מקורות חישוב</h2>
         <p class="text-gray-400 text-xs leading-relaxed">
             הציון מחושב אוטומטית מנתוני
-            <a href="https://community.gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 hover:underline font-bold">קהילה בשכונה</a> —
+            <a href="https://community.gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 hover:underline font-bold">קהילה בשכונה</a> -
             הפלטפורמה הארצית של תושבים המאורגנים בשכונה: כמות חברים פעילים, ועדים רשומים, יוזמות מקומיות,
-            גמ"חים ומאבקים אזרחיים בעיר. ככל שיש יותר פעילות אזרחית עצמאית בעיר — הציון עולה.
+            גמ"חים ומאבקים אזרחיים בעיר. ככל שיש יותר פעילות אזרחית עצמאית בעיר - הציון עולה.
         </p>
     </div>
 {/if}

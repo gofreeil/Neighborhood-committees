@@ -1,4 +1,4 @@
-// נתוני צוותי המומחים — מקור יחיד עבור הפרח בדף /experts ולדפים הפנימיים
+// נתוני צוותי המומחים - מקור יחיד עבור הפרח בדף /experts ולדפים הפנימיים
 // פריט ראשון = מרכז הפרח; שמונת הבאים = עלים סביב (יש 8 מיקומים בלבד ב-CSS).
 export type Team = {
     slug: string;
@@ -6,7 +6,7 @@ export type Team = {
     desc: string;
     emoji: string;
     color: string;
-    /** אופציונלי — תמונה שתחליף את ה-emoji כשתהיה. ברירת מחדל: /images/teams/<slug>.png */
+    /** אופציונלי - תמונה שתחליף את ה-emoji כשתהיה. ברירת מחדל: /images/teams/<slug>.png */
     image?: string;
 };
 
@@ -19,7 +19,7 @@ export const teams: Team[] = [
     { slug: 'technology',   name: 'צוות טכנולוגיה',              desc: 'תפקידם לפתח מוצרים שיועילו לכלל.', emoji: '💻', color: '#8b5cf6', image: '/images/teams/technology.png' },
     { slug: 'health',       name: 'צוות בריאות טבעית',           desc: 'לקדם ידע, מניעה, בריאות וריפוי הטובים ביותר, והזולים ביותר לכלל האוכלוסיה!', emoji: '🌿', color: '#10b981', image: '/images/teams/health.png' },
     { slug: 'ethics',       name: 'צוות מוסר',                   desc: 'לקדם קהילתיות, חברה צדק ואחווה שלום ורעות בין כלל הזרמים בחברה בישראל.', emoji: '🕊️', color: '#e2e8f0', image: '/images/teams/ethics.jpg' },
-    { slug: 'rights',       name: 'צוות מיצוי זכויות',           desc: 'תפקידם לסייע לתושבים ולוועדים למצות את הזכויות המגיעות להם מול הרשויות והמדינה — תוך מחקר, ליווי וייעוץ.', emoji: '🔍', color: '#ef4444', image: '/images/teams/rights.png' }
+    { slug: 'rights',       name: 'צוות מיצוי זכויות',           desc: 'תפקידם לסייע לתושבים ולוועדים למצות את הזכויות המגיעות להם מול הרשויות והמדינה - תוך מחקר, ליווי וייעוץ.', emoji: '🔍', color: '#ef4444', image: '/images/teams/rights.png' }
 ];
 
 export const teamBySlug = (slug: string): Team | undefined => teams.find((t) => t.slug === slug);

@@ -49,7 +49,7 @@
         return interpolate(heroAnchors, progress);
     }
     function subtitleColorAt(progress: number): string {
-        // טווח גוונים מצד ימין של הגרדיאנט (ירוק/מנטה) — נוכחות מינימלית של כחול בצד שמאל
+        // טווח גוונים מצד ימין של הגרדיאנט (ירוק/מנטה) - נוכחות מינימלית של כחול בצד שמאל
         const compressed = 0.15 + progress * 0.25;
         return interpolate(heroAnchors, compressed);
     }
@@ -84,7 +84,7 @@
             }
             line.spans.push(sp);
         });
-        // לכל שורה — צבע על בסיס X יחסי לרוחב השורה (מימין לשמאל)
+        // לכל שורה - צבע על בסיס X יחסי לרוחב השורה (מימין לשמאל)
         lines.forEach((line) => {
             const w = line.right - line.left;
             if (w <= 0) return;
@@ -112,7 +112,7 @@
             }
         });
         if (cur.length) words.push(cur);
-        // לכל מילה — חשב bounding-box ופרוס גרדיאנט שלם מימין לשמאל
+        // לכל מילה - חשב bounding-box ופרוס גרדיאנט שלם מימין לשמאל
         words.forEach((wordSpans) => {
             let left = Infinity, right = -Infinity;
             wordSpans.forEach((sp) => {
@@ -230,7 +230,7 @@
     ];
 </script>
 
-<svelte:head><title>ועדי שכונות ארצי — קול התושב</title></svelte:head>
+<svelte:head><title>ועדי שכונות ארצי - קול התושב</title></svelte:head>
 
 <!-- Hero text (מעל התמונה) -->
 <div class="mb-4 md:mb-6 px-1 text-center">
@@ -315,7 +315,7 @@
                         </li>
                     {/each}
                 </ul>
-                <div class="mt-3 text-[10px] text-gray-500 text-center">מוקאפ — נתונים לדוגמה</div>
+                <div class="mt-3 text-[10px] text-gray-500 text-center">מוקאפ - נתונים לדוגמה</div>
             </div>
         {/each}
     </div>
@@ -340,7 +340,7 @@
                     </div>
                 </div>
                 <p class="text-sm text-gray-300 leading-relaxed mb-3">
-                    שמירה על הזכות לשלם במזומן — נגד חוקים שמגבילים שימוש בכסף פיזי
+                    שמירה על הזכות לשלם במזומן - נגד חוקים שמגבילים שימוש בכסף פיזי
                     ודוחפים לעולם דיגיטלי במעקב מלא.
                 </p>
                 <div class="flex items-center justify-between text-xs">
@@ -360,7 +360,7 @@
                 </div>
                 <p class="text-sm text-gray-300 leading-relaxed mb-3">
                     התנגדות להעברת נתונים אישיים בלי הסכמה, מצלמות בכל פינה, וזיהוי
-                    ביומטרי כפוי — שמירה על הזכות הבסיסית לאנונימיות.
+                    ביומטרי כפוי - שמירה על הזכות הבסיסית לאנונימיות.
                 </p>
                 <div class="flex items-center justify-between text-xs">
                     <span class="text-gray-400">תומכים: <span class="text-white font-bold">2,815</span></span>

@@ -16,7 +16,7 @@
         return () => clearTimeout(id);
     });
 
-    // קליק על עלה — מסובב את הגלגל כדי שהעלה הזה יעלה לראש,
+    // קליק על עלה - מסובב את הגלגל כדי שהעלה הזה יעלה לראש,
     // ובמקביל ה-<a> מנווט לדף של הצוות (לא קוראים ל-preventDefault).
     function handlePetalClick(i: number) {
         if (currentTopIndex === i) return;
@@ -34,7 +34,7 @@
     const flowerPetals = teams.slice(1);
 </script>
 
-<svelte:head><title>מומחים לייעוץ — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>מומחים לייעוץ - ועדי שכונות ארצי</title></svelte:head>
 
 <!-- פרח המומחים -->
 <section class="my-8 sm:my-12">
@@ -45,7 +45,7 @@
 
     <div class="flex justify-center">
         <div class="flower-outer">
-            <!-- הגלגל המסתובב — רק 8 העלים -->
+            <!-- הגלגל המסתובב - רק 8 העלים -->
             <div class="expert-flower" style="transform: rotate({wheelAngle}deg)">
                 {#each flowerPetals as p, i}
                     <a class="petal petal-{i}" style="--c:{p.color}" href="/experts/{p.slug}" target="_blank" rel="noopener" aria-label={p.name} onclick={() => handlePetalClick(i)}>
@@ -66,7 +66,7 @@
                 {/each}
             </div>
 
-            <!-- המרכז — ציר קבוע, לא משתתף בסיבוב -->
+            <!-- המרכז - ציר קבוע, לא משתתף בסיבוב -->
             <a class="petal petal-center" style="--c:{flowerCenter.color}" href="/experts/{flowerCenter.slug}" target="_blank" rel="noopener" aria-label={flowerCenter.name}>
                 <div class="petal-face">
                     {#if flowerCenter.image}
@@ -142,7 +142,7 @@
         }
     }
 
-    /* מרכז — ציר קבוע, יושב על ה-.flower-outer ולא משתתף בסיבוב */
+    /* מרכז - ציר קבוע, יושב על ה-.flower-outer ולא משתתף בסיבוב */
     .petal-center {
         width: 24%;
         height: 24%;
@@ -157,7 +157,7 @@
         height: 22%;
     }
 
-    /* 8 מיקומים על מעגל מדויק ברדיוס 38% — אותו מרחק מהמרכז לכל העיגולים.
+    /* 8 מיקומים על מעגל מדויק ברדיוס 38% - אותו מרחק מהמרכז לכל העיגולים.
        38% * cos(45°) = 38% * 0.7071 = 26.87% → אלכסונים ב-50% ± 26.87% = 23.13% / 76.87% */
     .petal-0 { top: 12%;    left: 50%;    }
     .petal-1 { top: 23.13%; left: 76.87%; }

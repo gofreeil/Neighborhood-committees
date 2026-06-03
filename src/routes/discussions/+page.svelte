@@ -3,9 +3,9 @@
 
     const threads = [
         { title: 'איך מתמודדים עם בנייה ללא היתר ברחוב הראשי?', author: 'יוסי כהן · ועד פתח תקווה', replies: 42, views: 1280, hot: true },
-        { title: 'מודל ניהול תקציב שכונתי עצמאי — שיתוף', author: 'דנה לוי · רכזת רעננה', replies: 28, views: 890, hot: false },
+        { title: 'מודל ניהול תקציב שכונתי עצמאי - שיתוף', author: 'דנה לוי · רכזת רעננה', replies: 28, views: 890, hot: false },
         { title: 'תיאום פעולה בין ועדי הצפון בנושא תחבורה', author: 'עומר ברקת · ועד קריות', replies: 17, views: 540, hot: false },
-        { title: 'כלי שיתוף תושבים שעובדים בשטח — מליצים?', author: 'שירה אבן · ועד גבעתיים', replies: 36, views: 1102, hot: true },
+        { title: 'כלי שיתוף תושבים שעובדים בשטח - מליצים?', author: 'שירה אבן · ועד גבעתיים', replies: 36, views: 1102, hot: true },
         { title: 'איך לפנות לאמצעי תקשורת בצורה אפקטיבית', author: 'מרים נחום · ועד אשדוד', replies: 19, views: 612, hot: false }
     ];
 
@@ -27,12 +27,12 @@
     let tab: 'discussions' | 'votes' = $state('discussions');
 </script>
 
-<svelte:head><title>דיונים והצבעות — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>דיונים והצבעות - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero
     icon="💬"
     title="דיונים והצבעות"
-    subtitle="מעגלי שיח פתוחים — מהדיון להחלטה, בשקיפות מלאה"
+    subtitle="מעגלי שיח פתוחים - מהדיון להחלטה, בשקיפות מלאה"
     gradient="from-purple-900/40 to-indigo-900/40"
 />
 

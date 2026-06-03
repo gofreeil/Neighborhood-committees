@@ -24,7 +24,7 @@
     ];
 </script>
 
-<svelte:head><title>חזון — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>חזון - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero icon="🌅" title="החזון שלנו" subtitle="עתיד שבו לקול התושב יש משקל אמיתי בקבלת החלטות" gradient="from-pink-900/40 to-purple-900/40" />
 
@@ -53,7 +53,7 @@
         <div class="aspect-[16/6] bg-gradient-to-br from-emerald-900/40 to-green-700/30 flex items-center justify-center text-gray-500 text-sm border-b border-white/10">
             <div class="text-center">
                 <div class="text-5xl mb-2">🌿</div>
-                <div>תמונה — עיר בת קיימה</div>
+                <div>תמונה - עיר בת קיימה</div>
             </div>
         </div>
         <div class="p-6 md:p-8">
@@ -79,7 +79,7 @@
         <div class="aspect-[16/6] bg-gradient-to-br from-cyan-900/40 to-blue-700/30 flex items-center justify-center text-gray-500 text-sm border-b border-white/10">
             <div class="text-center">
                 <div class="text-5xl mb-2">⚡</div>
-                <div>תמונה — טכנולוגיה</div>
+                <div>תמונה - טכנולוגיה</div>
             </div>
         </div>
         <div class="p-6 md:p-8">
@@ -91,26 +91,26 @@
                 <li class="flex gap-3">
                     <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">1</span>
                     <div>
-                        <strong class="text-white">מחוללי מים</strong> — מכשיר המייצר מים על ידי הפרשי אטמוספרות
+                        <strong class="text-white">מחוללי מים</strong> - מכשיר המייצר מים על ידי הפרשי אטמוספרות
                     </div>
                 </li>
                 <li class="flex gap-3">
                     <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">2</span>
                     <div>
-                        <strong class="text-white">לורה (LoRa)</strong> — מכשירי קשר בפריסה ארצית שאינם תלויים באנטנות הרדיו, הלווינים או הקבלים בארץ.
+                        <strong class="text-white">לורה (LoRa)</strong> - מכשירי קשר בפריסה ארצית שאינם תלויים באנטנות הרדיו, הלווינים או הקבלים בארץ.
                         למעשה אפילו ניתן לתקשר ביניהם גם כשהטלפון על מצב טיסה.
                     </div>
                 </li>
                 <li class="flex gap-3">
                     <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">3</span>
                     <div>
-                        <strong class="text-white">מחוללי חשמל</strong> — על ידי טכנולוגיות פירוק מימן. פרטים בקרוב.
+                        <strong class="text-white">מחוללי חשמל</strong> - על ידי טכנולוגיות פירוק מימן. פרטים בקרוב.
                     </div>
                 </li>
                 <li class="flex gap-3">
                     <span class="flex-shrink-0 w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center text-sm">4</span>
                     <div>
-                        <strong class="text-white">מכשיר זיהוי רעידות אדמה</strong> — מזהה רעידת אדמה ומתריע עליה חצי שעה לפני התרחשותה.
+                        <strong class="text-white">מכשיר זיהוי רעידות אדמה</strong> - מזהה רעידת אדמה ומתריע עליה חצי שעה לפני התרחשותה.
                     </div>
                 </li>
             </ul>
@@ -120,7 +120,7 @@
     <!-- ציטוט סיום -->
     <div class="rounded-2xl bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-white/10 p-6 md:p-8">
         <p class="text-center text-lg md:text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            "השכונה היא הבית. הוועד הוא הקול. ביחד — אנחנו הכוח."
+            "השכונה היא הבית. הוועד הוא הקול. ביחד - אנחנו הכוח."
         </p>
     </div>
 </article>

@@ -10,7 +10,7 @@
     ];
 </script>
 
-<svelte:head><title>רכזי שכונות — ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>רכזי שכונות - ועדי שכונות ארצי</title></svelte:head>
 
 <PageHero icon="👥" title="רכזי שכונות" subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 
@@ -21,7 +21,7 @@
             <h3 class="text-white font-bold text-lg mb-1">חיבור אוטומטי לקהילה בשכונה</h3>
             <p class="text-sm text-gray-300">
                 כל מי שמשמש כרכז שכונה באתר <strong>"קהילה בשכונה"</strong> מקבל אוטומטית
-                גם הרשאת רכז כאן — אותם אישורים, אותם משתמשים, פעולה אחת מאוחדת.
+                גם הרשאת רכז כאן - אותם אישורים, אותם משתמשים, פעולה אחת מאוחדת.
             </p>
             <a
                 href="https://community-il.vercel.app/coordinator"
