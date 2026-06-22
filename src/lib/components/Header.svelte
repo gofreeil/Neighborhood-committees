@@ -2,6 +2,8 @@
     import { t } from 'svelte-i18n';
     import { get } from 'svelte/store';
 
+    let { userEmail = null }: { userEmail?: string | null } = $props();
+
     const nav = [
         { href: '/vision', label: 'החזון' },
         { href: '/struggles', label: 'מאבקים ונצחונות' },
@@ -10,6 +12,9 @@
         { href: '/marketplace', label: 'נקודות איסוף' },
         { href: '/ratings', label: 'סטטוס שכונות' }
     ];
+
+    // קישור פרטי שלי בלבד - גישה ישירה ל-Strapi DB
+    const isPrimaryAdmin = $derived(userEmail === 'yahavanter@gmail.com');
 
     let mobileOpen = $state(false);
 </script>
@@ -59,6 +64,18 @@
                 >
                     🔐 התחבר
                 </a>
+                {#if isPrimaryAdmin}
+                    <a
+                        href="https://community-il.duckdns.org/admin"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onclick={() => (mobileOpen = false)}
+                        class="col-span-2 px-3 py-2 rounded-lg bg-rose-600/20 border border-rose-500/40 text-rose-200 text-sm text-center font-bold"
+                        title="גישה ישירה ל-Strapi (פרטי - רק לך)"
+                    >
+                        🗄️ Strapi DB
+                    </a>
+                {/if}
             </nav>
         {/if}
 
@@ -76,13 +93,26 @@
                         <p class="text-lg text-white font-extrabold drop-shadow">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                     </div>
                 </a>
-                <a
-                    href="/login"
-                    class="rounded-lg px-4 py-2 font-bold text-white hover:scale-105 transition-transform"
-                    style="background:linear-gradient(135deg,#2563eb,#7c3aed); box-shadow:0 4px 15px rgba(124,58,237,0.4);"
-                >
-                    🔐 התחבר
-                </a>
+                <div class="flex items-center gap-2">
+                    {#if isPrimaryAdmin}
+                        <a
+                            href="https://community-il.duckdns.org/admin"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="rounded-lg px-3 py-2 font-bold text-rose-200 hover:scale-105 transition-transform border border-rose-500/40 bg-rose-600/15 text-sm"
+                            title="גישה ישירה ל-Strapi (פרטי - רק לך)"
+                        >
+                            🗄️ Strapi DB
+                        </a>
+                    {/if}
+                    <a
+                        href="/login"
+                        class="rounded-lg px-4 py-2 font-bold text-white hover:scale-105 transition-transform"
+                        style="background:linear-gradient(135deg,#2563eb,#7c3aed); box-shadow:0 4px 15px rgba(124,58,237,0.4);"
+                    >
+                        🔐 התחבר
+                    </a>
+                </div>
             </div>
             <nav class="flex flex-wrap items-center justify-center gap-1 pt-3 w-full">
                 {#each nav as item, i}

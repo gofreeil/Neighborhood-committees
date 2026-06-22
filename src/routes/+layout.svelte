@@ -7,11 +7,11 @@
     import AdsSidebar from '$lib/components/AdsSidebar.svelte';
     import MobileAdsDrawer from '$lib/components/MobileAdsDrawer.svelte';
 
-    let { children } = $props();
+    let { children, data } = $props();
 </script>
 
 <a href="#main" class="skip-link">דלג לתוכן</a>
-<Header />
+<Header userEmail={data?.userEmail ?? null} />
 
 <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8 py-6">
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6">
