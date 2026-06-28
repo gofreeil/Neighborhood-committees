@@ -10,6 +10,7 @@
         { href: '/discussions', label: 'דיונים הצבעות' },
         { href: '/experts', label: 'צוות המומחים' },
         { href: '/marketplace', label: 'נקודות איסוף' },
+        { href: '/coordinators', label: 'רכזי השכונות' },
         { href: '/ratings', label: 'סטטוס שכונות' }
     ];
 
