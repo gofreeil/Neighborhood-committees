@@ -67,7 +67,7 @@
                 </a>
                 {#if isPrimaryAdmin}
                     <a
-                        href="https://community-il.duckdns.org/admin"
+                        href="https://api.gofreeil.com/admin"
                         target="_blank"
                         rel="noopener noreferrer"
                         onclick={() => (mobileOpen = false)}
@@ -97,7 +97,7 @@
                 <div class="flex items-center gap-2">
                     {#if isPrimaryAdmin}
                         <a
-                            href="https://community-il.duckdns.org/admin"
+                            href="https://api.gofreeil.com/admin"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="rounded-lg px-3 py-2 font-bold text-rose-200 hover:scale-105 transition-transform border border-rose-500/40 bg-rose-600/15 text-sm"
