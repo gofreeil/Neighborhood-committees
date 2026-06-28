@@ -34,15 +34,13 @@
                     {#each coordinators as c, i (c.id)}
                         <tr class="border-b border-white/5 transition-colors hover:bg-white/5"
                             style={i % 2 === 1 ? 'background:rgba(255,255,255,0.025);' : ''}>
-                            <!-- תמונה -->
+                            <!-- תמונה (ריק אם לא הועלתה תמונה) -->
                             <td class="py-3 px-4">
                                 {#if c.avatar_url}
                                     <img src={c.avatar_url} alt={c.name}
                                         class="w-11 h-11 rounded-full object-cover border border-white/20" />
                                 {:else}
-                                    <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold">
-                                        {c.name.charAt(0)}
-                                    </div>
+                                    <div class="w-11 h-11" aria-hidden="true"></div>
                                 {/if}
                             </td>
                             <!-- שם -->
