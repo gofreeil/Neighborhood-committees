@@ -8,27 +8,6 @@
 
 <PageHero icon="👥" title="רכזי השכונות" subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 
-<div class="mb-6 rounded-2xl bg-gradient-to-r from-purple-900/40 to-indigo-900/40 border border-purple-500/30 p-5">
-    <div class="flex items-start gap-4 flex-wrap">
-        <div class="text-4xl">🔗</div>
-        <div class="flex-1 min-w-0">
-            <h3 class="text-white font-bold text-lg mb-1">מחובר ישירות ל"קהילה בשכונה"</h3>
-            <p class="text-sm text-gray-300">
-                הרשימה נטענת אוטומטית מאתר <strong>"קהילה בשכונה"</strong> - כל מי שמשמש
-                שם כרכז שכונה מופיע כאן, יחד עם מספר התושבים הרשומים בשכונתו.
-            </p>
-            <a
-                href="https://community.gofreeil.com/coordinator"
-                target="_blank"
-                rel="noopener"
-                class="inline-block mt-3 px-4 py-2 rounded-lg bg-white text-purple-900 font-bold text-sm hover:scale-105 transition-transform"
-            >
-                הרשמה כרכז דרך קהילה בשכונה →
-            </a>
-        </div>
-    </div>
-</div>
-
 {#if coordinators.length === 0}
     <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
         <div class="text-4xl mb-3">🗂️</div>
