@@ -21,7 +21,7 @@
                 <thead>
                     <tr class="sticky top-0 z-10 text-xs uppercase tracking-wide text-cyan-200/80"
                         style="background:#0d1426;">
-                        <th class="py-3 px-4 font-semibold w-16">תמונה</th>
+                        <th class="py-3 px-4 font-semibold w-16"><span class="sr-only">תמונה</span></th>
                         <th class="py-3 px-4 font-semibold">שם הרכז</th>
                         <th class="py-3 px-4 font-semibold">טלפון</th>
                         <th class="py-3 px-4 font-semibold">עיר</th>
