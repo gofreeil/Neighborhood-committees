@@ -52,12 +52,11 @@ export const actions: Actions = {
         const neighborhood = (fd.get('neighborhood') as string ?? '').trim();
         const city     = (fd.get('city')      as string ?? '').trim();
 
-        const isFree = fd.get('is_free') === 'on';
-        const price = isFree ? 0 : Number(priceRaw.replace(/[^\d.]/g, ''));
+        const price = Number(priceRaw.replace(/[^\d.]/g, ''));
 
         if (!title) return fail(400, { error: 'יש למלא שם מוצר.', values: { title, priceRaw, description, phone } });
-        if (!isFree && (!priceRaw || Number.isNaN(price) || price < 0)) {
-            return fail(400, { error: 'יש למלא מחיר תקין, או לסמן "מסירה חינם".', values: { title, priceRaw, description, phone } });
+        if (!priceRaw || Number.isNaN(price) || price < 0) {
+            return fail(400, { error: 'יש למלא מחיר תקין.', values: { title, priceRaw, description, phone } });
         }
         if (!phone) return fail(400, { error: 'יש למלא פרטי קשר (טלפון).', values: { title, priceRaw, description, phone } });
 
@@ -70,12 +69,11 @@ export const actions: Actions = {
                 phone,
                 neighborhood,
                 city,
-                icon:         isFree ? '🎁' : (CATEGORY_EMOJI[productCategory] ?? '🛍️'),
+                icon:         CATEGORY_EMOJI[productCategory] ?? '🛍️',
                 color:        'emerald',
                 user_id:      session.user.id as string,
                 extra_fields: {
                     price,
-                    is_free: isFree,
                     product_category: productCategory,
                     seller_name: sellerName,
                 },

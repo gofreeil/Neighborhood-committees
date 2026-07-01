@@ -6,7 +6,6 @@
 
     const categories = ['רהיטים', 'מוצרי חשמל', 'ילדים וצעצועים', 'כלי בית', 'ספרים', 'ספורט', 'גינה', 'שונות'];
     let submitting = $state(false);
-    let isFree = $state(false);
 </script>
 
 <svelte:head><title>פרסום מוצר - ועדי שכונות ארצי</title></svelte:head>
@@ -46,17 +45,11 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-            <label for="price" class="block text-sm text-gray-300 mb-1.5">
-                מחיר (₪) {#if !isFree}<span class="text-red-400">*</span>{/if}
-            </label>
-            <input id="price" name="price" type="number" min="0" step="1" required={!isFree} disabled={isFree}
-                value={isFree ? '' : (form?.values?.priceRaw ?? '')}
-                placeholder={isFree ? 'חינם 🎁' : '450'}
-                class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 disabled:opacity-50" />
-            <label class="flex items-center gap-2 mt-2 text-sm text-gray-300 cursor-pointer">
-                <input type="checkbox" name="is_free" bind:checked={isFree} class="w-4 h-4 accent-emerald-500" />
-                🎁 מסירה חינם (ללא תשלום)
-            </label>
+            <label for="price" class="block text-sm text-gray-300 mb-1.5">מחיר (₪) <span class="text-red-400">*</span></label>
+            <input id="price" name="price" type="number" min="0" step="1" required
+                value={form?.values?.priceRaw ?? ''}
+                placeholder="450"
+                class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
         </div>
         <div>
             <label for="product_category" class="block text-sm text-gray-300 mb-1.5">קטגוריה</label>
