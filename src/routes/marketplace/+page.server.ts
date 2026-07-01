@@ -14,6 +14,7 @@ export const load: PageServerLoad = async (event) => {
         city: string;
         contact: string;
         emoji: string;
+        isFree: boolean;
     }> = [];
 
     try {
@@ -32,6 +33,7 @@ export const load: PageServerLoad = async (event) => {
                 city:         it.city || '',
                 contact:      it.phone || it.contact || '',
                 emoji:        it.icon || '🛍️',
+                isFree:       Boolean(ef.is_free) || Number(ef.price ?? 0) === 0,
             };
         });
     } catch (e) {

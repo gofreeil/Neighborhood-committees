@@ -3,7 +3,8 @@
 
     let { data } = $props();
 
-    const categories = ['הכל', 'רהיטים', 'מוצרי חשמל', 'ילדים וצעצועים', 'כלי בית', 'ספרים', 'ספורט', 'גינה', 'שונות'];
+    const FREE_FILTER = '🎁 מסירה חינם';
+    const categories = ['הכל', FREE_FILTER, 'רהיטים', 'מוצרי חשמל', 'ילדים וצעצועים', 'כלי בית', 'ספרים', 'ספורט', 'גינה', 'שונות'];
     let active = $state('הכל');
     let query = $state('');
     let revealed = $state<Record<string, boolean>>({});
@@ -23,7 +24,7 @@
 
     let filtered = $derived(
         data.items
-            .filter((i) => active === 'הכל' || i.cat === active)
+            .filter((i) => active === 'הכל' || (active === FREE_FILTER ? i.isFree : i.cat === active))
             .filter((i) => {
                 const q = query.trim();
                 if (!q) return true;
@@ -40,8 +41,8 @@
 
 <PageHero
     icon="🛍️"
-    title="מוצרים למכירה בשכונה"
-    subtitle="שכן מוכר לשכן - ללא עמלות, ללא תיווך. תומכים בקהילה המקומית."
+    title="מוצרים למכירה ולמסירה בשכונה"
+    subtitle="שכן לשכן - למכירה או במסירה חינם. ללא עמלות, ללא תיווך. תומכים בקהילה המקומית."
     gradient="from-emerald-900/40 to-teal-900/40"
 />
 
@@ -87,7 +88,11 @@
                     <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                         {p.cat}
                     </span>
-                    <div class="text-2xl font-black text-white">₪{p.price.toLocaleString('he-IL')}</div>
+                    {#if p.isFree}
+                        <div class="text-lg font-black text-green-400 flex items-center gap-1">🎁 חינם</div>
+                    {:else}
+                        <div class="text-2xl font-black text-white">₪{p.price.toLocaleString('he-IL')}</div>
+                    {/if}
                 </div>
                 <h3 class="text-white font-bold text-base mb-2 leading-snug">{p.title}</h3>
                 <div class="flex items-center justify-between text-xs text-gray-400 mb-3">
