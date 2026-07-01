@@ -16,6 +16,9 @@
              : tag === 'דיון' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
              : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40';
     }
+
+    let activeTag = $state('הכל');
+    let filtered = $derived(activeTag === 'הכל' ? news : news.filter(n => n.tag === activeTag));
 </script>
 
 <svelte:head><title>חדשות - ועדי שכונות ארצי</title></svelte:head>
@@ -25,12 +28,15 @@
 <div class="flex items-center gap-2 mb-4 text-sm">
     <span class="text-gray-400">סינון:</span>
     {#each ['הכל', 'ניצחון', 'מאבק', 'דיון', 'פנייה'] as f}
-        <button class="px-3 py-1 rounded-full bg-white/5 hover:bg-white/15 text-white border border-white/10 transition-colors">{f}</button>
+        <button
+            onclick={() => (activeTag = f)}
+            class="px-3 py-1 rounded-full border transition-colors {activeTag === f ? 'bg-blue-600 text-white border-blue-500 font-bold' : 'bg-white/5 hover:bg-white/15 text-white border-white/10'}"
+        >{f}</button>
     {/each}
 </div>
 
 <div class="space-y-3">
-    {#each news as item}
+    {#each filtered as item}
         <article class="rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 p-4 transition-colors">
             <div class="flex items-start justify-between gap-3 flex-wrap">
                 <div class="flex-1 min-w-0">
@@ -47,6 +53,9 @@
             </div>
         </article>
     {/each}
+    {#if filtered.length === 0}
+        <div class="text-center py-10 text-gray-400">אין ידיעות בקטגוריה זו.</div>
+    {/if}
 </div>
 
 <p class="mt-6 text-xs text-gray-500 text-center">

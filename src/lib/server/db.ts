@@ -402,6 +402,161 @@ export async function getResolvedCount(category: string): Promise<number> {
 }
 
 // ============================================================
+// ---- Engagement (RSVP / הצטרפות למאבק / הצבעה) ----
+// רשומת מעורבות גנרית שנשמרת בקולקציית items המשותפת תחת
+// קטגוריה מבודדת. kind מבחין בין סוגי הפעולה, target = מזהה
+// הפריט הסטטי (אירוע/מאבק/הצבעה), choice = בחירה בהצבעה.
+// ============================================================
+
+// לוח "מוצרים למכירה בשכונה" - קטגוריה מבודדת בקולקציית items המשותפת
+export const MARKETPLACE_CATEGORY = 'nc_marketplace';
+
+export const ENGAGEMENT_CATEGORY = 'nc_engagement';
+
+export type EngagementKind = 'rsvp' | 'join' | 'vote';
+
+export interface Engagement {
+    id: string;
+    kind: EngagementKind;
+    target: string;
+    choice: string;
+    user_id: string;
+}
+
+function mapEngagement(it: DbItem): Engagement {
+    let ef: Record<string, unknown> = {};
+    try { ef = it.extra_fields ? JSON.parse(it.extra_fields) : {}; } catch { ef = {}; }
+    return {
+        id:      it.id,
+        kind:    String(ef.kind   ?? '') as EngagementKind,
+        target:  String(ef.target ?? ''),
+        choice:  String(ef.choice ?? ''),
+        user_id: it.user_id ?? '',
+    };
+}
+
+/** כל רשומות המעורבות של משתמש (לסימון מצב "אישרת"/"הצבעת") */
+export async function getUserEngagements(userId: string, kind?: EngagementKind): Promise<Engagement[]> {
+    try {
+        const res = await strapiGet<{ data: StrapiItem[] }>('/api/items', {
+            'filters[category][$eq]': ENGAGEMENT_CATEGORY,
+            'filters[user_id][$eq]':  userId,
+            'pagination[limit]':      '1000',
+        });
+        const list = (res.data ?? []).map(mapStrapiItem).map(mapEngagement);
+        return kind ? list.filter(e => e.kind === kind) : list;
+    } catch (e) {
+        if (e instanceof StrapiContentTypeError) return [];
+        throw e;
+    }
+}
+
+/** ספירת מעורבות אמיתית לכל target (ולכל choice בהצבעות) מסוג נתון */
+export async function getEngagementCounts(
+    kind: EngagementKind,
+): Promise<Record<string, { total: number; choices: Record<string, number> }>> {
+    const counts: Record<string, { total: number; choices: Record<string, number> }> = {};
+    try {
+        const res = await strapiGet<{ data: StrapiItem[] }>('/api/items', {
+            'filters[category][$eq]': ENGAGEMENT_CATEGORY,
+            'pagination[limit]':      '5000',
+        });
+        for (const raw of res.data ?? []) {
+            const e = mapEngagement(mapStrapiItem(raw));
+            if (e.kind !== kind || !e.target) continue;
+            if (!counts[e.target]) counts[e.target] = { total: 0, choices: {} };
+            counts[e.target].total += 1;
+            if (e.choice) counts[e.target].choices[e.choice] = (counts[e.target].choices[e.choice] ?? 0) + 1;
+        }
+    } catch (e) {
+        if (e instanceof StrapiContentTypeError) return counts;
+        throw e;
+    }
+    return counts;
+}
+
+/** מוצא רשומת מעורבות קיימת של המשתמש עבור kind+target (למניעת כפילות) */
+async function findEngagement(userId: string, kind: EngagementKind, target: string): Promise<Engagement | undefined> {
+    const list = await getUserEngagements(userId, kind);
+    return list.find(e => e.target === target);
+}
+
+export interface ToggleResult { active: boolean; choice: string }
+
+/**
+ * מפעיל/מכבה מעורבות (RSVP/join) או קובע/משנה בחירת הצבעה.
+ * - rsvp/join: אם קיים → מוחק (ביטול); אחרת יוצר.
+ * - vote: אם קיים עם אותה בחירה → מוחק; אם בחירה שונה → מעדכן; אחרת יוצר.
+ */
+export async function toggleEngagement(
+    userId: string,
+    kind: EngagementKind,
+    target: string,
+    choice = '',
+): Promise<ToggleResult> {
+    const existing = await findEngagement(userId, kind, target);
+
+    if (existing) {
+        if (kind === 'vote' && choice && existing.choice !== choice) {
+            await updateItem(existing.id, { extra_fields: { kind, target, choice } });
+            return { active: true, choice };
+        }
+        await deleteItem(existing.id);
+        return { active: false, choice: '' };
+    }
+
+    await createItem({
+        category:     ENGAGEMENT_CATEGORY,
+        label:        `${kind}:${target}`,
+        user_id:      userId,
+        icon:         '✅',
+        color:        'emerald',
+        extra_fields: { kind, target, choice },
+    });
+    return { active: true, choice };
+}
+
+// ============================================================
+// ---- Discussions (דיונים שנפתחו ע"י משתמשים) ----
+// ============================================================
+
+export const DISCUSSION_CATEGORY = 'nc_discussion';
+
+export interface Discussion {
+    id: string;
+    title: string;
+    author: string;
+    created_at: string;
+}
+
+export async function getDiscussions(): Promise<Discussion[]> {
+    try {
+        const items = await getItemsByCategory(DISCUSSION_CATEGORY);
+        return items.map(it => ({
+            id:         it.id,
+            title:      it.label,
+            author:     it.contact || 'תושב/ה',
+            created_at: it.created_at,
+        }));
+    } catch (e) {
+        if (e instanceof StrapiContentTypeError) return [];
+        throw e;
+    }
+}
+
+export async function createDiscussion(title: string, author: string, userId: string): Promise<Discussion> {
+    const item = await createItem({
+        category: DISCUSSION_CATEGORY,
+        label:    title,
+        contact:  author,
+        user_id:  userId,
+        icon:     '💬',
+        color:    'purple',
+    });
+    return { id: item.id, title: item.label, author, created_at: item.created_at };
+}
+
+// ============================================================
 // ---- Events ----
 // ============================================================
 

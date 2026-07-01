@@ -1,10 +1,14 @@
 <script lang="ts">
     import PageHero from '$lib/components/PageHero.svelte';
+    import { toggleEngagement } from '$lib/engagement';
+
+    let { data } = $props();
 
     const stages = ['פנייה ראשונית', 'דיון פנימי', 'הגשה רשמית', 'דיון משפטי/ציבורי', 'הכרעה'];
 
     const protestTopics = [
         {
+            id: 'protest-0',
             title: 'נאבקים בתקנות WHO',
             emoji: '🌐',
             tag: 'בריאות עולמית',
@@ -12,6 +16,7 @@
             cta: 'הצטרפו למאבק'
         },
         {
+            id: 'protest-1',
             title: 'נאבקים במטבע הריכוזי - CBDC',
             emoji: '💵',
             tag: 'חופש כלכלי',
@@ -19,6 +24,7 @@
             cta: 'הצטרפו למאבק'
         },
         {
+            id: 'protest-2',
             title: 'נאבקים בריסוסים',
             emoji: '🌥️',
             tag: 'סביבה ובריאות',
@@ -26,6 +32,7 @@
             cta: 'הצטרפו למאבק'
         },
         {
+            id: 'protest-3',
             title: 'נאבקים בגזילת ילדים מהוריהם',
             emoji: '👨‍👩‍👧',
             tag: 'זכויות המשפחה',
@@ -153,6 +160,30 @@
             emoji: '🌳'
         }
     ];
+
+    // מזהה יציב למאבק לפי אינדקס (המערך סטטי)
+    const struggleId = (i: number) => `struggle-${i}`;
+
+    // מצב הצטרפות + תוספת תומכים אמיתית (baseline + מעורבות)
+    const allIds = [...protestTopics.map(p => p.id), ...items.map((_, i) => struggleId(i))];
+    let joined = $state<Record<string, boolean>>(
+        Object.fromEntries(allIds.map(id => [id, data.myJoins.includes(id)]))
+    );
+    let extra = $state<Record<string, number>>(
+        Object.fromEntries(allIds.map(id => [id, data.counts[id] ?? 0]))
+    );
+    let busy = $state<Record<string, boolean>>({});
+
+    async function join(id: string) {
+        if (busy[id]) return;
+        busy = { ...busy, [id]: true };
+        const res = await toggleEngagement('join', id, '', '/struggles');
+        if (res) {
+            joined = { ...joined, [id]: res.active };
+            extra = { ...extra, [id]: (extra[id] ?? 0) + (res.active ? 1 : -1) };
+        }
+        busy = { ...busy, [id]: false };
+    }
 </script>
 
 <svelte:head><title>מאבקים ונצחונות - ועדי שכונות ארצי</title></svelte:head>
@@ -186,9 +217,14 @@
                     </div>
                 </div>
                 <p class="text-sm text-gray-300 leading-relaxed mb-3">{p.desc}</p>
-                <div class="flex items-center justify-end">
-                    <button class="px-4 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-sm hover:scale-105 transition-transform">
-                        {p.cta}
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400">{#if extra[p.id] > 0}{extra[p.id].toLocaleString('he-IL')} הצטרפו{/if}</span>
+                    <button
+                        onclick={() => join(p.id)}
+                        disabled={busy[p.id]}
+                        class="px-4 py-1.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50 {joined[p.id] ? 'bg-cyan-500/25 border border-cyan-500/50 text-cyan-200' : 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white'}"
+                    >
+                        {joined[p.id] ? '✓ הצטרפת' : p.cta}
                     </button>
                 </div>
             </div>
@@ -216,7 +252,7 @@
     <p class="text-center text-gray-400 text-sm mb-6">מעקב חי אחר שלב כל מאבק</p>
 
     <div class="space-y-4">
-        {#each items as s}
+        {#each items as s, i}
             <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
                 <!-- שורת כותרת -->
                 <div class="flex items-start justify-between gap-3 mb-3 flex-wrap">
@@ -232,14 +268,18 @@
                         </div>
                         <h3 class="text-white font-bold text-lg">{s.title}</h3>
                     </div>
-                    <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold text-sm whitespace-nowrap hover:scale-105 transition-transform">
-                        הצטרף למאבק
+                    <button
+                        onclick={() => join(struggleId(i))}
+                        disabled={busy[struggleId(i)] || s.status === 'הושג'}
+                        class="px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors disabled:opacity-50 {joined[struggleId(i)] ? 'bg-orange-500/25 border border-orange-500/50 text-orange-200' : 'bg-gradient-to-r from-red-600 to-orange-600 text-white'}"
+                    >
+                        {s.status === 'הושג' ? '🏆 הושג' : joined[struggleId(i)] ? '✓ הצטרפת' : 'הצטרף למאבק'}
                     </button>
                 </div>
 
                 <!-- מונים והתקדמות אחוזים -->
                 <div class="flex items-center justify-between text-xs text-gray-300 mb-2">
-                    <span><strong class="text-white">{s.vaadim}</strong> ועדי שכונות · <strong class="text-white">{s.supporters.toLocaleString('he-IL')}</strong> תומכים</span>
+                    <span><strong class="text-white">{s.vaadim}</strong> ועדי שכונות · <strong class="text-white">{(s.supporters + (extra[struggleId(i)] ?? 0)).toLocaleString('he-IL')}</strong> תומכים</span>
                     <span>{s.progress}%</span>
                 </div>
                 <div class="h-2 bg-white/10 rounded-full overflow-hidden mb-4">
