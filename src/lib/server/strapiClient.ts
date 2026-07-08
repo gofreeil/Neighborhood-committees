@@ -198,6 +198,25 @@ export async function strapiLogin(identifier: string, password: string): Promise
     return res.json() as Promise<StrapiAuthResponse>;
 }
 
+/**
+ * אימות JWT מול ה-Strapi המשותף והחזרת המשתמש (GET /api/users/me).
+ * משמש את כניסת ה-SSO ("יוצאים לחירות"): העוגייה המשותפת gofreeil-auth מכילה
+ * JWT שנשתל ע"י אתר אחר תחת gofreeil.com — מאמתים אותו וקובעים מי המשתמש.
+ * מחזיר null אם ה-JWT חסר/פג/לא תקין.
+ */
+export async function getStrapiMe(jwt: string): Promise<StrapiUser | null> {
+    if (!jwt) return null;
+    try {
+        const res = await fetch(STRAPI_URL + '/api/users/me', {
+            headers: { Authorization: `Bearer ${jwt}` },
+        });
+        if (!res.ok) return null;
+        return (await res.json()) as StrapiUser;
+    } catch {
+        return null;
+    }
+}
+
 // ============================================================
 // ---- Users-Permissions User API ----
 // ============================================================

@@ -32,10 +32,10 @@
                     <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
                 </div>
                 <div class="min-w-0 flex-1">
-                    <h1 class="bg-clip-text text-lg font-black text-transparent leading-tight truncate" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <h1 class="bg-clip-text text-lg font-black text-transparent leading-tight" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                         ועדי שכונות ארצי
                     </h1>
-                    <p class="text-xs text-gray-400 leading-tight truncate">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
+                    <p class="text-xs text-gray-400 leading-tight">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                 </div>
             </a>
             <button
