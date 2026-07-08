@@ -8,6 +8,7 @@ export interface CoordinatorRow {
     city: string;
     neighborhoods: string[];
     residentsCount: number;
+    itemsOnMap: number;
 }
 
 // המקור: אתר "קהילה בשכונה" - שם מוגדרים הרכזים ונרשמים התושבים
