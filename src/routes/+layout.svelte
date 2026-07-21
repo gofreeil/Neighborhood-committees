@@ -6,11 +6,16 @@
     import Footer from '$lib/components/Footer.svelte';
     import AdsSidebar from '$lib/components/AdsSidebar.svelte';
     import MobileAdsDrawer from '$lib/components/MobileAdsDrawer.svelte';
+    import WelcomeScreen from '$lib/components/WelcomeScreen.svelte';
 
     let { children, data } = $props();
 </script>
 
 <a href="#main" class="skip-link">דלג לתוכן</a>
+
+<!-- מסך פתיחה אחרי הרשמה / זיהוי ראשון — גלובלי, מופעל ע"י ?welcome ב-URL -->
+<WelcomeScreen />
+
 <Header userEmail={data?.userEmail ?? null} />
 
 <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8 py-6">
