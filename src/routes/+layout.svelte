@@ -13,8 +13,8 @@
 
 <a href="#main" class="skip-link">דלג לתוכן</a>
 
-<!-- מסך פתיחה אחרי הרשמה / זיהוי ראשון — גלובלי, מופעל ע"י ?welcome ב-URL -->
-<WelcomeScreen />
+<!-- מסך פתיחה אחרי התחברות / הרשמה — גלובלי, מופעל ע"י ?welcome ב-URL -->
+<WelcomeScreen userName={data?.userName ?? ''} />
 
 <Header userEmail={data?.userEmail ?? null} />
 
