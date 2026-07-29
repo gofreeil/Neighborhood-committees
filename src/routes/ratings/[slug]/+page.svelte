@@ -4,7 +4,7 @@
     import { getCityBySlug, CATEGORIES, scoreColor, scoreHex, cities, formatPopulation } from '$lib/citiesData';
 
     const slug = $derived(page.params.slug);
-    const city = $derived(getCityBySlug(slug));
+    const city = $derived(slug ? getCityBySlug(slug) : undefined);
 
     // ממוצע ארצי לכל קטגוריה (להשוואה)
     const national = $derived.by(() => {

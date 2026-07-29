@@ -58,7 +58,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         console.warn('[hooks] auth handle threw - continuing anonymously:', err);
         // fallback: מגדיר auth בטוח כדי שקוד downstream לא יזרוק TypeError
         if (!event.locals.auth) {
-            (event.locals as Record<string, unknown>).auth = async () => null;
+            event.locals.auth = async () => null;
         }
         return await resolve(event);
     }
