@@ -1,9 +1,22 @@
 <script lang="ts">
     import PageHero from '$lib/components/PageHero.svelte';
     import { onMount } from 'svelte';
+    import { invalidateAll } from '$app/navigation';
     import { SvelteSet } from 'svelte/reactivity';
     let { data } = $props();
     const coordinators = $derived(data.coordinators ?? []);
+
+    // רענון: מריץ מחדש את ה-load בשרת ומביא את הרכזים העדכניים
+    let refreshing = $state(false);
+    async function refresh() {
+        if (refreshing) return;
+        refreshing = true;
+        try {
+            await invalidateAll();
+        } finally {
+            refreshing = false;
+        }
+    }
 
     // בחירת שורות: סימון וי בריבוע לכל רכז
     const selected = new SvelteSet<string>();
@@ -18,6 +31,23 @@
     let selectAllEl: HTMLInputElement | undefined = $state();
     $effect(() => {
         if (selectAllEl) selectAllEl.indeterminate = someSelected;
+    });
+
+    // רמז הגלילה לצדדים מוצג רק אם הטבלה באמת רחבה מהמסגרת
+    let tableWrap: HTMLDivElement | undefined = $state();
+    let scrollableX = $state(false);
+    $effect(() => {
+        const el = tableWrap;
+        if (!el) {
+            scrollableX = false;
+            return;
+        }
+        const check = () => (scrollableX = el.scrollWidth - el.clientWidth > 4);
+        check();
+        const ro = new ResizeObserver(check);
+        ro.observe(el);
+        if (el.firstElementChild) ro.observe(el.firstElementChild);
+        return () => ro.disconnect();
     });
 
     // הכותרת מוקפאת מתחת לניווט העליון של האתר (Header דביק בגובה משתנה)
@@ -41,38 +71,49 @@
 
 <PageHero icon="👥" title="רכזי השכונות" subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 
+<!-- סרגל כלים: רענון (בכל הגרסאות) + מידע על השורות שנבחרו -->
+<div class="-mt-4 sm:mt-0 mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-cyan-200">
+    <button type="button" onclick={refresh} disabled={refreshing}
+        class="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 sm:px-3 sm:py-1.5 hover:bg-white/10 transition-colors disabled:opacity-60"
+        aria-label="רענן את רשימת הרכזים">
+        <span class="text-sm sm:text-base leading-none" class:spin={refreshing} aria-hidden="true">🔄</span>
+        {refreshing ? 'מרענן…' : 'רענן'}
+    </button>
+    {#if selected.size > 0}
+        <span class="font-bold">נבחרו {selected.size} רכזים</span>
+        <button type="button" onclick={() => selected.clear()}
+            class="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 sm:px-3 sm:py-1.5 hover:bg-white/10 transition-colors">
+            נקה בחירה
+        </button>
+    {/if}
+    {#if scrollableX}
+        <span class="ms-auto text-[11px] text-gray-400 lg:hidden">↔ ניתן לגלול את הטבלה לצדדים</span>
+    {/if}
+</div>
+
 {#if coordinators.length === 0}
     <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
         <div class="text-4xl mb-3">🗂️</div>
         <p class="text-gray-300">עדיין לא הוגדרו רכזי שכונות.</p>
     </div>
 {:else}
-    {#if selected.size > 0}
-        <div class="mb-3 flex items-center gap-3 text-sm text-cyan-200">
-            <span class="font-bold">נבחרו {selected.size} רכזים</span>
-            <button type="button" onclick={() => selected.clear()}
-                class="rounded-lg border border-white/15 bg-white/5 px-3 py-1 hover:bg-white/10 transition-colors">
-                נקה בחירה
-            </button>
-        </div>
-    {/if}
-    <div class="rounded-2xl border border-white/10">
-        <!-- הטבלה יושבת ישר על הדף (בלי גלילה פנימית); הכותרת דביקה לחלון -->
-        <table class="w-full border-collapse text-right">
+    <!-- עד lg: גלילה אופקית בתוך המסגרת (הטבלה רחבה). מ-lg: יושבת ישר על הדף והכותרת דביקה לחלון -->
+    <div bind:this={tableWrap} class="table-wrap rounded-2xl border border-white/10">
+        <table class="w-full border-collapse text-right text-[13px] sm:text-base">
             <thead>
-                <tr class="sticky z-20 text-xs uppercase tracking-wide text-cyan-200/80"
+                <tr class="sticky z-20 text-[10px] sm:text-xs uppercase tracking-wide text-cyan-200/80"
                     style="top:{headerOffset}px;">
-                    <th class="py-3 px-4 border-b border-white/15 rounded-tr-2xl w-12 text-center" style="background:#0d1426;">
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 border-b border-white/15 rounded-tr-2xl w-9 sm:w-12 text-center" style="background:#0d1426;">
                         <input type="checkbox" bind:this={selectAllEl} checked={allSelected} onchange={toggleAll}
-                            class="h-5 w-5 rounded accent-cyan-500 cursor-pointer align-middle" aria-label="בחר הכול" />
+                            class="h-4 w-4 sm:h-5 sm:w-5 rounded accent-cyan-500 cursor-pointer align-middle" aria-label="בחר הכול" />
                     </th>
-                    <th class="py-3 px-4 font-semibold w-16 border-b border-white/15" style="background:#0d1426;"><span class="sr-only">תמונה</span></th>
-                    <th class="py-3 px-4 font-semibold border-b border-white/15" style="background:#0d1426;">שם הרכז</th>
-                    <th class="py-3 px-4 font-semibold border-b border-white/15" style="background:#0d1426;">עיר</th>
-                    <th class="py-3 px-4 font-semibold border-b border-white/15" style="background:#0d1426;">שכונה</th>
-                    <th class="py-3 px-4 font-semibold text-center border-b border-white/15" style="background:#0d1426;">תושבים רשומים</th>
-                    <th class="py-3 px-4 font-semibold text-center border-b border-white/15" style="background:#0d1426;">פריטים על המפה</th>
-                    <th class="py-3 px-4 font-semibold border-b border-white/15 rounded-tl-2xl" style="background:#0d1426;">טלפון</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold w-10 sm:w-16 border-b border-white/15" style="background:#0d1426;"><span class="sr-only">תמונה</span></th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold border-b border-white/15 whitespace-nowrap" style="background:#0d1426;">שם הרכז</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold border-b border-white/15 whitespace-nowrap" style="background:#0d1426;">עיר</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold border-b border-white/15 whitespace-nowrap" style="background:#0d1426;">שכונה</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold text-center border-b border-white/15 whitespace-nowrap" style="background:#0d1426;">תושבים רשומים</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold text-center border-b border-white/15 whitespace-nowrap" style="background:#0d1426;">פריטים על המפה</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 font-semibold border-b border-white/15 rounded-tl-2xl whitespace-nowrap" style="background:#0d1426;">טלפון</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,40 +123,40 @@
                                 ? 'background:rgba(34,211,238,0.12);'
                                 : (i % 2 === 1 ? 'background:rgba(255,255,255,0.025);' : '')}>
                             <!-- סימון בחירה -->
-                            <td class="py-3 px-4 text-center">
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-center">
                                 <input type="checkbox" checked={selected.has(c.id)} onchange={() => toggle(c.id)}
-                                    class="h-5 w-5 rounded accent-cyan-500 cursor-pointer align-middle" aria-label={`בחר את ${c.name}`} />
+                                    class="h-4 w-4 sm:h-5 sm:w-5 rounded accent-cyan-500 cursor-pointer align-middle" aria-label={`בחר את ${c.name}`} />
                             </td>
                             <!-- תמונה (ריק אם לא הועלתה תמונה) -->
-                            <td class="py-3 px-4">
+                            <td class="py-1 px-2 sm:py-3 sm:px-4">
                                 {#if c.avatar_url}
                                     <img src={c.avatar_url} alt={c.name}
-                                        class="w-11 h-11 rounded-full object-cover border border-white/20" />
+                                        class="w-7 h-7 sm:w-11 sm:h-11 rounded-full object-cover border border-white/20" />
                                 {:else}
-                                    <div class="w-11 h-11" aria-hidden="true"></div>
+                                    <div class="w-7 h-7 sm:w-11 sm:h-11" aria-hidden="true"></div>
                                 {/if}
                             </td>
                             <!-- שם -->
-                            <td class="py-3 px-4 text-white font-bold whitespace-nowrap">{c.name}</td>
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-white font-bold whitespace-nowrap">{c.name}</td>
                             <!-- עיר -->
-                            <td class="py-3 px-4 text-gray-300 whitespace-nowrap">{c.city || '—'}</td>
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-gray-300 whitespace-nowrap">{c.city || '—'}</td>
                             <!-- שכונה -->
-                            <td class="py-3 px-4 text-gray-300">{c.neighborhoods.length ? c.neighborhoods.join(', ') : '—'}</td>
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-gray-300">{c.neighborhoods.length ? c.neighborhoods.join(', ') : '—'}</td>
                             <!-- תושבים רשומים -->
-                            <td class="py-3 px-4 text-center">
-                                <span class="inline-block min-w-[2.5rem] rounded-lg bg-cyan-500/10 px-2 py-1 text-lg font-bold text-cyan-300">
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-center">
+                                <span class="inline-block min-w-[1.75rem] sm:min-w-[2.5rem] rounded-md sm:rounded-lg bg-cyan-500/10 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[13px] sm:text-lg font-bold text-cyan-300">
                                     {c.residentsCount}
                                 </span>
                             </td>
                             <!-- פריטים שכבר על המפה בשכונה (בעלי קואורדינטות) -->
-                            <td class="py-3 px-4 text-center">
-                                <span class="inline-block min-w-[2.5rem] rounded-lg bg-emerald-500/10 px-2 py-1 text-lg font-bold text-emerald-300"
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-center">
+                                <span class="inline-block min-w-[1.75rem] sm:min-w-[2.5rem] rounded-md sm:rounded-lg bg-emerald-500/10 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[13px] sm:text-lg font-bold text-emerald-300 whitespace-nowrap"
                                     title="פריטים שכבר מופיעים על המפה בשכונה">
                                     📍 {c.itemsOnMap ?? 0}
                                 </span>
                             </td>
                             <!-- טלפון (בקצה השמאלי) -->
-                            <td class="py-3 px-4 whitespace-nowrap">
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 whitespace-nowrap">
                                 {#if c.phone}
                                     <a href={`tel:${c.phone}`} class="text-cyan-300 hover:underline" dir="ltr">{c.phone}</a>
                                 {:else}
@@ -128,3 +169,40 @@
             </table>
     </div>
 {/if}
+
+<style>
+    /* אנימציית סיבוב לאייקון הרענון בזמן טעינה */
+    .spin {
+        display: inline-block;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* נייד וטאבלט: הטבלה רחבה מהמסך — גלילה/משיכה אופקית בתוך המסגרת */
+    @media (max-width: 1023px) {
+        .table-wrap {
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* בתוך מכל גלילה אין משמעות ל-sticky אנכי, ולכן הכותרת רגילה */
+        .table-wrap thead tr {
+            position: static;
+        }
+        /* פס גלילה דק ונראה, כרמז שאפשר למשוך לצדדים */
+        .table-wrap::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-wrap::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: rgba(34, 211, 238, 0.4);
+            border-radius: 999px;
+        }
+    }
+</style>
