@@ -1,9 +1,22 @@
 <script lang="ts">
     import PageHero from '$lib/components/PageHero.svelte';
     import { enhance } from '$app/forms';
+    import { formDraft, clearDraft, resumeDraft } from '$lib/formDraft';
 
     let { data, form } = $props();
     let submitting = $state(false);
+
+    // טיוטה אוטומטית — דיון שנכתב ולא נשלח לא הולך לאיבוד ביציאה מהדף
+    const DRAFT_KEY = 'nc-discussion-new';
+    let draftRestored = $state(false);
+    let formEl = $state<HTMLFormElement | null>(null);
+
+    function discardDraft() {
+        clearDraft(DRAFT_KEY);
+        resumeDraft(DRAFT_KEY);
+        formEl?.reset();
+        draftRestored = false;
+    }
 </script>
 
 <svelte:head><title>פתיחת דיון חדש - ועדי שכונות ארצי</title></svelte:head>
@@ -21,19 +34,35 @@
     </div>
 {/if}
 
+{#if draftRestored}
+    <div class="max-w-2xl mx-auto mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-purple-500/40 bg-purple-900/20 px-4 py-3 text-sm text-purple-100">
+        <span class="font-bold">💾 שחזרנו את מה שכתבת קודם — הטופס ממשיך מהמקום שעצרת.</span>
+        <button type="button" onclick={discardDraft}
+            class="rounded-full border border-purple-400/50 bg-purple-900/50 px-3 py-1 text-xs font-bold hover:bg-purple-800/60">
+            התחל מטופס ריק
+        </button>
+    </div>
+{/if}
+
 <form
+    bind:this={formEl}
     method="POST"
     dir="rtl"
     class="max-w-2xl mx-auto space-y-4"
+    use:formDraft={{ key: DRAFT_KEY, onRestore: () => (draftRestored = true) }}
     use:enhance={() => {
         submitting = true;
-        return async ({ update }) => { await update(); submitting = false; };
+        return async ({ result, update }) => {
+            if (result.type === 'redirect' || result.type === 'success') clearDraft(DRAFT_KEY);
+            await update();
+            submitting = false;
+        };
     }}
 >
     <div>
         <label for="title" class="block text-sm text-gray-300 mb-1.5">נושא הדיון <span class="text-red-400">*</span></label>
         <input id="title" name="title" type="text" required minlength="8" maxlength="160"
-            value={form?.title ?? ''}
+            defaultValue={form?.title ?? ''}
             placeholder="לדוגמה: איך מתמודדים עם בנייה ללא היתר ברחוב הראשי?"
             class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500" />
     </div>
@@ -41,7 +70,7 @@
     <div>
         <label for="author" class="block text-sm text-gray-300 mb-1.5">מפרסם/ת</label>
         <input id="author" name="author" type="text" maxlength="80"
-            value={data.author ?? ''}
+            defaultValue={data.author ?? ''}
             placeholder="השם שיוצג לצד הדיון"
             class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500" />
     </div>

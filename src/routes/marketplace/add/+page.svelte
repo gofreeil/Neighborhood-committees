@@ -1,11 +1,24 @@
 <script lang="ts">
     import PageHero from '$lib/components/PageHero.svelte';
     import { enhance } from '$app/forms';
+    import { formDraft, clearDraft, resumeDraft } from '$lib/formDraft';
 
     let { data, form } = $props();
 
     const categories = ['רהיטים', 'מוצרי חשמל', 'ילדים וצעצועים', 'כלי בית', 'ספרים', 'ספורט', 'גינה', 'שונות'];
     let submitting = $state(false);
+
+    // טיוטה אוטומטית — יציאה מהדף או רענון לא מוחקים את מה שהוקלד
+    const DRAFT_KEY = 'nc-marketplace-add';
+    let draftRestored = $state(false);
+    let formEl = $state<HTMLFormElement | null>(null);
+
+    function discardDraft() {
+        clearDraft(DRAFT_KEY);
+        resumeDraft(DRAFT_KEY);
+        formEl?.reset();
+        draftRestored = false;
+    }
 </script>
 
 <svelte:head><title>פרסום מוצר - ועדי שכונות ארצי</title></svelte:head>
@@ -23,13 +36,27 @@
     </div>
 {/if}
 
+{#if draftRestored}
+    <div class="max-w-2xl mx-auto mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-emerald-500/40 bg-emerald-900/20 px-4 py-3 text-sm text-emerald-100">
+        <span class="font-bold">💾 שחזרנו את מה שמילאת קודם — הטופס ממשיך מהמקום שעצרת.</span>
+        <button type="button" onclick={discardDraft}
+            class="rounded-full border border-emerald-400/50 bg-emerald-900/50 px-3 py-1 text-xs font-bold hover:bg-emerald-800/60">
+            התחל מטופס ריק
+        </button>
+    </div>
+{/if}
+
 <form
+    bind:this={formEl}
     method="POST"
     dir="rtl"
     class="max-w-2xl mx-auto space-y-4"
+    use:formDraft={{ key: DRAFT_KEY, onRestore: () => (draftRestored = true) }}
     use:enhance={() => {
         submitting = true;
-        return async ({ update }) => {
+        return async ({ result, update }) => {
+            // פורסם — הטיוטה המקומית סיימה את תפקידה (מנקים לפני הניווט)
+            if (result.type === 'redirect' || result.type === 'success') clearDraft(DRAFT_KEY);
             await update();
             submitting = false;
         };
@@ -38,7 +65,7 @@
     <div>
         <label for="title" class="block text-sm text-gray-300 mb-1.5">שם המוצר <span class="text-red-400">*</span></label>
         <input id="title" name="title" type="text" required maxlength="120"
-            value={form?.values?.title ?? ''}
+            defaultValue={form?.values?.title ?? ''}
             placeholder="לדוגמה: ספה תלת מושבית - כמעט חדשה"
             class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
     </div>
@@ -47,7 +74,7 @@
         <div>
             <label for="price" class="block text-sm text-gray-300 mb-1.5">מחיר (₪) <span class="text-red-400">*</span></label>
             <input id="price" name="price" type="number" min="0" step="1" required
-                value={form?.values?.priceRaw ?? ''}
+                defaultValue={form?.values?.priceRaw ?? ''}
                 placeholder="450"
                 class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
         </div>
@@ -73,14 +100,14 @@
         <div>
             <label for="seller_name" class="block text-sm text-gray-300 mb-1.5">שם המוכר</label>
             <input id="seller_name" name="seller_name" type="text" maxlength="60"
-                value={data.name ?? ''}
+                defaultValue={data.name ?? ''}
                 placeholder="השם שיוצג לקונים"
                 class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
         </div>
         <div>
             <label for="phone" class="block text-sm text-gray-300 mb-1.5">טלפון ליצירת קשר <span class="text-red-400">*</span></label>
             <input id="phone" name="phone" type="tel" required
-                value={form?.values?.phone ?? ''}
+                defaultValue={form?.values?.phone ?? ''}
                 placeholder="050-1234567"
                 class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
         </div>
@@ -90,14 +117,14 @@
         <div>
             <label for="city" class="block text-sm text-gray-300 mb-1.5">עיר</label>
             <input id="city" name="city" type="text" maxlength="60"
-                value={data.city ?? ''}
+                defaultValue={data.city ?? ''}
                 placeholder="עיר"
                 class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
         </div>
         <div>
             <label for="neighborhood" class="block text-sm text-gray-300 mb-1.5">שכונה</label>
             <input id="neighborhood" name="neighborhood" type="text" maxlength="60"
-                value={data.neighborhood ?? ''}
+                defaultValue={data.neighborhood ?? ''}
                 placeholder="שכונה"
                 class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500" />
         </div>
