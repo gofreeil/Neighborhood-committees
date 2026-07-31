@@ -6,6 +6,26 @@
     let { data } = $props();
     const coordinators = $derived(data.coordinators ?? []);
 
+    // סינון: חיפוש חופשי (שם רכז / עיר / שכונה) + בחירת עיר מרשימה
+    let query = $state('');
+    let cityFilter = $state('');
+    const cities = $derived(
+        [...new Set(coordinators.map((c) => c.city).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'he'))
+    );
+    const filtered = $derived(
+        coordinators.filter((c) => {
+            if (cityFilter && c.city !== cityFilter) return false;
+            const q = query.trim().toLowerCase();
+            if (!q) return true;
+            return [c.name, c.city, ...(c.neighborhoods ?? [])].join(' ').toLowerCase().includes(q);
+        })
+    );
+    const isFiltering = $derived(query.trim() !== '' || cityFilter !== '');
+    function clearFilters() {
+        query = '';
+        cityFilter = '';
+    }
+
     // רענון: מריץ מחדש את ה-load בשרת ומביא את הרכזים העדכניים
     let refreshing = $state(false);
     async function refresh() {
@@ -21,11 +41,12 @@
     // בחירת שורות: סימון וי בריבוע לכל רכז
     const selected = new SvelteSet<string>();
     const toggle = (id: string) => (selected.has(id) ? selected.delete(id) : selected.add(id));
-    const allSelected = $derived(coordinators.length > 0 && coordinators.every((c) => selected.has(c.id)));
+    // "בחר הכול" חל על השורות המוצגות בלבד (אחרי סינון)
+    const allSelected = $derived(filtered.length > 0 && filtered.every((c) => selected.has(c.id)));
     const someSelected = $derived(selected.size > 0 && !allSelected);
     function toggleAll() {
-        if (allSelected) selected.clear();
-        else for (const c of coordinators) selected.add(c.id);
+        if (allSelected) for (const c of filtered) selected.delete(c.id);
+        else for (const c of filtered) selected.add(c.id);
     }
     // מצב "חלקי" של checkbox "בחר הכול" (אינו ניתן להגדרה כ-attribute)
     let selectAllEl: HTMLInputElement | undefined = $state();
@@ -71,6 +92,45 @@
 
 <PageHero icon="👥" title="רכזי השכונות" subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 
+<!-- סינון: חיפוש חופשי לפי שם/עיר/שכונה + בחירת עיר -->
+{#if coordinators.length > 0}
+    <div class="-mt-2 sm:mt-0 mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
+        <div class="relative flex-1 min-w-[180px]">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">🔍</span>
+            <input
+                type="text"
+                bind:value={query}
+                placeholder="חיפוש שם רכז / עיר / שכונה..."
+                aria-label="חיפוש שם רכז, עיר או שכונה"
+                class="w-full rounded-xl bg-white/5 border border-white/10 pr-10 pl-9 py-2 sm:py-2.5 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400/50 focus:bg-white/10 transition-colors"
+            />
+            {#if query}
+                <button type="button" onclick={() => (query = '')}
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white" aria-label="נקה חיפוש">✕</button>
+            {/if}
+        </div>
+        <select
+            bind:value={cityFilter}
+            aria-label="סינון לפי עיר"
+            class="rounded-xl bg-white/5 border border-white/10 px-3 py-2 sm:py-2.5 text-sm sm:text-base text-white focus:outline-none focus:border-cyan-400/50 focus:bg-white/10 transition-colors"
+        >
+            <option value="" style="background:#0d1426;">כל הערים</option>
+            {#each cities as city}
+                <option value={city} style="background:#0d1426;">{city}</option>
+            {/each}
+        </select>
+        {#if isFiltering}
+            <button type="button" onclick={clearFilters}
+                class="rounded-xl border border-white/15 bg-white/5 px-3 py-2 sm:py-2.5 text-xs sm:text-sm text-cyan-200 hover:bg-white/10 transition-colors whitespace-nowrap">
+                נקה סינון
+            </button>
+            <span class="text-xs sm:text-sm text-gray-400 whitespace-nowrap">
+                מציג {filtered.length} מתוך {coordinators.length}
+            </span>
+        {/if}
+    </div>
+{/if}
+
 <!-- סרגל כלים: רענון (בכל הגרסאות) + מידע על השורות שנבחרו -->
 <div class="-mt-4 sm:mt-0 mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-cyan-200">
     <button type="button" onclick={refresh} disabled={refreshing}
@@ -96,6 +156,15 @@
         <div class="text-4xl mb-3">🗂️</div>
         <p class="text-gray-300">עדיין לא הוגדרו רכזי שכונות.</p>
     </div>
+{:else if filtered.length === 0}
+    <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
+        <div class="text-4xl mb-3">🔍</div>
+        <p class="text-gray-300">לא נמצאו רכזים התואמים לסינון.</p>
+        <button type="button" onclick={clearFilters}
+            class="mt-3 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm text-cyan-200 hover:bg-white/10 transition-colors">
+            נקה סינון
+        </button>
+    </div>
 {:else}
     <!-- עד lg: גלילה אופקית בתוך המסגרת (הטבלה רחבה). מ-lg: יושבת ישר על הדף והכותרת דביקה לחלון -->
     <div bind:this={tableWrap} class="table-wrap rounded-2xl border border-white/10">
@@ -117,7 +186,7 @@
                 </tr>
             </thead>
             <tbody>
-                    {#each coordinators as c, i (c.id)}
+                    {#each filtered as c, i (c.id)}
                         <tr class="border-b border-white/5 transition-colors hover:bg-white/5"
                             style={selected.has(c.id)
                                 ? 'background:rgba(34,211,238,0.12);'
