@@ -1,8 +1,26 @@
 <script lang="ts">
     import { t } from 'svelte-i18n';
     import { get } from 'svelte/store';
+    import { signOut } from '@auth/sveltekit/client';
 
-    let { userEmail = null }: { userEmail?: string | null } = $props();
+    let { userEmail = null, userName = null }: { userEmail?: string | null; userName?: string | null } = $props();
+
+    // מחובר = יש אימייל בסשן (מגיע מ-+layout.server.ts)
+    const isLoggedIn = $derived(!!userEmail);
+    const displayName = $derived(userName?.trim() || userEmail?.split('@')[0] || 'המשתמש שלי');
+    const initial = $derived(displayName.charAt(0).toUpperCase());
+
+    // יציאה: Auth.js מוחק את הסשן ומפנה ל-/logout שמנקה גם את טוקן ה-Strapi
+    let signingOut = $state(false);
+    async function logout() {
+        if (signingOut) return;
+        signingOut = true;
+        try {
+            await signOut({ redirectTo: '/logout' });
+        } catch {
+            signingOut = false;
+        }
+    }
 
     const nav = [
         { href: '/vision', label: 'החזון' },
@@ -58,13 +76,30 @@
                         {item.label}
                     </a>
                 {/each}
-                <a
-                    href="/login"
-                    onclick={() => (mobileOpen = false)}
-                    class="col-span-2 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm text-center font-bold"
-                >
-                    🔐 התחבר
-                </a>
+                {#if isLoggedIn}
+                    <div class="col-span-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
+                        <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                            {initial}
+                        </span>
+                        <span class="min-w-0 flex-1 truncate text-sm font-bold text-white">{displayName}</span>
+                        <button
+                            type="button"
+                            onclick={logout}
+                            disabled={signingOut}
+                            class="shrink-0 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-gray-200 hover:bg-white/15 transition-colors disabled:opacity-60"
+                        >
+                            {signingOut ? 'יוצא…' : 'יציאה'}
+                        </button>
+                    </div>
+                {:else}
+                    <a
+                        href="/login"
+                        onclick={() => (mobileOpen = false)}
+                        class="col-span-2 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm text-center font-bold"
+                    >
+                        🔐 התחבר
+                    </a>
+                {/if}
                 {#if isPrimaryAdmin}
                     <a
                         href="https://api.gofreeil.com/admin"
@@ -106,13 +141,30 @@
                             🗄️ Strapi DB
                         </a>
                     {/if}
-                    <a
-                        href="/login"
-                        class="rounded-lg px-4 py-2 font-bold text-white hover:scale-105 transition-transform"
-                        style="background:linear-gradient(135deg,#2563eb,#7c3aed); box-shadow:0 4px 15px rgba(124,58,237,0.4);"
-                    >
-                        🔐 התחבר
-                    </a>
+                    {#if isLoggedIn}
+                        <div class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5">
+                            <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                {initial}
+                            </span>
+                            <span class="max-w-[140px] truncate text-sm font-bold text-white" title={userEmail}>{displayName}</span>
+                            <button
+                                type="button"
+                                onclick={logout}
+                                disabled={signingOut}
+                                class="shrink-0 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-gray-200 hover:bg-white/15 transition-colors disabled:opacity-60"
+                            >
+                                {signingOut ? 'יוצא…' : 'יציאה'}
+                            </button>
+                        </div>
+                    {:else}
+                        <a
+                            href="/login"
+                            class="rounded-lg px-4 py-2 font-bold text-white hover:scale-105 transition-transform"
+                            style="background:linear-gradient(135deg,#2563eb,#7c3aed); box-shadow:0 4px 15px rgba(124,58,237,0.4);"
+                        >
+                            🔐 התחבר
+                        </a>
+                    {/if}
                 </div>
             </div>
             <nav class="flex flex-wrap items-center justify-center gap-1 pt-3 w-full">

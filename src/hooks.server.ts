@@ -9,9 +9,9 @@ import type { Handle } from '@sveltejs/kit';
  */
 /** בדיקת חסימה - אם המשתמש banned מפנים לדף חסימה */
 const checkBanned: Handle = async ({ event, resolve }) => {
-    // לא חוסם את דף החסימה עצמו, login, ו-API של auth
+    // לא חוסם את דף החסימה עצמו, login, יציאה, ו-API של auth
     const path = event.url.pathname;
-    if (path === '/banned' || path.startsWith('/api/auth') || path === '/login') {
+    if (path === '/banned' || path.startsWith('/api/auth') || path === '/login' || path === '/logout') {
         return resolve(event);
     }
     try {

@@ -16,7 +16,7 @@
 <!-- מסך פתיחה אחרי התחברות / הרשמה — גלובלי, מופעל ע"י ?welcome ב-URL -->
 <WelcomeScreen userName={data?.userName ?? ''} />
 
-<Header userEmail={data?.userEmail ?? null} />
+<Header userEmail={data?.userEmail ?? null} userName={data?.userName ?? null} />
 
 <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8 py-6">
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6">
