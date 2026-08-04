@@ -89,6 +89,11 @@
 					<p class="text-gray-400 text-sm">התחברו לחשבון שלכם</p>
 				</div>
 
+				<!-- הודעה ברורה למשתמש חדש: בפעם הראשונה יש להירשם תחילה -->
+				<p class="mb-6 text-center text-amber-200 text-[13px] sm:text-sm font-bold leading-relaxed">
+					👋 פעם ראשונה כאן? יש להירשם תחילה — ואז ניתן להישאר מחובר במכשיר זה.
+				</p>
+
 				{#if data.error}
 					<div id="login-error" role="alert" class="mb-6 rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-center">
 						<p class="text-red-400 text-sm font-medium">{errorMessage(data.error)}</p>
