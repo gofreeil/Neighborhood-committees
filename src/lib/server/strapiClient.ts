@@ -143,6 +143,8 @@ export interface StrapiUser {
     displayName?: string;
     firstname?: string;
     lastname?: string;
+    /** תפקיד פר-אתר על הרשומה המשותפת (super_admin / nc_admin / ...) */
+    app_role?: string | null;
 }
 
 export interface StrapiAuthResponse {

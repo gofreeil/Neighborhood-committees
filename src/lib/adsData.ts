@@ -9,6 +9,9 @@ export interface Ad {
     imageHeight?: string;
     imageScale?: number;
     hover?: string;
+    gradientCss?: string;   // רקע כמחרוזת CSS מלאה (מודעות מהבילדר) — גובר על color
+    /** מזהה המודעה ב-Strapi (רק למודעות מהבילדר) — למדידה בדשבורד המפרסם */
+    adId?: string;
 }
 
 export const ads: Ad[] = [
