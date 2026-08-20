@@ -147,7 +147,7 @@
         </button>
     {/if}
     {#if scrollableX}
-        <span class="ms-auto text-[11px] text-gray-400 lg:hidden">↔ ניתן לגלול את הטבלה לצדדים</span>
+        <span class="ms-auto text-[11px] text-gray-400 xl:hidden">↔ ניתן לגלול את הטבלה לצדדים</span>
     {/if}
 </div>
 
@@ -166,7 +166,7 @@
         </button>
     </div>
 {:else}
-    <!-- עד lg: גלילה אופקית בתוך המסגרת (הטבלה רחבה). מ-lg: יושבת ישר על הדף והכותרת דביקה לחלון -->
+    <!-- עד xl: גלילה אופקית בתוך המסגרת (הטבלה רחבה מטור התוכן). מ-xl: יושבת ישר על הדף והכותרת דביקה לחלון -->
     <div bind:this={tableWrap} class="table-wrap rounded-2xl border border-white/10">
         <table class="w-full border-collapse text-right text-[13px] sm:text-base">
             <thead>
@@ -251,8 +251,10 @@
         }
     }
 
-    /* נייד וטאבלט: הטבלה רחבה מהמסך — גלילה/משיכה אופקית בתוך המסגרת */
-    @media (max-width: 1023px) {
+    /* נייד ודסקטופ צר: הטבלה רחבה מהמסגרת שהיא יושבת בה - גלילה/משיכה
+       אופקית בתוך המסגרת. מ-lg נפתחים שני טורי הפרסום וטור התוכן מצטמצם
+       ל-452px-708px, ולכן הגבול הזה נמשך עד xl ולא עד lg. */
+    @media (max-width: 1279px) {
         .table-wrap {
             overflow-x: auto;
             overscroll-behavior-x: contain;
@@ -272,6 +274,34 @@
         .table-wrap::-webkit-scrollbar-thumb {
             background: rgba(34, 211, 238, 0.4);
             border-radius: 999px;
+        }
+    }
+
+    /* מ-xl הטבלה יושבת ישר על הדף (כדי שהכותרת תיצמד לניווט העליון), ולכן
+       היא חייבת להיכנס לרוחב טור התוכן - 708px בין שני טורי הפרסום. בלי
+       זה היא גולשת החוצה, וב-RTL הגלישה היא שמאלה: הטבלה נמרחת מעל טור
+       אתרי הרשת ומסתירה את עמודת הטלפון. ריפוד צר יותר ושבירת שורה
+       בעמודות הארוכות מקצרים אותה מ-898px ל-580px. */
+    @media (min-width: 1280px) {
+        /* רשת ביטחון לנתונים ארוכים מהצפוי (השמות מגיעים מ-API חיצוני):
+           clip חותך בלי ליצור scroll container, ולכן הכותרת הדביקה
+           ממשיכה לעבוד - אותו פתרון כמו על html ב-app.css */
+        .table-wrap {
+            overflow-x: clip;
+        }
+        .table-wrap th,
+        .table-wrap td {
+            padding-inline: 0.5rem;
+        }
+        /* שם הרכז והעיר שוברים שורה במקום להרחיב את הטבלה, וכך גם שתי
+           כותרות המונים ("תושבים רשומים" / "פריטים על המפה") */
+        .table-wrap th:nth-child(3),
+        .table-wrap td:nth-child(3),
+        .table-wrap th:nth-child(4),
+        .table-wrap td:nth-child(4),
+        .table-wrap th:nth-child(6),
+        .table-wrap th:nth-child(7) {
+            white-space: normal;
         }
     }
 </style>
