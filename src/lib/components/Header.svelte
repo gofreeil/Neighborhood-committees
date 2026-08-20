@@ -2,8 +2,19 @@
     import { t } from 'svelte-i18n';
     import { get } from 'svelte/store';
     import { signOut } from '@auth/sveltekit/client';
+    import { adminNav, roleBadge } from '$lib/adminNav';
 
-    let { userEmail = null, userName = null }: { userEmail?: string | null; userName?: string | null } = $props();
+    let {
+        userEmail = null,
+        userName = null,
+        isAdmin = false,
+        superAdmin = false,
+    }: {
+        userEmail?: string | null;
+        userName?: string | null;
+        isAdmin?: boolean;
+        superAdmin?: boolean;
+    } = $props();
 
     // מחובר = יש אימייל בסשן (מגיע מ-+layout.server.ts)
     const isLoggedIn = $derived(!!userEmail);
@@ -32,11 +43,26 @@
         { href: '/ratings', label: 'סטטוס שכונות' }
     ];
 
-    // קישור פרטי שלי בלבד - גישה ישירה ל-Strapi DB
-    const isPrimaryAdmin = $derived(userEmail === 'yahavanter@gmail.com');
+    // מסכי הניהול שהמשתמש רשאי לראות — אותה רשימה שמופיעה כאריחים ב-/admin
+    const adminItems = $derived(adminNav(isAdmin, superAdmin));
 
     let mobileOpen = $state(false);
+
+    // תפריט הפרופיל: יציאה ו-Strapi יושבים כאן ולא ככפתורים ראשיים בכותרת,
+    // כדי שלחיצה מקרית לא תוציא את המשתמש מהחשבון
+    let profileOpen = $state(false);
+    let mobileProfileOpen = $state(false);
+    let profileEl: HTMLElement | null = $state(null);
+
+    function onWindowPointerDown(event: PointerEvent) {
+        if (profileOpen && profileEl && !profileEl.contains(event.target as Node)) profileOpen = false;
+    }
+    function onWindowKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape') profileOpen = false;
+    }
 </script>
+
+<svelte:window onpointerdown={onWindowPointerDown} onkeydown={onWindowKeydown} />
 
 <header
     class="sticky top-0 z-50 border-b-2 md:border-b-4 border-blue-600 shadow-lg backdrop-blur-lg"
@@ -77,19 +103,60 @@
                     </a>
                 {/each}
                 {#if isLoggedIn}
-                    <div class="col-span-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
-                        <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                            {initial}
-                        </span>
-                        <span class="min-w-0 flex-1 truncate text-sm font-bold text-white">{displayName}</span>
+                    <div class="col-span-2 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
                         <button
                             type="button"
-                            onclick={logout}
-                            disabled={signingOut}
-                            class="shrink-0 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-gray-200 hover:bg-white/15 transition-colors disabled:opacity-60"
+                            onclick={() => (mobileProfileOpen = !mobileProfileOpen)}
+                            aria-expanded={mobileProfileOpen}
+                            class="flex w-full items-center gap-2 px-3 py-2 text-right hover:bg-white/10 transition-colors"
                         >
-                            {signingOut ? 'יוצא…' : 'יציאה'}
+                            <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                {initial}
+                            </span>
+                            <span class="min-w-0 flex-1 truncate text-sm font-bold text-white">{displayName}</span>
+                            <span class="shrink-0 text-[10px] text-gray-400">{mobileProfileOpen ? '▲' : '▼'}</span>
                         </button>
+                        {#if mobileProfileOpen}
+                            <div class="border-t border-white/10 p-1.5 space-y-1">
+                                {#if userEmail}
+                                    <p class="px-2 pb-1 truncate text-xs text-gray-400">{userEmail}</p>
+                                {/if}
+                                {#if adminItems.length}
+                                    <div class="rounded-lg bg-amber-500/10 border border-amber-500/25 p-1.5 space-y-0.5">
+                                        <div class="flex items-center justify-between gap-2 px-1.5 pb-1">
+                                            <span class="text-[11px] font-black text-amber-300">{roleBadge(superAdmin)}</span>
+                                            <a
+                                                href="/admin"
+                                                onclick={() => (mobileOpen = false)}
+                                                class="text-[11px] font-bold text-amber-200 hover:underline"
+                                            >
+                                                לפאנל המלא ←
+                                            </a>
+                                        </div>
+                                        {#each adminItems as item (item.href)}
+                                            <a
+                                                href={item.href}
+                                                target={item.external ? '_blank' : undefined}
+                                                rel={item.external ? 'noopener noreferrer' : undefined}
+                                                onclick={() => (mobileOpen = false)}
+                                                class="block rounded-lg px-2.5 py-1.5 text-sm text-amber-100 hover:bg-white/10 transition-colors"
+                                                title={item.desc}
+                                            >
+                                                {item.icon} {item.title}
+                                            </a>
+                                        {/each}
+                                    </div>
+                                {/if}
+                                <button
+                                    type="button"
+                                    onclick={logout}
+                                    disabled={signingOut}
+                                    class="block w-full rounded-lg px-3 py-2 text-right text-sm text-gray-200 hover:bg-white/10 transition-colors disabled:opacity-60"
+                                >
+                                    {signingOut ? 'יוצא…' : '🚪 יציאה'}
+                                </button>
+                            </div>
+                        {/if}
                     </div>
                 {:else}
                     <a
@@ -98,18 +165,6 @@
                         class="col-span-2 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm text-center font-bold"
                     >
                         🔐 התחבר
-                    </a>
-                {/if}
-                {#if isPrimaryAdmin}
-                    <a
-                        href="https://api.gofreeil.com/admin"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onclick={() => (mobileOpen = false)}
-                        class="col-span-2 px-3 py-2 rounded-lg bg-rose-600/20 border border-rose-500/40 text-rose-200 text-sm text-center font-bold"
-                        title="גישה ישירה ל-Strapi (פרטי - רק לך)"
-                    >
-                        🗄️ Strapi DB
                     </a>
                 {/if}
             </nav>
@@ -130,31 +185,69 @@
                     </div>
                 </a>
                 <div class="flex items-center gap-2">
-                    {#if isPrimaryAdmin}
-                        <a
-                            href="https://api.gofreeil.com/admin"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="rounded-lg px-3 py-2 font-bold text-rose-200 hover:scale-105 transition-transform border border-rose-500/40 bg-rose-600/15 text-sm"
-                            title="גישה ישירה ל-Strapi (פרטי - רק לך)"
-                        >
-                            🗄️ Strapi DB
-                        </a>
-                    {/if}
                     {#if isLoggedIn}
-                        <div class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5">
-                            <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                {initial}
-                            </span>
-                            <span class="max-w-[140px] truncate text-sm font-bold text-white" title={userEmail}>{displayName}</span>
+                        <div class="relative" bind:this={profileEl}>
                             <button
                                 type="button"
-                                onclick={logout}
-                                disabled={signingOut}
-                                class="shrink-0 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-gray-200 hover:bg-white/15 transition-colors disabled:opacity-60"
+                                onclick={() => (profileOpen = !profileOpen)}
+                                aria-haspopup="menu"
+                                aria-expanded={profileOpen}
+                                title={userEmail}
+                                class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 hover:bg-white/10 transition-colors"
                             >
-                                {signingOut ? 'יוצא…' : 'יציאה'}
+                                <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                    {initial}
+                                </span>
+                                <span class="max-w-[140px] truncate text-sm font-bold text-white">{displayName}</span>
+                                <span class="shrink-0 text-[10px] text-gray-400">{profileOpen ? '▲' : '▼'}</span>
                             </button>
+                            {#if profileOpen}
+                                <div
+                                    class="absolute left-0 top-full mt-2 w-60 rounded-xl border border-white/15 bg-gray-900/95 p-1.5 shadow-2xl backdrop-blur-lg"
+                                >
+                                    <div class="border-b border-white/10 px-2 pb-2 mb-1">
+                                        <p class="truncate text-sm font-bold text-white">{displayName}</p>
+                                        {#if userEmail}
+                                            <p class="truncate text-xs text-gray-400">{userEmail}</p>
+                                        {/if}
+                                    </div>
+                                    <!-- פאנל הניהול — אותה רשימת מסכים בדיוק שמופיעה כאריחים ב-/admin -->
+                                    {#if adminItems.length}
+                                        <div class="mb-1 rounded-lg border border-amber-500/25 bg-amber-500/10 p-1.5">
+                                            <div class="flex items-center justify-between gap-2 px-1.5 pb-1">
+                                                <span class="text-[11px] font-black text-amber-300">{roleBadge(superAdmin)}</span>
+                                                <a
+                                                    href="/admin"
+                                                    onclick={() => (profileOpen = false)}
+                                                    class="text-[11px] font-bold text-amber-200 hover:underline"
+                                                >
+                                                    לפאנל המלא ←
+                                                </a>
+                                            </div>
+                                            {#each adminItems as item (item.href)}
+                                                <a
+                                                    href={item.href}
+                                                    target={item.external ? '_blank' : undefined}
+                                                    rel={item.external ? 'noopener noreferrer' : undefined}
+                                                    onclick={() => (profileOpen = false)}
+                                                    class="block rounded-lg px-2.5 py-1.5 text-sm text-amber-100 hover:bg-white/10 transition-colors"
+                                                    title={item.desc}
+                                                >
+                                                    {item.icon} {item.title}
+                                                </a>
+                                            {/each}
+                                        </div>
+                                    {/if}
+                                    <button
+                                        type="button"
+                                        onclick={logout}
+                                        disabled={signingOut}
+                                        class="block w-full rounded-lg px-3 py-2 text-right text-sm text-gray-200 hover:bg-white/10 transition-colors disabled:opacity-60"
+                                    >
+                                        {signingOut ? 'יוצא…' : '🚪 יציאה'}
+                                    </button>
+                                </div>
+                            {/if}
                         </div>
                     {:else}
                         <a

@@ -18,19 +18,23 @@
 <!-- מסך פתיחה אחרי התחברות / הרשמה — גלובלי, מופעל ע"י ?welcome ב-URL -->
 <WelcomeScreen userName={data?.userName ?? ''} />
 
-<Header userEmail={data?.userEmail ?? null} userName={data?.userName ?? null} />
+<Header
+    userEmail={data?.userEmail ?? null}
+    userName={data?.userName ?? null}
+    isAdmin={data?.isAdmin ?? false}
+    superAdmin={data?.superAdmin ?? false}
+/>
 
-<div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8 py-6">
-    <!-- שלוש עמודות בדסקטופ (RTL): טור הפרסומות בתשלום מימין, התוכן
-         במרכז, ואתרי הרשת משמאל. מתחת ל-lg נשאר טור תוכן יחיד — שני
-         הטורים הצדדיים מוסתרים, והפרסומות עוברות לפרסומת-הביניים. -->
-    <div class="grid grid-cols-1 lg:grid-cols-[240px_1fr_220px] gap-6">
-        <RightAdBanner />
-        <main id="main" class="min-w-0">
-            {@render children?.()}
-        </main>
-        <AdsSidebar />
-    </div>
+<!-- פריסת הרשת (RTL), זהה ל-index/avedot ולשאר האתרים: המודעות
+     בתשלום מימין (144px, מ-xl), התוכן במרכז, ואתרי הרשת משמאל
+     (192px, מ-lg). מתחת ל-lg נשאר טור תוכן יחיד, ושני הטורים
+     הצדדיים מוסתרים — הפרסומות עוברות לפרסומת-הביניים. -->
+<div class="layout-container">
+    <RightAdBanner />
+    <main id="main" class="main-content">
+        {@render children?.()}
+    </main>
+    <AdsSidebar />
 </div>
 
 <!-- פרסומת-הביניים (נייד) — שכבה גלובלית; נפתחת רק דרך adGate -->

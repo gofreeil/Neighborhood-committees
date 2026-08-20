@@ -60,11 +60,11 @@ export async function resolveRole(session: Session | null): Promise<AdminRole | 
 }
 
 /** שולף את הסשן ומוודא הרשאת ניהול. לשימוש ב-load ובכל action של /admin. */
-export async function getAdminContext(locals: App.Locals): Promise<AdminContext> {
+export async function getAdminContext(locals: App.Locals, redirectTo = '/admin'): Promise<AdminContext> {
     const session = await locals.auth();
-    if (!session?.user) throw redirect(302, '/login?redirect=/admin/ads');
+    if (!session?.user) throw redirect(302, `/login?redirect=${encodeURIComponent(redirectTo)}`);
     const role = await resolveRole(session);
-    if (!role) throw error(403, 'אין לך הרשאת גישה לניהול הפרסומות');
+    if (!role) throw error(403, 'אין לך הרשאת גישה לפאנל הניהול');
     return {
         user: {
             id: session.user.id ?? '',

@@ -22,7 +22,9 @@ declare module '@auth/core/types' {
             id: string;
             provider?: string;
             strapiJwt?: string;
-            role?: 'user' | 'neighborhood_admin' | 'super_admin';
+            // app_role של הרשומה המשותפת ב-Strapi, כפי ש-db.ts ממפה אותו.
+        // nc_admin = אדמין האתר הזה; neighborhood_admin = רכז שכונה.
+        role?: 'user' | 'nc_admin' | 'neighborhood_admin' | 'super_admin';
             neighborhood?: string;
             banned?: boolean;
         } & DefaultSession['user'];
@@ -34,7 +36,9 @@ declare module '@auth/core/jwt' {
         dbUserId?: string;
         provider?: string;
         strapiJwt?: string;
-        role?: 'user' | 'neighborhood_admin' | 'super_admin';
+        // app_role של הרשומה המשותפת ב-Strapi, כפי ש-db.ts ממפה אותו.
+        // nc_admin = אדמין האתר הזה; neighborhood_admin = רכז שכונה.
+        role?: 'user' | 'nc_admin' | 'neighborhood_admin' | 'super_admin';
         neighborhood?: string;
         banned?: boolean;
     }

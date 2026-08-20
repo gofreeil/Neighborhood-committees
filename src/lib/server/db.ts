@@ -62,7 +62,8 @@ export interface DbUser {
     gender: string;
     birth_date: string;
     balance: number;
-    role: 'user' | 'neighborhood_admin' | 'super_admin';
+    // app_role של הרשומה המשותפת: nc_admin = אדמין האתר, neighborhood_admin = רכז שכונה
+    role: 'user' | 'nc_admin' | 'neighborhood_admin' | 'super_admin';
     banned: boolean;
     created_at: string;
     security_question: string;
@@ -664,6 +665,21 @@ export async function getPendingEvents(neighborhood: string): Promise<DbEvent[]>
             'filters[status][$eq]':      'pending',
             'sort':                      'createdAt:desc',
             'pagination[limit]':         '100',
+        });
+        return (res.data ?? []).map(mapStrapiEvent);
+    } catch (e) {
+        if (e instanceof StrapiContentTypeError) return [];
+        throw e;
+    }
+}
+
+/** כל האירועים הממתינים לאישור בכל השכונות (פאנל הניהול הארצי) */
+export async function getAllPendingEvents(): Promise<DbEvent[]> {
+    try {
+        const res = await strapiGet<{ data: StrapiEvent[] }>('/api/events', {
+            'filters[status][$eq]': 'pending',
+            'sort':                 'createdAt:desc',
+            'pagination[limit]':    '200',
         });
         return (res.data ?? []).map(mapStrapiEvent);
     } catch (e) {
