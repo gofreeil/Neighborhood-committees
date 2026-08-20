@@ -43,3 +43,40 @@
 <MobileAdsDrawer />
 
 <Footer />
+
+<style>
+    /* מכל התוכן של הרשת - העתק מ-index/avedot כדי שכל האתרים יתנהגו
+       אותו דבר: 1440px, שתי מסילות פרסום, והתוכן ביניהן. */
+    .layout-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        display: flex;
+        gap: 2rem;
+        padding: 2rem 2rem 0;
+        width: 100%;
+    }
+    .main-content {
+        flex: 1;
+        min-width: 0;
+    }
+    @media (max-width: 1023px) {
+        .layout-container {
+            flex-direction: column;
+            gap: 0;
+            /* ריפוד הנייד של האתר הזה נשמר כפי שהיה (px-3 / py-6) */
+            padding: 1.5rem 0.75rem;
+            max-width: 100vw;
+            /* clip ולא hidden: hidden הופך למכל גלילה ושובר sticky של צאצאים */
+            overflow-x: clip;
+        }
+        .main-content {
+            max-width: 100vw;
+            overflow-x: clip;
+        }
+    }
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .layout-container {
+            padding: 1.5rem 1rem;
+        }
+    }
+</style>

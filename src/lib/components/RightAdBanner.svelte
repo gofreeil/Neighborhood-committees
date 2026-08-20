@@ -65,11 +65,11 @@
 </script>
 
 <!-- RightAdBanner.svelte -->
-<!-- הרוחב מגיע ממסילת ה-grid של ה-layout‏ (240px); מתחת ל-lg הטור מוסתר
+<!-- 144px (w-36) מ-xl ומעלה, כמו בכל אתרי הרשת; מתחת ל-xl הטור מוסתר
      והפרסומות עוברות לפרסומת-הביניים (adGate) -->
 <aside
     aria-label="פרסומות"
-    class="hidden lg:block sticky top-4 h-fit pb-8 text-center"
+    class="hidden xl:block w-36 flex-shrink-0 sticky top-4 h-fit pb-8 text-center"
 >
     <h4
         class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2 px-2"
