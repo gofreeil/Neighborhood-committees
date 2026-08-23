@@ -3,6 +3,8 @@
     import NewsTicker from '$lib/components/NewsTicker.svelte';
     import StackedWindows from '$lib/components/StackedWindows.svelte';
 
+    let { data } = $props();
+
     let heroEl: HTMLElement | undefined = $state();
     let parallaxImg: HTMLElement | undefined = $state();
 
@@ -174,12 +176,13 @@
         };
     });
 
-    const stats = [
-        { value: '60', label: 'ועדי שכונות' },
+    // המספר מגיע מ"קהילה בשכונה": שכונות שיש להן רכז
+    const stats = $derived([
+        { value: data.committeesCount === null ? '—' : data.committeesCount.toLocaleString('he-IL'), label: 'ועדי שכונות' },
         { value: '10,000+', label: 'תושבים פעילים' },
         { value: '4', label: 'מאבקים פעילים' },
         { value: '156', label: 'ניצחונות' }
-    ];
+    ]);
 
     const featuredProducts = [
         { title: 'בטריות דור 2', cat: 'אנרגיה' },
