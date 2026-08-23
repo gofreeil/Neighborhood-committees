@@ -54,6 +54,15 @@ const ITEMS: AdminNavItem[] = [
         desc: 'מינוי אדמינים לאתר והסרת הרשאות',
         superOnly: true,
     },
+    {
+        href: '/coordinators/guide',
+        path: '/coordinators/guide',
+        icon: '📘',
+        label: 'מדריך הרכז',
+        title: 'מדריך רכז השכונה',
+        desc: 'מסלול ההקמה וערכת גיוס העסקים - עם עריכה חיה בדף עצמו',
+        superOnly: true,
+    },
 ];
 
 /** המסכים שהמשתמש רשאי לראות. */
