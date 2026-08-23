@@ -47,6 +47,12 @@
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // צבע הזהות של כל לשונית
+    const TAB_META: { id: TabId; icon: string; grad: string; shadow: string; idle: string }[] = [
+        { id: 'path', icon: '🗺️', grad: 'linear-gradient(135deg,#1e3a8a,#3b82f6)', shadow: 'rgba(59,130,246,0.4)', idle: '#93c5fd' },
+        { id: 'biz', icon: '🏪', grad: 'linear-gradient(135deg,#b45309,#f59e0b)', shadow: 'rgba(245,158,11,0.4)', idle: '#94a3b8' },
+    ];
+
     // ארבעת השלבים - צבעי הזהות של כל שלב (הכותרות עצמן נערכות בתוכן)
     const STAGE_META = [
         { id: 'stage-a', letter: 'א', icon: '🗺️', color: '#60a5fa', grad: 'linear-gradient(135deg,#1e3a8a,#3b82f6)' },
@@ -99,13 +105,13 @@
     <!-- TAB BAR (דביק: נשאר על המסך בגלילה, מתחת להדר) -->
     <div class="sticky z-40 flex gap-2 mb-6 p-1.5 rounded-2xl backdrop-blur-lg"
         style="top:{stickyTop}px; background: rgba(7,11,20,0.85); border: 1px solid rgba(255,255,255,0.1);">
-        {#each ([['path', '🗺️'], ['biz', '🏪']] as const) as [id, icon]}
+        {#each TAB_META as { id, icon, grad, shadow, idle }}
             <button
-                onclick={() => setTab(id as TabId)}
+                onclick={() => setTab(id)}
                 class="flex-1 flex items-center justify-center gap-2 px-2 py-3 rounded-xl font-black text-xs md:text-sm transition-all duration-200"
                 style={activeTab === id
-                    ? 'background: linear-gradient(135deg,#b45309,#f59e0b); color:#fff; box-shadow: 0 4px 15px rgba(245,158,11,0.4);'
-                    : 'color:#94a3b8;'}>
+                    ? `background: ${grad}; color:#fff; box-shadow: 0 4px 15px ${shadow};`
+                    : `color:${idle};`}>
                 {icon}
                 <span role="presentation" onclick={(e) => { if (editMode) e.stopPropagation(); }}>
                     <Ed obj={c.tabs} k={id} edit={editMode} />
