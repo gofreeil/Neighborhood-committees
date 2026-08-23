@@ -48,7 +48,7 @@
 
     let mobileOpen = $state(false);
 
-    // תפריט הפרופיל: יציאה ו-Strapi יושבים כאן ולא ככפתורים ראשיים בכותרת,
+    // תפריט הפרופיל: היציאה יושבת כאן ולא ככפתור ראשי בכותרת,
     // כדי שלחיצה מקרית לא תוציא את המשתמש מהחשבון
     let profileOpen = $state(false);
     let mobileProfileOpen = $state(false);

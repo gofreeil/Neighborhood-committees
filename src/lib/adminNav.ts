@@ -28,9 +28,6 @@ export interface AdminNavItem {
     external?: boolean;
 }
 
-/** ה-Strapi המשותף לכל אתרי הרשת — ניהול התוכן הגולמי */
-export const STRAPI_ADMIN_URL = 'https://api.gofreeil.com/admin';
-
 const ITEMS: AdminNavItem[] = [
     {
         href: '/admin/ads',
@@ -56,16 +53,6 @@ const ITEMS: AdminNavItem[] = [
         title: 'ניהול אדמינים',
         desc: 'מינוי אדמינים לאתר והסרת הרשאות',
         superOnly: true,
-    },
-    {
-        href: STRAPI_ADMIN_URL,
-        path: STRAPI_ADMIN_URL,
-        icon: '🗄️',
-        label: 'Strapi DB',
-        title: 'Strapi DB',
-        desc: 'גישה ישירה לבסיס הנתונים המשותף של הרשת',
-        superOnly: true,
-        external: true,
     },
 ];
 
