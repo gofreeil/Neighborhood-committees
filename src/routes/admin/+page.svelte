@@ -17,7 +17,7 @@
     icon="🛡️"
     title="פאנל ניהול"
     subtitle="{data.adminName} · {roleBadge(data.superAdmin)}"
-    gradient="from-amber-900/40 to-orange-900/40"
+    plain
 />
 
 <div class="grid gap-4 sm:grid-cols-2">

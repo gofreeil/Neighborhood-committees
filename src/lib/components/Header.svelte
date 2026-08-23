@@ -104,18 +104,43 @@
                 {/each}
                 {#if isLoggedIn}
                     <div class="col-span-2 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
-                        <button
-                            type="button"
-                            onclick={() => (mobileProfileOpen = !mobileProfileOpen)}
-                            aria-expanded={mobileProfileOpen}
-                            class="flex w-full items-center gap-2 px-3 py-2 text-right hover:bg-white/10 transition-colors"
-                        >
-                            <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                {initial}
-                            </span>
-                            <span class="min-w-0 flex-1 truncate text-sm font-bold text-white">{displayName}</span>
-                            <span class="shrink-0 text-[10px] text-gray-400">{mobileProfileOpen ? '▲' : '▼'}</span>
-                        </button>
+                        {#if adminItems.length}
+                            <!-- אדמין: לחיצה על הפרופיל מובילה ישר לפאנל המלא; החץ פותח את התפריט (יציאה וקיצורים) -->
+                            <div class="flex items-stretch">
+                                <a
+                                    href="/admin"
+                                    onclick={() => (mobileOpen = false)}
+                                    class="flex min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-white/10 transition-colors"
+                                >
+                                    <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                        {initial}
+                                    </span>
+                                    <span class="min-w-0 flex-1 truncate text-right text-sm font-bold text-white">{displayName}</span>
+                                </a>
+                                <button
+                                    type="button"
+                                    onclick={() => (mobileProfileOpen = !mobileProfileOpen)}
+                                    aria-expanded={mobileProfileOpen}
+                                    aria-label="תפריט פרופיל"
+                                    class="px-3 text-[10px] text-gray-400 hover:bg-white/10 transition-colors"
+                                >
+                                    {mobileProfileOpen ? '▲' : '▼'}
+                                </button>
+                            </div>
+                        {:else}
+                            <button
+                                type="button"
+                                onclick={() => (mobileProfileOpen = !mobileProfileOpen)}
+                                aria-expanded={mobileProfileOpen}
+                                class="flex w-full items-center gap-2 px-3 py-2 text-right hover:bg-white/10 transition-colors"
+                            >
+                                <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                    {initial}
+                                </span>
+                                <span class="min-w-0 flex-1 truncate text-sm font-bold text-white">{displayName}</span>
+                                <span class="shrink-0 text-[10px] text-gray-400">{mobileProfileOpen ? '▲' : '▼'}</span>
+                            </button>
+                        {/if}
                         {#if mobileProfileOpen}
                             <div class="border-t border-white/10 p-1.5 space-y-1">
                                 {#if userEmail}
@@ -187,20 +212,47 @@
                 <div class="flex items-center gap-2">
                     {#if isLoggedIn}
                         <div class="relative" bind:this={profileEl}>
-                            <button
-                                type="button"
-                                onclick={() => (profileOpen = !profileOpen)}
-                                aria-haspopup="menu"
-                                aria-expanded={profileOpen}
-                                title={userEmail}
-                                class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 hover:bg-white/10 transition-colors"
-                            >
-                                <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                    {initial}
-                                </span>
-                                <span class="max-w-[140px] truncate text-sm font-bold text-white">{displayName}</span>
-                                <span class="shrink-0 text-[10px] text-gray-400">{profileOpen ? '▲' : '▼'}</span>
-                            </button>
+                            {#if adminItems.length}
+                                <!-- אדמין: לחיצה על הפרופיל מובילה ישר לפאנל המלא; החץ פותח את התפריט (יציאה וקיצורים) -->
+                                <div class="flex items-stretch overflow-hidden rounded-lg border border-white/15 bg-white/5">
+                                    <a
+                                        href="/admin"
+                                        onclick={() => (profileOpen = false)}
+                                        title={userEmail}
+                                        class="flex items-center gap-2 px-2 py-1.5 hover:bg-white/10 transition-colors"
+                                    >
+                                        <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                            {initial}
+                                        </span>
+                                        <span class="max-w-[140px] truncate text-sm font-bold text-white">{displayName}</span>
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onclick={() => (profileOpen = !profileOpen)}
+                                        aria-haspopup="menu"
+                                        aria-expanded={profileOpen}
+                                        aria-label="תפריט פרופיל"
+                                        class="px-2 text-[10px] text-gray-400 hover:bg-white/10 transition-colors"
+                                    >
+                                        {profileOpen ? '▲' : '▼'}
+                                    </button>
+                                </div>
+                            {:else}
+                                <button
+                                    type="button"
+                                    onclick={() => (profileOpen = !profileOpen)}
+                                    aria-haspopup="menu"
+                                    aria-expanded={profileOpen}
+                                    title={userEmail}
+                                    class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 hover:bg-white/10 transition-colors"
+                                >
+                                    <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+                                        {initial}
+                                    </span>
+                                    <span class="max-w-[140px] truncate text-sm font-bold text-white">{displayName}</span>
+                                    <span class="shrink-0 text-[10px] text-gray-400">{profileOpen ? '▲' : '▼'}</span>
+                                </button>
+                            {/if}
                             {#if profileOpen}
                                 <div
                                     class="absolute left-0 top-full mt-2 w-60 rounded-xl border border-white/15 bg-gray-900/95 p-1.5 shadow-2xl backdrop-blur-lg"
