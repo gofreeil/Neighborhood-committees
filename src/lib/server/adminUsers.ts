@@ -86,6 +86,61 @@ export async function searchUsers(q: string): Promise<SlimUser[]> {
     return arr.map(toSlim);
 }
 
+// ---- חיפוש עמוק (לחיפוש החי במסך המינוי) ----
+const SCAN_PAGE_SIZE = 1000; // maxLimit של השרת
+const MAX_SCAN       = 5000; // תקרת רשומות לסריקה המקומית
+const MAX_RESULTS    = 10;
+
+/** האם אחד משדות הטקסט של הרשומה מכיל את מחרוזת החיפוש */
+function matchesLocally(u: unknown, q: string): boolean {
+    const needle = q.toLowerCase();
+    return Object.values(u as Record<string, unknown>).some(
+        (v) => typeof v === 'string' && v.toLowerCase().includes(needle),
+    );
+}
+
+/**
+ * חיפוש דו-שלבי: קודם שאילתת $containsi בצד Strapi (email/username/nickname);
+ * אם אין תוצאות — סריקה מקומית של כל שדות הטקסט בדפדוף מוגבל, שתופסת גם
+ * שמות בעברית ושדות לא-סטנדרטיים (טלפון וכד').
+ */
+export async function searchUsersDeep(q: string): Promise<SlimUser[]> {
+    let matches: unknown[] = [];
+    try {
+        matches = await findStrapiUpUsers({
+            'filters[$or][0][email][$containsi]':    q,
+            'filters[$or][1][username][$containsi]': q,
+            'filters[$or][2][nickname][$containsi]': q,
+            'pagination[pageSize]':                  String(MAX_RESULTS * 5),
+            'sort':                                  'id:desc',
+        });
+    } catch {
+        // סינון לא נתמך בקונפיגורציה הזו — נמשיך לסריקה המקומית
+    }
+
+    if (matches.length === 0) {
+        for (let start = 0; start < MAX_SCAN; start += SCAN_PAGE_SIZE) {
+            const batch = await findStrapiUpUsers({
+                'pagination[start]': String(start),
+                'pagination[limit]': String(SCAN_PAGE_SIZE),
+            });
+            matches.push(...batch.filter((u) => matchesLocally(u, q)));
+            if (batch.length < SCAN_PAGE_SIZE || matches.length >= MAX_RESULTS) break;
+        }
+    }
+
+    const seen = new Set<number>();
+    const users: SlimUser[] = [];
+    for (const raw of matches) {
+        const u = toSlim(raw);
+        if (!u.id || seen.has(u.id)) continue;
+        seen.add(u.id);
+        users.push(u);
+        if (users.length >= MAX_RESULTS) break;
+    }
+    return users;
+}
+
 /** משתמש בודד — לבדיקות ההגנה לפני שינוי תפקיד */
 export async function getUserSlim(id: number): Promise<SlimUser | null> {
     try {

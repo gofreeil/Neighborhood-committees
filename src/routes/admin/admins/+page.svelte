@@ -4,10 +4,63 @@
 
     let { data, form } = $props();
 
-    // שדה החיפוש נזרע מ-q שב-URL בטעינה בלבד; משם ואילך עריכה חופשית עד השליחה
+    // שדה החיפוש נזרע מ-q שב-URL בטעינה בלבד; משם ואילך חיפוש חי בצד הלקוח
     // svelte-ignore state_referenced_locally
     let q = $state(data.q ?? '');
     let busy = $state('');
+
+    // ═══ חיפוש חי — debounce + שומר-רצף נגד תשובות ישנות ═══
+    // svelte-ignore state_referenced_locally
+    let results = $state(data.results ?? []);
+    // svelte-ignore state_referenced_locally
+    let searchedQ = $state(data.q ?? '');
+    let searching = $state(false);
+    let searchError = $state('');
+    let seq = 0;
+    let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+    async function runSearch(query: string) {
+        const mySeq = ++seq;
+        searching = true;
+        searchError = '';
+        try {
+            const res = await fetch('/admin/admins/search?q=' + encodeURIComponent(query));
+            const body = await res.json();
+            if (mySeq !== seq) return; // תשובה ישנה — מתעלמים
+            results = body.users ?? [];
+            searchError = body.error ?? '';
+            searchedQ = query;
+        } catch {
+            if (mySeq !== seq) return;
+            results = [];
+            searchError = 'החיפוש נכשל — אפשר לנסות שוב';
+            searchedQ = query;
+        } finally {
+            if (mySeq === seq) searching = false;
+        }
+    }
+
+    function onSearchInput() {
+        clearTimeout(debounceTimer);
+        const query = q.trim();
+        if (query.length < 2) {
+            seq++; // מבטל תשובות שבדרך
+            searching = false;
+            searchError = '';
+            results = [];
+            searchedQ = query;
+            return;
+        }
+        searching = true; // חיווי מיידי עוד לפני תום ההשהיה
+        debounceTimer = setTimeout(() => runSearch(query), 350);
+    }
+
+    function onSearchSubmit(e: SubmitEvent) {
+        e.preventDefault();
+        clearTimeout(debounceTimer);
+        const query = q.trim();
+        if (query.length >= 2) runSearch(query);
+    }
 
     const ROLE_HE: Record<string, [string, string]> = {
         super_admin: ['👑 סופר-אדמין',         'bg-amber-500/10 text-amber-300 border-amber-500/40'],
@@ -38,7 +91,7 @@
     // תוצאות החיפוש בלי מי שכבר מופיע ברשימת הצוות למעלה
     const adminIds = $derived(new Set(data.admins.map((a: { id: number }) => a.id)));
     const searchResults = $derived(
-        (data.results ?? []).filter((u: { id: number }) => !adminIds.has(u.id)),
+        results.filter((u: { id: number }) => !adminIds.has(u.id)),
     );
 
     const submitFn = (id: string) => () => {
@@ -177,14 +230,15 @@
             <b class="text-gray-400">סופר-אדמין</b> - הרשאה בכל אתרי הרשת; לתת רק למי שאמור לנהל את כולם.
         </p>
 
-        <form method="GET" class="mb-4 flex gap-2">
+        <form method="GET" onsubmit={onSearchSubmit} class="mb-4 flex gap-2">
             <label class="sr-only" for="q">חיפוש משתמש</label>
             <input
                 id="q"
                 type="search"
                 name="q"
                 bind:value={q}
-                placeholder="חיפוש לפי אימייל או שם (לפחות 2 תווים)…"
+                oninput={onSearchInput}
+                placeholder="חיפוש לפי שם / מייל / טלפון (לפחות 2 תווים)…"
                 class="w-full max-w-md rounded-xl border border-white/20 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-blue-500/60 focus:outline-none"
             />
             <button class="rounded-xl bg-white/10 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/20">
@@ -192,11 +246,22 @@
             </button>
         </form>
 
-        {#if data.q && data.q.length >= 2}
+        {#if searching}
+            <p class="mb-3 text-xs text-gray-500">🔍 מחפש בין המשתמשים הרשומים…</p>
+        {/if}
+        {#if searchError}
+            <p class="mb-3 rounded-xl border border-red-500/30 bg-red-500/10 p-2 text-center text-xs text-red-300">
+                {searchError}
+            </p>
+        {/if}
+
+        {#if searchedQ.length >= 2}
             {#if searchResults.length === 0}
-                <p class="rounded-2xl border border-dashed border-white/15 py-10 text-center text-gray-500">
-                    לא נמצאו משתמשים מתאימים לחיפוש "{data.q}"
-                </p>
+                {#if !searching}
+                    <p class="rounded-2xl border border-dashed border-white/15 py-10 text-center text-gray-500">
+                        לא נמצא משתמש רשום התואם ל"{searchedQ}"
+                    </p>
+                {/if}
             {:else}
                 <div class="space-y-2">
                     {#each searchResults as u (u.id)}
