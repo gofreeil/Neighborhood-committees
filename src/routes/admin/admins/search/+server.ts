@@ -1,8 +1,9 @@
 // ============================================================
 // חיפוש חי בין המשתמשים הרשומים (לסופר-אדמין) — מסך מינוי האדמינים.
-// מחפש ברשימת המשתמשים המאוחדת של ה-Strapi המשותף בשני שלבים
-// (שאילתת $containsi ואז סריקה מקומית של כל שדות הטקסט) — ראו
-// searchUsersDeep ב-adminUsers.ts. מחזיר צורות SlimUser רזות בלבד.
+// מחפש ברשימת המשתמשים המאוחדת של ה-Strapi המשותף בשלושה שלבים
+// (שאילתת $containsi, סריקה מקומית של כל שדות הטקסט, ולבסוף התאמה
+// עמומה לשגיאות כתיב) — ראו searchUsersDeep ב-adminUsers.ts.
+// מחזיר צורות SlimUser רזות בלבד + דגל fuzzy כשהתוצאות הן רק "דומים".
 // ============================================================
 
 import { json } from '@sveltejs/kit';
@@ -18,7 +19,8 @@ export const GET: RequestHandler = async ({ locals, url }) => {
     if (q.length < 2 || !hasAdminToken()) return json({ users: [] });
 
     try {
-        return json({ users: await searchUsersDeep(q) });
+        const { users, fuzzy } = await searchUsersDeep(q);
+        return json({ users, fuzzy });
     } catch (e) {
         console.error('[admin] user search failed:', e);
         return json({ users: [], error: 'החיפוש ברשימת המשתמשים נכשל — אפשר לנסות שוב' });

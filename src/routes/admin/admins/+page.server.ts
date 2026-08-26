@@ -30,16 +30,17 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
     // בלי טוקן שרת הרשימה תחזור ריקה ותיראה כאילו אין אדמינים — עדיף הסבר
     if (!hasAdminToken()) {
-        return { user, admins: [], results: [], q: '', tokenMissing: true };
+        return { user, admins: [], results: [], fuzzy: false, q: '', tokenMissing: true };
     }
 
     const q = (url.searchParams.get('q') ?? '').trim();
-    const [admins, results] = await Promise.all([
+    const empty = { users: [], fuzzy: false };
+    const [admins, search] = await Promise.all([
         listAdminUsers().catch(() => []),
-        q.length >= 2 ? searchUsersDeep(q).catch(() => []) : Promise.resolve([]),
+        q.length >= 2 ? searchUsersDeep(q).catch(() => empty) : Promise.resolve(empty),
     ]);
 
-    return { user, admins, results, q, tokenMissing: false };
+    return { user, admins, results: search.users, fuzzy: search.fuzzy, q, tokenMissing: false };
 };
 
 export const actions: Actions = {

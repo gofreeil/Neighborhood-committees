@@ -14,6 +14,9 @@
     let results = $state(data.results ?? []);
     // svelte-ignore state_referenced_locally
     let searchedQ = $state(data.q ?? '');
+    // התוצאות הן "דומים" (שגיאת כתיב) ולא התאמה מדויקת
+    // svelte-ignore state_referenced_locally
+    let fuzzy = $state(data.fuzzy ?? false);
     let searching = $state(false);
     let searchError = $state('');
     let seq = 0;
@@ -28,11 +31,13 @@
             const body = await res.json();
             if (mySeq !== seq) return; // תשובה ישנה — מתעלמים
             results = body.users ?? [];
+            fuzzy = body.fuzzy ?? false;
             searchError = body.error ?? '';
             searchedQ = query;
         } catch {
             if (mySeq !== seq) return;
             results = [];
+            fuzzy = false;
             searchError = 'החיפוש נכשל — אפשר לנסות שוב';
             searchedQ = query;
         } finally {
@@ -48,6 +53,7 @@
             searching = false;
             searchError = '';
             results = [];
+            fuzzy = false;
             searchedQ = query;
             return;
         }
@@ -263,6 +269,11 @@
                     </p>
                 {/if}
             {:else}
+                {#if fuzzy}
+                    <p class="mb-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-2 text-center text-xs text-amber-200">
+                        לא נמצאה התאמה מדויקת ל"{searchedQ}" — אולי התכוונת לאחד מאלה:
+                    </p>
+                {/if}
                 <div class="space-y-2">
                     {#each searchResults as u (u.id)}
                         <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
