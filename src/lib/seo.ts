@@ -15,3 +15,16 @@ export function canonical(path = '/'): string {
     if (!path.startsWith('/')) path = '/' + path;
     return path === '/' ? SITE_URL : SITE_URL + path;
 }
+
+/** סכמת FAQPage (JSON-LD) — נבנית מאותו מקור אמת של השו"ת המוצג בדף. */
+export function faqSchema(items: { q: string; a: string }[]) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: items.map((i) => ({
+            '@type': 'Question',
+            name: i.q,
+            acceptedAnswer: { '@type': 'Answer', text: i.a }
+        }))
+    };
+}
