@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { toggleEngagement, type EngagementKind } from '$lib/server/db';
 import type { RequestHandler } from './$types';
 
-const VALID_KINDS: EngagementKind[] = ['rsvp', 'join', 'vote'];
+const VALID_KINDS: EngagementKind[] = ['rsvp', 'join', 'vote', 'letter'];
 
 // POST /api/engagement  { kind, target, choice? }
 // מפעיל/מכבה מעורבות למשתמש המחובר. מחזיר את המצב החדש.

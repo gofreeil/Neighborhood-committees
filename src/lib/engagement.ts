@@ -7,7 +7,7 @@ export interface ToggleResponse { active: boolean; choice: string }
  * מחזיר את המצב החדש, או null אם הופנה להתחברות / נכשל.
  */
 export async function toggleEngagement(
-    kind: 'rsvp' | 'join' | 'vote',
+    kind: 'rsvp' | 'join' | 'vote' | 'letter',
     target: string,
     choice = '',
     redirectAfterLogin = '/',

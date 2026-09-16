@@ -8,6 +8,7 @@ const STATIC_PAGES: Array<{ path: string; priority: number; changefreq: string }
     { path: '/',                     priority: 1.0, changefreq: 'daily' },
     { path: '/struggles',            priority: 0.9, changefreq: 'daily' },   // מאבקים + הצלחות
     { path: '/discussions',          priority: 0.9, changefreq: 'daily' },   // דיונים והצבעות
+    { path: '/letters',              priority: 0.9, changefreq: 'daily' },   // מכתב משותף
     { path: '/sync',                 priority: 0.8, changefreq: 'daily' },   // סנכרון / אירועים
     { path: '/marketplace',          priority: 0.8, changefreq: 'daily' },   // לוח יד שנייה
     { path: '/coordinators',         priority: 0.8, changefreq: 'weekly' },  // רכזי שכונות

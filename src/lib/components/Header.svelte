@@ -37,6 +37,7 @@
         { href: '/vision', label: 'החזון' },
         { href: '/struggles', label: 'מאבקים ונצחונות' },
         { href: '/discussions', label: 'דיונים הצבעות' },
+        { href: '/letters', label: 'מכתב משותף' },
         { href: '/experts', label: 'צוות המומחים' },
         { href: '/marketplace', label: 'נקודות איסוף' },
         { href: '/coordinators', label: 'רכזי השכונות' },

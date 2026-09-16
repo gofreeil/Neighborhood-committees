@@ -1,6 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { getAdminContext } from '$lib/server/adsAdmin';
+import { LETTER_CATEGORY } from '$lib/server/letters';
 import {
     getAllItems,
     getDiscussions,
@@ -21,7 +22,7 @@ import {
 // שניהם נשלפים בקריאה אחת ומופרדים כאן.
 
 /** קטגוריות פנימיות שאינן "תוכן" — רשומות מעורבות (לייקים/הצבעות) */
-const HIDDEN_CATEGORIES = new Set<string>([DISCUSSION_CATEGORY, ENGAGEMENT_CATEGORY]);
+const HIDDEN_CATEGORIES = new Set<string>([DISCUSSION_CATEGORY, ENGAGEMENT_CATEGORY, LETTER_CATEGORY]);
 
 function slimItem(it: DbItem) {
     return {

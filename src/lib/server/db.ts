@@ -414,7 +414,7 @@ export const MARKETPLACE_CATEGORY = 'nc_marketplace';
 
 export const ENGAGEMENT_CATEGORY = 'nc_engagement';
 
-export type EngagementKind = 'rsvp' | 'join' | 'vote';
+export type EngagementKind = 'rsvp' | 'join' | 'vote' | 'letter';
 
 export interface Engagement {
     id: string;
