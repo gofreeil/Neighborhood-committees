@@ -6,7 +6,7 @@
 	let { data, form } = $props();
 
 	let isLoading       = $state(false);
-	let loadingProvider = $state<'google' | 'facebook' | 'credentials' | null>(null);
+	let loadingProvider = $state<'google' | 'facebook' | 'credentials' | 'sso' | null>(null);
 	let showPassword    = $state(false);
 	let credError       = $state<string | null>(null);
 	let emailValue      = $state('');
@@ -38,11 +38,23 @@
 
 	// SSO: מפנים לקהילת "יוצאים לחירות", היא קובעת את העוגייה המשותפת gofreeil-auth
 	// על .gofreeil.com ומחזירה ל-callback שמקים סשן דרך ספק gofreeil-sso.
+	// מי שאין לו חשבון בקהילה לא מוחזר לכאן עם שגיאה: אתר הקהילה מציע לו שם
+	// כניסה בלחיצה (Google/Facebook) ומחזיר אותו לכאן כבר מחובר.
 	function loginWithCommunity() {
 		isLoading = true;
+		loadingProvider = 'sso';
 		const returnTo = data.redirectTo || '/';
 		const callback = `${window.location.origin}/auth/community-callback?returnTo=${encodeURIComponent(returnTo)}`;
 		window.location.href = `https://community.gofreeil.com/sso?callback=${encodeURIComponent(callback)}`;
+	}
+
+	// זוהה מראש לפי העוגייה המשותפת: אין צורך לעבור דרך אתר הקהילה, ה-callback
+	// המקומי מקים סשן ישירות מהעוגייה.
+	function continueAsCommunityUser() {
+		isLoading = true;
+		loadingProvider = 'sso';
+		const returnTo = data.redirectTo || '/';
+		window.location.href = `/auth/community-callback?returnTo=${encodeURIComponent(returnTo)}`;
 	}
 
 	function errorMessage(code: string | null): string {
@@ -89,10 +101,12 @@
 					<p class="text-gray-400 text-sm">התחברו לחשבון שלכם</p>
 				</div>
 
-				<!-- הודעה ברורה למשתמש חדש: בפעם הראשונה יש להירשם תחילה -->
-				<p class="mb-6 text-center text-amber-200 text-[13px] sm:text-sm font-bold leading-relaxed">
-					👋 פעם ראשונה כאן? יש להירשם תחילה — ואז ניתן להישאר מחובר במכשיר זה.
-				</p>
+				<!-- הודעה למשתמש חדש: הכניסה עם Google/Facebook היא גם ההרשמה -->
+				{#if !data.ssoName}
+					<p class="mb-6 text-center text-amber-200 text-[13px] sm:text-sm font-bold leading-relaxed">
+						👋 פעם ראשונה כאן? כניסה עם Google או Facebook יוצרת לך חשבון בלחיצה אחת.
+					</p>
+				{/if}
 
 				{#if data.error}
 					<div id="login-error" role="alert" class="mb-6 rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-center">
@@ -108,6 +122,35 @@
 					<div role="status" class="mb-6 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center">
 						<p class="text-green-400 text-sm font-medium">נרשמת בהצלחה! אנא התחבר.</p>
 					</div>
+				{/if}
+
+				{#if data.ssoName}
+				<!-- זוהה מראש דרך יוצאים לחירות (עוגייה משותפת חיה) - הכפתור הראשי, מעל כל השאר -->
+				<button
+					type="button"
+					onclick={continueAsCommunityUser}
+					disabled={isLoading}
+					class="w-full flex items-center justify-center gap-3 login-grad
+					       hover:brightness-110 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg
+					       transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl
+					       disabled:opacity-60 disabled:cursor-not-allowed mb-2 cursor-pointer"
+				>
+					{#if loadingProvider === 'sso'}
+						<span class="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin flex-shrink-0"></span>
+					{:else}
+						<span class="text-xl flex-shrink-0">🕊️</span>
+					{/if}
+					<span>המשך כ-{data.ssoName}</span>
+				</button>
+				<p class="text-center text-xs text-gray-500 mb-6 leading-relaxed">
+					זוהית דרך יוצאים לחירות. לא את/ה? אפשר להיכנס עם חשבון אחר למטה.
+				</p>
+
+				<div class="flex items-center gap-3 mb-6">
+					<div class="flex-1 h-px bg-white/10"></div>
+					<span class="text-xs text-gray-500">או</span>
+					<div class="flex-1 h-px bg-white/10"></div>
+				</div>
 				{/if}
 
 				<form method="POST" action="?/credentials" use:enhance={() => {
@@ -262,21 +305,30 @@
 					<span>המשך עם Facebook</span>
 				</button>
 
+				{#if !data.ssoName}
+				<!-- יוצאים לחירות (SSO) - אפשרות משנית למי שכבר יש לו חשבון באתר הקהילה.
+				     חברי קבוצות הווצאפ בלי חשבון: הכפתור לא נכשל, אתר הקהילה מציע להם
+				     כניסה עם Google/Facebook ומחזיר אותם לכאן מחוברים. -->
 				<button
 					type="button"
 					onclick={loginWithCommunity}
 					disabled={isLoading}
-					class="w-full flex items-center justify-center gap-3 login-grad
-					       hover:brightness-110 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg
-					       transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl
-					       disabled:opacity-60 disabled:cursor-not-allowed mb-3 cursor-pointer"
+					class="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-2xl
+					       border border-purple-400/40 bg-purple-500/10 text-purple-100 text-sm font-bold
+					       hover:bg-purple-500/20 hover:border-purple-400/60 transition-all duration-200
+					       disabled:opacity-60 disabled:cursor-not-allowed mb-2 cursor-pointer"
 				>
-					<span class="text-xl flex-shrink-0">🕊️</span>
-					<span>התחבר דרך "יוצאים לחירות"</span>
+					{#if loadingProvider === 'sso'}
+						<span class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin flex-shrink-0"></span>
+					{:else}
+						<span class="text-lg flex-shrink-0">🕊️</span>
+					{/if}
+					<span>יש לי חשבון באתר קהילת יוצאים לחירות</span>
 				</button>
 				<p class="text-center text-xs text-gray-500 mb-6 leading-relaxed">
-					רשום כבר בקהילה, בשכונה או באתר אחר של יוצאים לחירות? המערכת תזהה אותך אוטומטית.
+					חברות בקבוצות הווצאפ אינה חשבון באתר. אם עדיין אין לך חשבון, הכניסה עם Google או Facebook למעלה יוצרת אחד בלחיצה.
 				</p>
+				{/if}
 
 				<p class="text-center text-sm text-gray-500 mb-4">
 					אין לך חשבון?
