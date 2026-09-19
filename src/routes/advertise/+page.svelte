@@ -47,13 +47,13 @@
 </script>
 
 <svelte:head>
-    <title>פרסום באתר ועדי שכונות — חשיפה לתושבים ולפעילי השכונות</title>
+    <title>פרסום באתר ועדי שכונות — חשיפה לתושבים ולפעילי השכונות | יוצאים לחירות</title>
     <meta name="description" content="פרסום באתר ועדי שכונות — טור פרסומות בדסקטופ ופרסומת מסך-מלא בנייד. מעצבים את הפרסומת ישירות באתר, משלמים, והמודעה עולה מיד אחרי אישור מנהל." />
     <link rel="canonical" href={canonical('/advertise')} />
     <meta name="robots" content="index, follow" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:title" content="פרסמו אצלנו — {SITE_NAME}" />
+    <meta property="og:title" content="פרסמו אצלנו — {SITE_NAME} | יוצאים לחירות" />
     <meta property="og:url" content={canonical('/advertise')} />
     <meta property="og:image" content={DEFAULT_OG_IMAGE} />
     <meta property="og:locale" content="he_IL" />

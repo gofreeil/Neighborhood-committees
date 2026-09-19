@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-    <title>{l.title} - מכתב משותף | {SITE_NAME}</title>
+    <title>{l.title} - מכתב משותף | {SITE_NAME} | יוצאים לחירות</title>
     <meta name="description" content={`${l.subject} - מכתב משותף של ועדי השכונות. לחיצה אחת פותחת את המייל שלכם עם הנמענים והטקסט מוכנים.`} />
     <link rel="canonical" href={canonical(`/letters/${l.id}`)} />
 </svelte:head>

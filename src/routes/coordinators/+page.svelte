@@ -88,7 +88,7 @@
     });
 </script>
 
-<svelte:head><title>רכזי השכונות - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>רכזי השכונות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero icon="👥" title="רכזי השכונות" subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 

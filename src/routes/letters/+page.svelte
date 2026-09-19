@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-    <title>מכתב משותף - שולחים יחד למקבלי ההחלטות | {SITE_NAME}</title>
+    <title>מכתב משותף - שולחים יחד למקבלי ההחלטות | {SITE_NAME} | יוצאים לחירות</title>
     <meta name="description" content="רכזי השכונות מנסחים מכתב אחד אחרי דיון והצבעה, והתושבים שולחים אותו מהמייל האישי שלהם בלחיצת כפתור - נמענים, נושא וטקסט כבר מוכנים." />
     <link rel="canonical" href={canonical('/letters')} />
 </svelte:head>

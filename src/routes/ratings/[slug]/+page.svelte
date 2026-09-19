@@ -45,7 +45,7 @@
     const labels = $derived(CATEGORIES.map((cat, i) => ({ ...polarPoint(118, i), ...cat })));
 </script>
 
-<svelte:head><title>{city ? `${city.name} - דירוג מפורט` : 'עיר לא נמצאה'}</title></svelte:head>
+<svelte:head><title>{city ? `${city.name} - דירוג מפורט` : 'עיר לא נמצאה'} | יוצאים לחירות</title></svelte:head>
 
 {#if !city}
     <div class="text-center py-20">

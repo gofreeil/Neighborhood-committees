@@ -69,7 +69,7 @@
     let tab: 'discussions' | 'votes' = $state('discussions');
 </script>
 
-<svelte:head><title>דיונים והצבעות - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>דיונים והצבעות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero
     icon="💬"

@@ -2,6 +2,8 @@
     import { onMount } from 'svelte';
     import NewsTicker from '$lib/components/NewsTicker.svelte';
     import StackedWindows from '$lib/components/StackedWindows.svelte';
+    import JsonLd from '$lib/components/JsonLd.svelte';
+    import { SITE_DESCRIPTION, PARENT_SITE, canonical, websiteSchema, organizationSchema } from '$lib/seo';
 
     let { data } = $props();
 
@@ -233,15 +235,34 @@
     ];
 </script>
 
-<svelte:head><title>ועדי שכונות ארצי - קול התושב</title></svelte:head>
+<svelte:head>
+    <title>ועדי שכונות ארצי - קול התושב | יוצאים לחירות</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <meta name="keywords" content="יוצאים לחירות, ועדי שכונות יוצאים לחירות, ועדי שכונות, ועד שכונה, ועדי שכונות ארצי, קול התושב, רכזי שכונות, מאבקים שכונתיים, דיונים והצבעות" />
+    <link rel="canonical" href={canonical('/')} />
+</svelte:head>
+<JsonLd schema={[websiteSchema(), organizationSchema()]} />
 
 <!-- Hero text (מעל התמונה) -->
 <div class="mb-4 md:mb-6 px-1 text-center">
     <h1 bind:this={heroTitleEl} class="hero-title text-3xl md:text-5xl font-black leading-tight mb-3 inline-block">
         {#each [...heroTitle] as ch}<span data-ch>{ch}</span>{/each}
+        <span class="sr-only"> - ועדי שכונות של יוצאים לחירות</span>
     </h1>
     <p bind:this={heroSubEl} class="hero-sub text-lg md:text-xl font-bold max-w-3xl mx-auto">
         {#each [...heroSubtitle] as ch}<span data-ch>{ch}</span>{/each}
+    </p>
+    <!-- שיוך גלוי לתנועה-האם מעל הקפל (לא רק בפוטר) כדי שגוגל יקשר "יוצאים לחירות" לאתר. גלולה כהה. -->
+    <p class="mt-3">
+        <a
+            href={PARENT_SITE.url}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-1.5 rounded-full border border-[#3b5794] bg-[#1c2f5a] px-4 py-1.5 text-xs md:text-sm font-semibold text-gray-200 shadow-md hover:bg-[#2a4379] hover:text-white transition-colors"
+        >
+            <span aria-hidden="true">👉</span>
+            מיזם של התנועה החברתית יוצאים לחירות
+        </a>
     </p>
 </div>
 

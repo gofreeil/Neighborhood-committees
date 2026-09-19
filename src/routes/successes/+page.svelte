@@ -59,7 +59,7 @@
     ];
 </script>
 
-<svelte:head><title>נצחונות - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>נצחונות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero
     icon="🏆"

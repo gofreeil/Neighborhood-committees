@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-	<title>הרשמה - ועדי שכונות ארצי</title>
+	<title>הרשמה - ועדי שכונות ארצי | יוצאים לחירות</title>
 </svelte:head>
 
 <div

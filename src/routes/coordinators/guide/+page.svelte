@@ -95,7 +95,7 @@
 {/snippet}
 
 <svelte:head>
-    <title>מדריך רכז השכונה - ועדי שכונות ארצי</title>
+    <title>מדריך רכז השכונה - ועדי שכונות ארצי | יוצאים לחירות</title>
     <meta name="description" content="המדריך הפנימי לרכזי השכונות - מסלול ההקמה וערכת גיוס העסקים" />
     <meta name="robots" content="noindex, nofollow" />
 </svelte:head>

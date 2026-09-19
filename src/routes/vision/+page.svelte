@@ -24,7 +24,7 @@
     ];
 </script>
 
-<svelte:head><title>חזון - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>חזון - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero icon="🌅" title="החזון שלנו" subtitle="עתיד שבו לקול התושב יש משקל אמיתי בקבלת החלטות" gradient="from-pink-900/40 to-purple-900/40" />
 

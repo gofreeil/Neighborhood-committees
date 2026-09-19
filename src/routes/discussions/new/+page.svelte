@@ -19,7 +19,7 @@
     }
 </script>
 
-<svelte:head><title>פתיחת דיון חדש - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>פתיחת דיון חדש - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero
     icon="💬"

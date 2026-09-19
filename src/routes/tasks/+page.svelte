@@ -2,7 +2,7 @@
     import PageHero from '$lib/components/PageHero.svelte';
 </script>
 
-<svelte:head><title>משימות - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>משימות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero
     icon="📋"

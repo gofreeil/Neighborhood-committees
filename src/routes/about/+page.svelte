@@ -22,10 +22,10 @@
 </script>
 
 <svelte:head>
-    <title>אודותינו | {SITE_NAME}</title>
+    <title>אודותינו | {SITE_NAME} | יוצאים לחירות</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical('/about')} />
-    <meta property="og:title" content="אודותינו | {SITE_NAME}" />
+    <meta property="og:title" content="אודותינו | {SITE_NAME} | יוצאים לחירות" />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical('/about')} />
 </svelte:head>

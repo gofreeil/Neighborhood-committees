@@ -34,7 +34,7 @@
     const count = (e: { id: string; attending: number }) => e.attending + (extra[e.id] ?? 0);
 </script>
 
-<svelte:head><title>סינכרונים - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>סינכרונים - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero icon="🔄" title="סינכרונים" subtitle="פגישות, ועידות ותיאומים בין ועדי שכונות" gradient="from-teal-900/40 to-emerald-900/40" />
 

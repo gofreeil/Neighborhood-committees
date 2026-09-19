@@ -186,7 +186,7 @@
     }
 </script>
 
-<svelte:head><title>מאבקים ונצחונות - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>מאבקים ונצחונות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero
     icon="✊"

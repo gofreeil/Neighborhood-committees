@@ -26,7 +26,7 @@
     const activeCategory = $derived(openCategory ? CATEGORIES.find(c => c.key === openCategory) : null);
 </script>
 
-<svelte:head><title>דירוג עצמאות ערים - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>דירוג עצמאות ערים - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <PageHero icon="🏆" title="דירוג עצמאות ערים" subtitle="מדד אוטומטי - חישוב חודשי ממקורות פתוחים" gradient="from-yellow-900/40 to-amber-900/40" />
 

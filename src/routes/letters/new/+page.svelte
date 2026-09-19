@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-    <title>מכתב חדש - מכתב משותף | ועדי שכונות ארצי</title>
+    <title>מכתב חדש - מכתב משותף | ועדי שכונות ארצי | יוצאים לחירות</title>
     <meta name="robots" content="noindex" />
 </svelte:head>
 

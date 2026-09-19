@@ -34,7 +34,7 @@
     const flowerPetals = teams.slice(1);
 </script>
 
-<svelte:head><title>מומחים לייעוץ - ועדי שכונות ארצי</title></svelte:head>
+<svelte:head><title>מומחים לייעוץ - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
 <!-- פרח המומחים -->
 <section class="my-8 sm:my-12">

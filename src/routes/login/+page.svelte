@@ -72,7 +72,7 @@
 </script>
 
 <svelte:head>
-	<title>התחברות - ועדי שכונות ארצי</title>
+	<title>התחברות - ועדי שכונות ארצי | יוצאים לחירות</title>
 </svelte:head>
 
 <div
