@@ -94,7 +94,7 @@
 
 <svelte:head><title>רכזי השכונות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
-<PageHero icon="👥" title={coordinators.length ? `רכזי השכונות (${coordinators.length})` : 'רכזי השכונות'} subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
+<PageHero icon="👥" title={coordinators.length ? `${coordinators.length} רכזי השכונות` : 'רכזי השכונות'} subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 
 <!-- סינון: חיפוש חופשי לפי שם/עיר/שכונה + בחירת עיר -->
 {#if coordinators.length > 0}

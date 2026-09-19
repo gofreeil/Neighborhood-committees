@@ -43,20 +43,11 @@ export async function fetchCoordinators(
 }
 
 /**
- * ועד שכונה = שכונה שיש לה רכז. שכונה נספרת פעם אחת גם אם רשומים בה כמה
- * רכזים, והשם מזוהה יחד עם העיר כדי ששכונות בעלות אותו שם בערים שונות
- * (מרכז העיר, שכונה א') לא יתמזגו לאחת.
+ * ועד שכונה = רכז. המונה בדף הבית זהה למספר שבכותרת עמוד הרכזים
+ * (מספר הרכזים הרשומים ב"קהילה בשכונה"), ולא לספירת שכונות.
  */
-export function countNeighborhoodsWithCoordinator(coordinators: CoordinatorRow[]): number {
-    const seen = new Set<string>();
-    for (const c of coordinators) {
-        const city = (c.city ?? '').trim();
-        for (const n of c.neighborhoods ?? []) {
-            const name = (n ?? '').trim();
-            if (name) seen.add(`${city}|${name}`);
-        }
-    }
-    return seen.size;
+export function countCommittees(coordinators: CoordinatorRow[]): number {
+    return coordinators.length;
 }
 
 // ============================================================
@@ -82,7 +73,7 @@ function reload(fetch: Fetch): Promise<number | null> {
             const coordinators = await fetchCoordinators(fetch);
             // כשה-API נופל עדיף להישאר על הערך האחרון מאשר לאפס את המונה
             if (!coordinators) return countCache?.value ?? null;
-            const value = countNeighborhoodsWithCoordinator(coordinators);
+            const value = countCommittees(coordinators);
             countCache = { at: Date.now(), value };
             return value;
         } finally {
@@ -110,7 +101,7 @@ export async function getCommitteesCount(fetch: Fetch): Promise<number | null> {
 export async function refreshCommitteesCount(): Promise<number | null> {
     const coordinators = await fetchCoordinators(globalThis.fetch, { bypassCdn: true });
     if (!coordinators) return null;
-    const value = countNeighborhoodsWithCoordinator(coordinators);
+    const value = countCommittees(coordinators);
     countCache = { at: Date.now(), value };
     return value;
 }
