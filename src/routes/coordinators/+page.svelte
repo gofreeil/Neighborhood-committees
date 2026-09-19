@@ -48,6 +48,10 @@
         if (allSelected) for (const c of filtered) selected.delete(c.id);
         else for (const c of filtered) selected.add(c.id);
     }
+    // שכונות: מוצגת רק הראשונה + "וכו'", ולחיצה פותחת את הרשימה המלאה לשורה
+    const expandedNbhd = new SvelteSet<string>();
+    const toggleNbhd = (id: string) => (expandedNbhd.has(id) ? expandedNbhd.delete(id) : expandedNbhd.add(id));
+
     // מצב "חלקי" של checkbox "בחר הכול" (אינו ניתן להגדרה כ-attribute)
     let selectAllEl: HTMLInputElement | undefined = $state();
     $effect(() => {
@@ -90,7 +94,7 @@
 
 <svelte:head><title>רכזי השכונות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
-<PageHero icon="👥" title="רכזי השכונות" subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
+<PageHero icon="👥" title={coordinators.length ? `רכזי השכונות (${coordinators.length})` : 'רכזי השכונות'} subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
 
 <!-- סינון: חיפוש חופשי לפי שם/עיר/שכונה + בחירת עיר -->
 {#if coordinators.length > 0}
@@ -172,7 +176,8 @@
             <thead>
                 <tr class="sticky z-20 text-[10px] sm:text-xs uppercase tracking-wide text-cyan-200/80"
                     style="top:{headerOffset}px;">
-                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 border-b border-white/15 rounded-tr-2xl w-9 sm:w-12 text-center" style="background:#0d1426;">
+                    <th class="py-1.5 px-1 sm:py-3 sm:px-2 font-semibold border-b border-white/15 rounded-tr-2xl w-7 sm:w-10 text-center" style="background:#0d1426;">#</th>
+                    <th class="py-1.5 px-2 sm:py-3 sm:px-4 border-b border-white/15 w-9 sm:w-12 text-center" style="background:#0d1426;">
                         <input type="checkbox" bind:this={selectAllEl} checked={allSelected} onchange={toggleAll}
                             class="h-4 w-4 sm:h-5 sm:w-5 rounded accent-cyan-500 cursor-pointer align-middle" aria-label="בחר הכול" />
                     </th>
@@ -191,6 +196,8 @@
                             style={selected.has(c.id)
                                 ? 'background:rgba(34,211,238,0.12);'
                                 : (i % 2 === 1 ? 'background:rgba(255,255,255,0.025);' : '')}>
+                            <!-- מספר סידורי (לפי הסינון הנוכחי) -->
+                            <td class="py-1 px-1 sm:py-3 sm:px-2 text-center text-[11px] sm:text-sm text-gray-500 tabular-nums">{i + 1}</td>
                             <!-- סימון בחירה -->
                             <td class="py-1 px-2 sm:py-3 sm:px-4 text-center">
                                 <input type="checkbox" checked={selected.has(c.id)} onchange={() => toggle(c.id)}
@@ -209,8 +216,24 @@
                             <td class="py-1 px-2 sm:py-3 sm:px-4 text-white font-bold whitespace-nowrap">{c.name}</td>
                             <!-- עיר -->
                             <td class="py-1 px-2 sm:py-3 sm:px-4 text-gray-300 whitespace-nowrap">{c.city || '—'}</td>
-                            <!-- שכונה -->
-                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-gray-300">{c.neighborhoods.length ? c.neighborhoods.join(', ') : '—'}</td>
+                            <!-- שכונה: הראשונה + "וכו'" (לחיצה פותחת/סוגרת את השאר) -->
+                            <td class="py-1 px-2 sm:py-3 sm:px-4 text-gray-300" class:whitespace-nowrap={!expandedNbhd.has(c.id)}>
+                                {#if c.neighborhoods.length === 0}
+                                    —
+                                {:else if c.neighborhoods.length === 1}
+                                    {c.neighborhoods[0]}
+                                {:else if expandedNbhd.has(c.id)}
+                                    {c.neighborhoods.join(', ')}
+                                    <button type="button" onclick={() => toggleNbhd(c.id)}
+                                        class="ms-1 text-cyan-300 hover:underline text-[11px] sm:text-xs whitespace-nowrap">פחות</button>
+                                {:else}
+                                    {c.neighborhoods[0]},
+                                    <button type="button" onclick={() => toggleNbhd(c.id)}
+                                        title={c.neighborhoods.slice(1).join(', ')}
+                                        aria-label={`הצג את כל ${c.neighborhoods.length} השכונות`}
+                                        class="text-cyan-300 hover:underline">וכו'</button>
+                                {/if}
+                            </td>
                             <!-- תושבים רשומים -->
                             <td class="py-1 px-2 sm:py-3 sm:px-4 text-center">
                                 <span class="inline-block min-w-[1.75rem] sm:min-w-[2.5rem] rounded-md sm:rounded-lg bg-cyan-500/10 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[13px] sm:text-lg font-bold text-cyan-300">
@@ -295,12 +318,12 @@
         }
         /* שם הרכז והעיר שוברים שורה במקום להרחיב את הטבלה, וכך גם שתי
            כותרות המונים ("תושבים רשומים" / "פריטים על המפה") */
-        .table-wrap th:nth-child(3),
-        .table-wrap td:nth-child(3),
         .table-wrap th:nth-child(4),
         .table-wrap td:nth-child(4),
-        .table-wrap th:nth-child(6),
-        .table-wrap th:nth-child(7) {
+        .table-wrap th:nth-child(5),
+        .table-wrap td:nth-child(5),
+        .table-wrap th:nth-child(7),
+        .table-wrap th:nth-child(8) {
             white-space: normal;
         }
     }
