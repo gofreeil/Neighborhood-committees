@@ -138,12 +138,20 @@
 
 <svelte:head><title>רכזי השכונות - ועדי שכונות ארצי | יוצאים לחירות</title></svelte:head>
 
-<PageHero icon="👥" title={coordinators.length ? `${coordinators.length} רכזי השכונות` : 'רכזי השכונות'} subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40" />
+<PageHero icon="👥" title={coordinators.length ? `${coordinators.length} רכזי השכונות` : 'רכזי השכונות'} subtitle="האנשים שמובילים את השינוי בשטח" gradient="from-blue-900/40 to-cyan-900/40">
+    <!-- רענון בקצה השמאלי של הכותרת: מריץ מחדש את ה-load ומביא את הרכזים העדכניים -->
+    <button type="button" onclick={refresh} disabled={refreshing}
+        class="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm text-cyan-200 hover:bg-white/10 transition-colors disabled:opacity-60 whitespace-nowrap"
+        aria-label="רענן את רשימת הרכזים">
+        <span class="text-sm sm:text-base leading-none" class:spin={refreshing} aria-hidden="true">🔄</span>
+        {refreshing ? 'מרענן…' : 'רענן'}
+    </button>
+</PageHero>
 
-<!-- סינון: חיפוש חופשי לפי שם/עיר/שכונה + בחירת עיר -->
+<!-- שורה אחת: חיפוש חופשי + בחירת עיר + כפתורי מיון -->
 {#if coordinators.length > 0}
     <div class="-mt-2 sm:mt-0 mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
-        <div class="relative flex-1 min-w-[180px]">
+        <div class="relative flex-1 min-w-[160px]">
             <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">🔍</span>
             <input
                 type="text"
@@ -176,51 +184,45 @@
                 מציג {filtered.length} מתוך {coordinators.length}
             </span>
         {/if}
-    </div>
-
-    <!-- כפתורי מיון: הכפתור הפעיל מציג את הכיוון; לחיצה חוזרת הופכת אותו -->
-    <div class="mb-2 sm:mb-3 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" role="group" aria-label="מיון הרשימה">
-        <span class="text-gray-400 whitespace-nowrap">מיון:</span>
-        {#each SORTS as s (s.key)}
-            {@const active = sortKey === s.key}
-            <button type="button" onclick={() => setSort(s.key)}
-                title={active ? `${s.title} — לחיצה הופכת את הכיוון` : s.title}
-                aria-pressed={active}
-                class="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 sm:px-3 sm:py-1.5 transition-colors whitespace-nowrap
-                    {active
-                        ? 'border-cyan-400/60 bg-cyan-500/20 text-cyan-100 font-bold'
-                        : 'border-white/15 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}">
-                <span aria-hidden="true">{s.icon}</span>
-                {s.label}
-                {#if active}
-                    <span class="text-cyan-300" aria-label={sortDir === 'desc' ? 'מהגדול לקטן' : 'מהקטן לגדול'}>
-                        {sortDir === 'desc' ? '↓' : '↑'}
-                    </span>
-                {/if}
-            </button>
-        {/each}
+        <!-- כפתורי מיון: הכפתור הפעיל מציג את הכיוון; לחיצה חוזרת הופכת אותו -->
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" role="group" aria-label="מיון הרשימה">
+            {#each SORTS as s (s.key)}
+                {@const active = sortKey === s.key}
+                <button type="button" onclick={() => setSort(s.key)}
+                    title={active ? `${s.title} — לחיצה הופכת את הכיוון` : s.title}
+                    aria-pressed={active}
+                    class="inline-flex items-center gap-1 rounded-xl border px-2.5 py-2 sm:px-3 sm:py-2.5 transition-colors whitespace-nowrap
+                        {active
+                            ? 'border-cyan-400/60 bg-cyan-500/20 text-cyan-100 font-bold'
+                            : 'border-white/15 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}">
+                    <span aria-hidden="true">{s.icon}</span>
+                    {s.label}
+                    {#if active}
+                        <span class="text-cyan-300" aria-label={sortDir === 'desc' ? 'מהגדול לקטן' : 'מהקטן לגדול'}>
+                            {sortDir === 'desc' ? '↓' : '↑'}
+                        </span>
+                    {/if}
+                </button>
+            {/each}
+        </div>
     </div>
 {/if}
 
-<!-- סרגל כלים: רענון (בכל הגרסאות) + מידע על השורות שנבחרו -->
-<div class="-mt-4 sm:mt-0 mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-cyan-200">
-    <button type="button" onclick={refresh} disabled={refreshing}
-        class="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 sm:px-3 sm:py-1.5 hover:bg-white/10 transition-colors disabled:opacity-60"
-        aria-label="רענן את רשימת הרכזים">
-        <span class="text-sm sm:text-base leading-none" class:spin={refreshing} aria-hidden="true">🔄</span>
-        {refreshing ? 'מרענן…' : 'רענן'}
-    </button>
-    {#if selected.size > 0}
-        <span class="font-bold">נבחרו {selected.size} רכזים</span>
-        <button type="button" onclick={() => selected.clear()}
-            class="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 sm:px-3 sm:py-1.5 hover:bg-white/10 transition-colors">
-            נקה בחירה
-        </button>
-    {/if}
-    {#if scrollableX}
-        <span class="ms-auto text-[11px] text-gray-400 xl:hidden">↔ ניתן לגלול את הטבלה לצדדים</span>
-    {/if}
-</div>
+<!-- מידע על השורות שנבחרו + רמז גלילה (הרענון עבר לכותרת) -->
+{#if selected.size > 0 || scrollableX}
+    <div class="mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-cyan-200">
+        {#if selected.size > 0}
+            <span class="font-bold">נבחרו {selected.size} רכזים</span>
+            <button type="button" onclick={() => selected.clear()}
+                class="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 sm:px-3 sm:py-1.5 hover:bg-white/10 transition-colors">
+                נקה בחירה
+            </button>
+        {/if}
+        {#if scrollableX}
+            <span class="ms-auto text-[11px] text-gray-400 xl:hidden">↔ ניתן לגלול את הטבלה לצדדים</span>
+        {/if}
+    </div>
+{/if}
 
 {#if coordinators.length === 0}
     <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
