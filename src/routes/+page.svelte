@@ -3,7 +3,7 @@
     import NewsTicker from '$lib/components/NewsTicker.svelte';
     import StackedWindows from '$lib/components/StackedWindows.svelte';
     import JsonLd from '$lib/components/JsonLd.svelte';
-    import { SITE_DESCRIPTION, PARENT_SITE, canonical, websiteSchema, organizationSchema } from '$lib/seo';
+    import { SITE_DESCRIPTION, canonical, websiteSchema, organizationSchema } from '$lib/seo';
 
     let { data } = $props();
 
@@ -251,18 +251,6 @@
     </h1>
     <p bind:this={heroSubEl} class="hero-sub text-lg md:text-xl font-bold max-w-3xl mx-auto">
         {#each [...heroSubtitle] as ch}<span data-ch>{ch}</span>{/each}
-    </p>
-    <!-- שיוך גלוי לתנועה-האם מעל הקפל (לא רק בפוטר) כדי שגוגל יקשר "יוצאים לחירות" לאתר. גלולה כהה. -->
-    <p class="mt-3">
-        <a
-            href={PARENT_SITE.url}
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-1.5 rounded-full border border-[#3b5794] bg-[#1c2f5a] px-4 py-1.5 text-xs md:text-sm font-semibold text-gray-200 shadow-md hover:bg-[#2a4379] hover:text-white transition-colors"
-        >
-            <span aria-hidden="true">👉</span>
-            מיזם של התנועה החברתית יוצאים לחירות
-        </a>
     </p>
 </div>
 
