@@ -14,6 +14,9 @@
     let { data, form } = $props();
 
     let tab = $state<'pending' | 'approved' | 'rejected'>('pending');
+    // "ייבא פרסומת מהאתר קהילה בשכונה" — הרשימה נפתחת מכפתור ליד הטאבים
+    let importOpen = $state(false);
+    let importingId = $state('');
 
     // תקופות שאפשר לקצוב למודעה שכבר באוויר (נספרות מיום האישור)
     const DURATION_OPTIONS = [7, 14, 30, 60, 90, 180, 365];
@@ -362,7 +365,57 @@
         <button type="button" class="tab-btn" class:active={tab === 'rejected'} onclick={() => (tab = 'rejected')}>
             ❌ נדחו ({rejected.length})
         </button>
+        <!-- ייבוא מהאתר האחות: פותח רשימה של מה שרץ שם עכשיו, כל שורה עם "ייבא" -->
+        <button type="button" class="tab-btn import-toggle" class:active={importOpen} onclick={() => (importOpen = !importOpen)}
+                title="העתקת פרסומת שרצה בקהילה בשכונה לממתינות של האתר הזה">
+            📥 ייבא פרסומת מהאתר קהילה בשכונה ({data.communityAds.length})
+        </button>
     </div>
+
+    {#if importOpen}
+        <section class="import-box">
+            <h3>📥 פרסומות שרצות עכשיו ב"קהילה בשכונה"</h3>
+            <p class="import-hint">
+                הייבוא יוצר עותק של הפרסומת בממתינות של האתר הזה — אשרו אותו (וקבעו תקופה) כדי שיעלה לטור. המקור בקהילה בשכונה לא משתנה.
+            </p>
+            {#if data.communityUnavailable}
+                <p class="empty">לא הצלחנו לשלוף את הפרסומות של קהילה בשכונה — נסו לרענן בעוד רגע.</p>
+            {:else if data.communityAds.length === 0}
+                <p class="empty">אין כרגע פרסומות פעילות בקהילה בשכונה.</p>
+            {:else}
+                <ul class="import-list">
+                    {#each data.communityAds as c (c.id)}
+                        <li class="import-row">
+                            <div class="import-info">
+                                <span class="import-title">{c.title || '(ללא כותרת)'}</span>
+                                {#if c.subtitle}<span class="import-sub">{c.subtitle}</span>{/if}
+                                <span class="import-meta">
+                                    {#if c.slot !== null}📍 מקום {c.slot} שם{/if}
+                                    {#if c.advertiser} · 👤 {c.advertiser}{/if}
+                                    {#if c.expiresAt} · ⏳ שם עד {fmtDate(c.expiresAt)}{/if}
+                                </span>
+                            </div>
+                            {#if c.imported}
+                                <span class="status-pill {c.imported.status}">
+                                    כבר יובאה — {c.imported.status === 'approved' ? 'מאושרת כאן' : c.imported.status === 'rejected' ? 'נדחתה כאן' : 'ממתינה כאן'}
+                                </span>
+                            {:else}
+                                <form method="POST" action="?/importCommunity" use:enhance={() => {
+                                    importingId = c.id;
+                                    return async ({ update }) => { importingId = ''; tab = 'pending'; await update(); };
+                                }}>
+                                    <input type="hidden" name="id" value={c.id} />
+                                    <button type="submit" class="a-btn approve" disabled={importingId === c.id}>
+                                        {importingId === c.id ? 'מייבא…' : '📥 ייבא'}
+                                    </button>
+                                </form>
+                            {/if}
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
+        </section>
+    {/if}
 
     {#if shown.length === 0}
         <p class="empty">אין פרסומות בקטגוריה הזו.</p>
@@ -948,6 +1001,63 @@
         color: #9ca3af;
         padding: 2rem 0;
     }
+
+    /* ===== ייבוא מ"קהילה בשכונה" ===== */
+    .tab-btn.import-toggle {
+        border-color: rgba(96, 165, 250, 0.45);
+        color: #93c5fd;
+    }
+    .tab-btn.import-toggle.active {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: #fff;
+    }
+    .import-box {
+        background: rgba(59, 130, 246, 0.06);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+    .import-box h3 {
+        margin: 0 0 0.3rem;
+        font-size: 1rem;
+        color: #fff;
+    }
+    .import-hint {
+        margin: 0 0 0.8rem;
+        font-size: 0.8rem;
+        color: #9ca3af;
+    }
+    .import-box .empty { padding: 0.8rem 0; }
+    .import-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+    }
+    .import-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 0.55rem 0.8rem;
+    }
+    .import-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        min-width: 0;
+    }
+    .import-title { font-weight: 800; color: #fff; }
+    .import-sub { font-size: 0.8rem; color: #d1d5db; }
+    .import-meta { font-size: 0.75rem; color: #9ca3af; }
 
     .promo-list {
         display: flex;

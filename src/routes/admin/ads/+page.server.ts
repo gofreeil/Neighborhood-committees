@@ -16,6 +16,7 @@ import {
     resumeAd,
 } from '$lib/server/adsStore';
 import { getAdStats, type AdStats, type AdCounters } from '$lib/server/adStats';
+import { listImportableCommunityAds, importCommunityAd, SOURCE_SITE_LABEL, type ImportableAd } from '$lib/server/adsImport';
 import { normalizePlanDays, planLabel } from '$lib/adPlans';
 import { rightAds } from '$lib/rightAdsData';
 
@@ -111,10 +112,48 @@ export const load: PageServerLoad = async ({ locals }) => {
         expired: ads.filter((a) => a.isExpired).length,
     };
 
-    return { ads, inventory, backendUnavailable, superAdmin };
+    // "ייבא פרסומת מהאתר קהילה בשכונה" — מה שרץ שם עכשיו ואפשר להעתיק לכאן.
+    // כשל בשליפה לא מפיל את המסך: הרשימה פשוט ריקה עם הודעה.
+    let communityAds: ImportableAd[] = [];
+    let communityUnavailable = false;
+    if (!backendUnavailable) {
+        try {
+            communityAds = await listImportableCommunityAds();
+        } catch (err) {
+            console.error('admin/ads: community ads list failed:', err);
+            communityUnavailable = true;
+        }
+    }
+
+    return { ads, inventory, backendUnavailable, superAdmin, communityAds, communityUnavailable };
 };
 
 export const actions: Actions = {
+    // ייבוא פרסומת שרצה ב"קהילה בשכונה" — נכנסת לממתינות, והמנהל מאשר
+    // אותה כרגיל עם תקופה. עותק שכבר קיים לא נוצר שוב.
+    importCommunity: async ({ request, locals }) => {
+        await getAdminContext(locals);
+        const form = await request.formData();
+        const id = String(form.get('id') ?? '');
+        if (!id) return fail(400, { error: 'חסר מזהה פרסומת' });
+        try {
+            const r = await importCommunityAd(id);
+            if (r.action === 'not-found') {
+                return fail(404, { error: `הפרסומת לא נמצאה ב"${SOURCE_SITE_LABEL}" (או שכבר לא מאושרת שם)` });
+            }
+            if (r.action === 'exists') {
+                const where = r.status === 'approved' ? 'מאושרות' : r.status === 'rejected' ? 'נדחו' : 'ממתינות';
+                return fail(409, { error: `"${r.title}" כבר יובאה — היא נמצאת בטאב "${where}"` });
+            }
+            return {
+                success: true,
+                message: `"${r.title}" יובאה מ"${SOURCE_SITE_LABEL}" ונכנסה לממתינות — אשרו אותה כדי שתעלה לטור 📥`,
+            };
+        } catch (err) {
+            console.error('importCommunity failed:', err);
+            return fail(502, { error: 'הייבוא נכשל — נסו שוב' });
+        }
+    },
     approve: async ({ request, locals }) => {
         const { user } = await getAdminContext(locals);
         const form = await request.formData();
