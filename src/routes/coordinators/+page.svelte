@@ -12,13 +12,57 @@
     const cities = $derived(
         [...new Set(coordinators.map((c) => c.city).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'he'))
     );
+    // מיון: כפתור לכל מפתח; לחיצה על הכפתור הפעיל הופכת את הכיוון.
+    // ברירת המחדל: הכי הרבה פריטים על המפה למעלה.
+    type SortKey = 'map' | 'residents' | 'name' | 'city' | 'date';
+    const SORTS: { key: SortKey; label: string; icon: string; defaultDir: 'asc' | 'desc'; title: string }[] = [
+        { key: 'map',       label: 'פריטים במפה', icon: '📍', defaultDir: 'desc', title: 'לפי מספר הפריטים על המפה' },
+        { key: 'residents', label: 'תושבים',      icon: '👥', defaultDir: 'desc', title: 'לפי מספר התושבים הרשומים' },
+        { key: 'name',      label: 'א-ב',         icon: '🔤', defaultDir: 'asc',  title: 'לפי שם הרכז' },
+        { key: 'city',      label: 'עיר',         icon: '🏙️', defaultDir: 'asc',  title: 'לפי שם העיר' },
+        { key: 'date',      label: 'תאריך',       icon: '📅', defaultDir: 'desc', title: 'לפי מועד ההצטרפות' },
+    ];
+    let sortKey = $state<SortKey>('map');
+    let sortDir = $state<'asc' | 'desc'>('desc');
+    function setSort(key: SortKey) {
+        if (sortKey === key) {
+            sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortKey = key;
+            sortDir = SORTS.find((s) => s.key === key)?.defaultDir ?? 'asc';
+        }
+    }
+    /** מועד ההצטרפות; ב-API ישן בלי תאריך נופלים למספר המזהה (גדול = חדש) */
+    function joinTs(c: { createdAt?: string; id: string }): number {
+        const t = c.createdAt ? Date.parse(c.createdAt) : NaN;
+        return Number.isNaN(t) ? Number(c.id) || 0 : t;
+    }
+    const heCompare = (a: string, b: string) => (a || '').localeCompare(b || '', 'he');
+    function compare(a: (typeof coordinators)[number], b: (typeof coordinators)[number]): number {
+        switch (sortKey) {
+            case 'map':       return (a.itemsOnMap ?? 0) - (b.itemsOnMap ?? 0);
+            case 'residents': return a.residentsCount - b.residentsCount;
+            case 'name':      return heCompare(a.name, b.name);
+            case 'city':      return heCompare(a.city, b.city);
+            case 'date':      return joinTs(a) - joinTs(b);
+        }
+    }
+    /** שוויון במפתח הראשי נשבר לפי פריטים במפה (יורד) ואז לפי שם */
+    function tieBreak(a: (typeof coordinators)[number], b: (typeof coordinators)[number]): number {
+        return (b.itemsOnMap ?? 0) - (a.itemsOnMap ?? 0) || heCompare(a.name, b.name);
+    }
     const filtered = $derived(
-        coordinators.filter((c) => {
-            if (cityFilter && c.city !== cityFilter) return false;
-            const q = query.trim().toLowerCase();
-            if (!q) return true;
-            return [c.name, c.city, ...(c.neighborhoods ?? [])].join(' ').toLowerCase().includes(q);
-        })
+        coordinators
+            .filter((c) => {
+                if (cityFilter && c.city !== cityFilter) return false;
+                const q = query.trim().toLowerCase();
+                if (!q) return true;
+                return [c.name, c.city, ...(c.neighborhoods ?? [])].join(' ').toLowerCase().includes(q);
+            })
+            .sort((a, b) => {
+                const r = compare(a, b);
+                return (sortDir === 'desc' ? -r : r) || tieBreak(a, b);
+            })
     );
     const isFiltering = $derived(query.trim() !== '' || cityFilter !== '');
     function clearFilters() {
@@ -132,6 +176,29 @@
                 מציג {filtered.length} מתוך {coordinators.length}
             </span>
         {/if}
+    </div>
+
+    <!-- כפתורי מיון: הכפתור הפעיל מציג את הכיוון; לחיצה חוזרת הופכת אותו -->
+    <div class="mb-2 sm:mb-3 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" role="group" aria-label="מיון הרשימה">
+        <span class="text-gray-400 whitespace-nowrap">מיון:</span>
+        {#each SORTS as s (s.key)}
+            {@const active = sortKey === s.key}
+            <button type="button" onclick={() => setSort(s.key)}
+                title={active ? `${s.title} — לחיצה הופכת את הכיוון` : s.title}
+                aria-pressed={active}
+                class="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 sm:px-3 sm:py-1.5 transition-colors whitespace-nowrap
+                    {active
+                        ? 'border-cyan-400/60 bg-cyan-500/20 text-cyan-100 font-bold'
+                        : 'border-white/15 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}">
+                <span aria-hidden="true">{s.icon}</span>
+                {s.label}
+                {#if active}
+                    <span class="text-cyan-300" aria-label={sortDir === 'desc' ? 'מהגדול לקטן' : 'מהקטן לגדול'}>
+                        {sortDir === 'desc' ? '↓' : '↑'}
+                    </span>
+                {/if}
+            </button>
+        {/each}
     </div>
 {/if}
 

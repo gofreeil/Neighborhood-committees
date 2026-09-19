@@ -15,6 +15,8 @@ export interface CoordinatorRow {
     neighborhoods: string[];
     residentsCount: number;
     itemsOnMap: number;
+    /** מועד ההצטרפות (ISO). ריק ב-API ישן שעוד לא מחזיר אותו */
+    createdAt?: string;
 }
 
 type Fetch = typeof globalThis.fetch;
