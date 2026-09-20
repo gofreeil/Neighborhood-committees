@@ -24,6 +24,7 @@ import { strapiGet, strapiPost, strapiPut, strapiDelete, StrapiContentTypeError 
 import { DEFAULT_PLAN_DAYS, normalizePlanDays } from '../adPlans.js';
 import { parseAdImageFit, type AdImageFit } from '../adImageFit.js';
 import { parseAdStyle, type AdStyle } from '../adStyle.js';
+import { toCssGradient } from '../adGradient.js';
 import { AD_SLOT_COUNT } from '../rightAdsData.js';
 import { imageStamp, decodeDataImage } from './inlineImage.js';
 
@@ -220,7 +221,9 @@ function fromStrapi(row: StrapiAd | null | undefined): SubmittedAd | null {
         subtitle: row.subtitle ?? '',
         hoverText: row.hover_text ?? '',
         cta: row.cta ?? '',
-        gradient: row.gradient ?? '',
+        // עותק שיובא מקהילה בשכונה לפני שהייבוא תרגם את הגרדיאנט נושא זוג
+        // מחלקות Tailwind — מתורגם בקריאה, כדי שגם הוא יוצג בצבע
+        gradient: row.gradient ? toCssGradient(row.gradient) : '',
         logo,
         mainImage,
         // בכתיבה נשמר חותם מוכן; רשומה ותיקה בלעדיו מקבלת חישוב בזמן קריאה
@@ -265,6 +268,21 @@ function byDisplayOrder(a: SubmittedAd, b: SubmittedAd): number {
     const bo = b.slotOrder ?? Number.MAX_SAFE_INTEGER;
     if (ao !== bo) return ao - bo;
     return Date.parse(a.submittedAt || '') - Date.parse(b.submittedAt || '');
+}
+
+/**
+ * מסנן גרסאות שהוחלפו: מי שסומנה _supersededBy, וגם מי שיש לה ברשימה יורשת
+ * מאושרת (עדכון שלה שכבר אושר) — גם אם סימון ההחלפה לא נכתב, למשל כשה-PUT
+ * של ההורדה נכשל אחרי שהאישור כבר עבר. בלי זה אותה פרסומת הופיעה פעמיים:
+ * הגרסה החדשה "באוויר" והישנה לצידה, באותו מקום בטור.
+ */
+function withoutReplaced(list: SubmittedAd[]): SubmittedAd[] {
+    const replaced = new Set(
+        list
+            .filter((a) => a.status === 'approved' && a.replacesAdId && !a.supersededBy)
+            .map((a) => a.replacesAdId),
+    );
+    return list.filter((a) => !a.supersededBy && !replaced.has(a.id));
 }
 
 // ---------- שליפות בסיס ----------
@@ -445,7 +463,8 @@ async function findPredecessors(
         console.warn('adsStore: findPredecessors failed', err instanceof Error ? err.message : err);
         return { target: null, stalePending: [] };
     }
-    const mine = all.filter((a) => !a.supersededBy && sameAdvertiser(a, identity));
+    // listAllForAdmin כבר מסתירה גרסאות שהוחלפו (withoutReplaced)
+    const mine = all.filter((a) => sameAdvertiser(a, identity));
     const live = mine.filter((a) => a.status === 'approved').sort(byNewest);
     const stalePending = mine.filter((a) => a.status === 'pending').sort(byNewest);
     const past = mine.filter((a) => a.status === 'rejected').sort(byNewest);
@@ -692,10 +711,14 @@ export async function listApproved(): Promise<ApprovedAdPublic[]> {
             'pagination[pageSize]': '50',
         });
         const now = Date.now();
-        const approvedAll = (res.data ?? [])
-            .filter(belongsToThisSite)
-            .map(fromStrapi)
-            .filter((a): a is SubmittedAd => Boolean(a));
+        // גרסה שהוחלפה בעדכון מאושר לא מוצגת לצד היורשת שלה — וגם לא
+        // תופסת מספר מקום (היורשת ירשה את המספר שלה)
+        const approvedAll = withoutReplaced(
+            (res.data ?? [])
+                .filter(belongsToThisSite)
+                .map(fromStrapi)
+                .filter((a): a is SubmittedAd => Boolean(a)),
+        );
         // מספרי המקומות מחושבים על *כל* המאושרות — גם מושהית/פגה שומרת את
         // מקומה (המשבצת שלה מוצגת כפנויה עד שתחזור). חישוב בזיכרון בלבד:
         // נתיב קריאה לא כותב ל-Strapi.
@@ -783,9 +806,8 @@ export function isAdOwner(keys: Set<string>, ad: SubmittedAd): boolean {
 export async function listForOwner(keys: Set<string>): Promise<SubmittedAd[]> {
     if (keys.size === 0) return [];
     const rows = await fetchAllRows();
-    return rows
-        .map(fromStrapi)
-        .filter((a): a is SubmittedAd => Boolean(a))
+    // גרסה שהוחלפה בעדכון מאושר יורדת מהרשימה — הפרסומת מופיעה פעם אחת
+    return withoutReplaced(rows.map(fromStrapi).filter((a): a is SubmittedAd => Boolean(a)))
         .filter((a) => isAdOwner(keys, a));
 }
 
@@ -842,10 +864,12 @@ export async function updateAdContent(
     invalidateAdsCache();
 }
 
-/** כל המודעות למסך האדמין (ממתינות + מאושרות + נדחות). */
+/** כל המודעות למסך האדמין (ממתינות + מאושרות + נדחות).
+ *  גרסה שהוחלפה בעדכון מאושר לא מוצגת: היא לא "נדחתה" ולא ממתינה —
+ *  היא ההיסטוריה של מודעה שכבר רצה על האתר בגרסה חדשה יותר. */
 export async function listAllForAdmin(): Promise<SubmittedAd[]> {
     const rows = await fetchAllRows();
-    return rows.map(fromStrapi).filter((a): a is SubmittedAd => Boolean(a));
+    return withoutReplaced(rows.map(fromStrapi).filter((a): a is SubmittedAd => Boolean(a)));
 }
 
 /** אישור מודעה — קובע תוקף (ברירת מחדל 30 יום). התשלום ידני, ולכן
@@ -922,6 +946,9 @@ export async function approveAd(
         expires_at: expires,
     }, {
         ...(slot !== undefined ? { _order: slot } : {}),
+        // "אשר כמודעה נוספת": הקישור לקודמת נמחק — אחרת withoutReplaced
+        // הייתה מסתירה את הקודמת, שהמנהל ביקש במפורש להשאיר על האתר
+        ...(keep && current?.replacesAdId ? { _replacesAdId: null, _replacesTitle: null } : {}),
         // מודעה שמאושרת עכשיו היא בהגדרה לא "גרסה ישנה שהוחלפה". דגל
         // _supersededBy שנשאר מגלגול קודם גרם למודעה חיה להיראות מוחלפת:
         // גרסה מעודכנת של המפרסם לא זיהתה אותה ולא הורידה אותה באישור.

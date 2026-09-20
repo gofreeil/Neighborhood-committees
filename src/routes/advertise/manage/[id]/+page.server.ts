@@ -3,12 +3,14 @@ import type { PageServerLoad } from './$types';
 import { getAd, isAdOwner } from '$lib/server/adsStore';
 import { getAdStats, type AdStats } from '$lib/server/adStats';
 import { ownerCandidateKeys } from '$lib/server/ownership';
+import { resolveRole } from '$lib/server/adsAdmin';
 import { planFor } from '$lib/adPlans';
 
 const STATS_DAYS = 14;
 
 // דף ניהול הנכס של המפרסם: מדדים, עריכה מחדש וחידוש הפרסום.
-// רק מי ששלח את המודעה רואה אותה (אימות מול submitted_by בכל טעינה).
+// רק מי ששלח את המודעה רואה אותה (אימות מול submitted_by בכל טעינה) —
+// וגם אדמין, שמגיע לכאן מכפתור "ערוך" במסך ניהול הפרסומות.
 export const load: PageServerLoad = async ({ params, locals, url }) => {
     const session = await locals.auth();
     if (!session?.user) {
@@ -17,7 +19,9 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 
     const ad = await getAd(params.id);
     if (!ad) throw error(404, 'הפרסומת לא נמצאה');
-    if (!isAdOwner(ownerCandidateKeys(session.user), ad)) {
+    const isOwner = isAdOwner(ownerCandidateKeys(session.user), ad);
+    const isAdmin = !isOwner && (await resolveRole(session)) !== null;
+    if (!isOwner && !isAdmin) {
         throw error(403, 'רק מי שהעלה את הפרסומת יכול לנהל אותה. אם זו הפרסומת שלך — התחברו עם החשבון שממנו נשלחה.');
     }
 
@@ -38,6 +42,9 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
             logo: ad.logo,
             mainImage: ad.mainImage,
             mainImageFit: ad.mainImageFit,
+            // העיצוב (מיקום/צורת הלוגו, גובה הרצועה, צבע הכותרת) חוזר לבונה
+            // בעריכה — בלעדיו הלוגו קפץ לברירת המחדל בכל עריכה
+            adStyle: ad.adStyle,
             landing: ad.landing,
             submittedAt: ad.submittedAt,
             editedAt: ad.editedAt,

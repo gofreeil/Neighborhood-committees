@@ -2,18 +2,20 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getAd, isAdOwner, updateAdContent, normalizeLanding } from '$lib/server/adsStore';
 import { ownerCandidateKeys } from '$lib/server/ownership';
+import { resolveRole } from '$lib/server/adsAdmin';
 import { adPayloadIssue } from '$lib/server/adBudget';
 
 // עריכה מחדש של מודעה קיימת בידי המפרסם שהעלה אותה (דשבורד הנכס →
-// הבונה → שלב השליחה). תוכן בלבד: הסטטוס, התוקף, המסלול והתשלום
-// נשארים כפי שהאדמין קבע, ורק edited_at מתעדכן.
+// הבונה → שלב השליחה), או בידי אדמין (מסך ניהול הפרסומות → "ערוך").
+// תוכן בלבד: הסטטוס, התוקף, המסלול והתשלום נשארים כפי שהאדמין קבע,
+// ורק edited_at מתעדכן.
 export const PUT: RequestHandler = async ({ params, request, locals }) => {
     const session = await locals.auth();
     if (!session?.user) throw error(401, 'צריך להתחבר כדי לערוך פרסומת');
 
     const ad = await getAd(params.id);
     if (!ad) throw error(404, 'הפרסומת לא נמצאה');
-    if (!isAdOwner(ownerCandidateKeys(session.user), ad)) {
+    if (!isAdOwner(ownerCandidateKeys(session.user), ad) && (await resolveRole(session)) === null) {
         throw error(403, 'אין לך הרשאה לערוך את הפרסומת הזו');
     }
 

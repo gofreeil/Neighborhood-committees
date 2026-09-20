@@ -11,6 +11,7 @@
         RENEW_WARNING_DAYS, type AdStatusKind,
     } from '$lib/adOwner';
     import { adImgFit, parseAdImageFit } from '$lib/adImageFit';
+    import { toCssGradient } from '$lib/adGradient';
 
     let { data } = $props();
     const ad = $derived(data.ad);
@@ -50,25 +51,34 @@
 
     function editInBuilder() {
         const adv = (lp.advantages ?? []) as string[];
+        // העיצוב שנשמר עם המודעה נטען לבונה כמו שהוא — אותו מיפוי כמו
+        // loadAdForEdit בבילדר של קהילה בשכונה. מודעה ותיקה (בלי עיצוב
+        // שמור) נשארת על כללי ברירת המחדל של הבונה, שהם גם מה שמעצב אותה
+        // על האתר (legacyAdStyle).
+        const st = ad.adStyle;
         const draft = {
             logo: ad.logo ?? '',
             logoOriginal: ad.logo ?? '',
-            hasCircleCrop: false,
-            logoShape: 'square',
-            logoPosition: 'right',
-            logoPositionExplicit: false,
+            hasCircleCrop: st?.logoShape === 'circle',
+            logoShape: st?.logoShape === 'circle' ? 'circle' : 'square',
+            logoPosition: st?.logoAnchor ?? 'right',
+            logoPositionExplicit: Boolean(st),
+            logoFreeX: typeof st?.logoX === 'number' ? st.logoX : null,
+            logoFreeY: typeof st?.logoY === 'number' ? st.logoY : null,
             mainImage: ad.mainImage ?? '',
             mainImageObjectX: ad.mainImageFit?.x ?? 50,
             mainImageObjectY: ad.mainImageFit?.y ?? 50,
             mainImageZoom: ad.mainImageFit?.z ?? 1,
             title: ad.title ?? '',
-            titleColor: '#ffffff',
-            titleOffsetY: 0,
+            titleColor: st?.titleColor ?? '#ffffff',
+            titleOffsetY: st?.titleOffsetY ?? 0,
             subtitle: ad.subtitle ?? '',
             hoverText: ad.hoverText ?? '',
             cta: ad.cta ?? '',
-            gradient: ad.gradient ?? '',
-            diagHeight: 12,
+            // עותק מקהילה בשכונה עשוי לשאת זוג מחלקות Tailwind — הפלטה
+            // של הבונה מזהה רק CSS
+            gradient: toCssGradient(ad.gradient),
+            diagHeight: st?.bandHeight ?? 12,
             landingHeadline: lp.headline ?? '',
             landingPitch: lp.pitch ?? '',
             landingExtended: lp.extended ?? '',

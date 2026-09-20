@@ -20,6 +20,7 @@ import { strapiGet, strapiPost } from './strapiClient.js';
 import { normalizePlanDays } from '../adPlans.js';
 import { parseAdImageFit } from '../adImageFit.js';
 import { parseAdStyle } from '../adStyle.js';
+import { toCssGradient } from '../adGradient.js';
 import { imageStamp } from './inlineImage.js';
 import { invalidateAdsCache, type AdStatus } from './adsStore.js';
 
@@ -225,7 +226,8 @@ export async function importCommunityAd(sourceId: string): Promise<ImportResult>
             subtitle: src.subtitle ?? '',
             hover_text: src.hover_text ?? '',
             cta: src.cta ?? '',
-            gradient: src.gradient ?? '',
+            // קהילה בשכונה שומרת זוג מחלקות Tailwind; כאן הכרטיס מציב CSS
+            gradient: toCssGradient(src.gradient),
             logo,
             main_image: mainImage,
             landing,

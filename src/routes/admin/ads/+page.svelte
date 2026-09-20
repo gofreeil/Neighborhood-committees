@@ -342,8 +342,9 @@
                                     · 📄 {a.totals.landing}
                                     · 🤝 {a.totals.leads}
                                 </span>
+                                <a class="adv-ad-link" href="/advertise/manage/{a.id}" title="דשבורד הנכס — ומשם עריכה בבונה">✏️ ערוך</a>
                                 {#if a.status === 'approved'}
-                                    <a class="adv-ad-link" href="/ads/{a.id}" target="_blank" rel="noopener">לדף הנחיתה ↗</a>
+                                    <a class="adv-ad-link adv-ad-link-next" href="/ads/{a.id}" target="_blank" rel="noopener">לדף הנחיתה ↗</a>
                                 {/if}
                             </div>
                         {/each}
@@ -563,6 +564,9 @@
                     {/if}
 
                     <div class="ad-actions">
+                        <!-- עריכה = אותו מסלול של המפרסם: דשבורד הנכס → הבונה עם התוכן
+                             והעיצוב הקיימים → שמירה מחליפה את המודעה (הסטטוס והתוקף נשארים) -->
+                        <a href="/advertise/manage/{ad.id}" class="a-btn ghost" title="פתיחת דשבורד הנכס ומשם עריכה בבונה">✏️ ערוך</a>
                         {#if ad.status === 'approved'}
                             <a href="/ads/{ad.id}" target="_blank" class="a-btn ghost">פתח את דף הנחיתה ↗</a>
                         {/if}
@@ -969,6 +973,8 @@
     .adv-ad-nums { color: #9ca3af; font-variant-numeric: tabular-nums; }
     .adv-ad-link { color: #93c5fd; text-decoration: none; margin-inline-start: auto; }
     .adv-ad-link:hover { text-decoration: underline; }
+    /* קישור שני באותה שורה — הראשון כבר דחף את עצמו לקצה */
+    .adv-ad-link-next { margin-inline-start: 0.75rem; }
 
     .tabs {
         display: flex;
