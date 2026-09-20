@@ -661,15 +661,7 @@
 </div>
 
 <style>
-    /* גובה scroll מתחת להדר הדביק ולשורת הלשוניות */
-    :global(.scroll-target) {
-        scroll-margin-top: 110px;
-    }
-    @media (min-width: 768px) {
-        :global(.scroll-target) {
-            scroll-margin-top: 150px;
-        }
-    }
+    /* פיצוי על ההדר הדביק בגלילה ליעד: scroll-padding-top גלובלי ב-app.css */
 
     /* תאי רשת עם קווי הפרדה עדינים */
     .stage-cell {
