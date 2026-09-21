@@ -3,6 +3,7 @@
     import NewsTicker from '$lib/components/NewsTicker.svelte';
     import StackedWindows from '$lib/components/StackedWindows.svelte';
     import JsonLd from '$lib/components/JsonLd.svelte';
+    import StaleBadge from '$lib/components/StaleBadge.svelte';
     import { SITE_DESCRIPTION, canonical, websiteSchema, organizationSchema } from '$lib/seo';
 
     let { data } = $props();
@@ -178,11 +179,23 @@
         };
     });
 
+    // נתון חי (LiveValue): כשהמקור לא בקשר מוצג הערך האחרון שנשמר עם סימן אזהרה,
+    // ומקף רק אם אין שום ערך שמור. כל מספר שיהפוך חי נכנס לאותו מנגנון.
+    type Stat = { value: string; label: string; href?: string; stale?: boolean; staleAt?: string | null };
+    function liveStat(v: { value: number | null; stale: boolean; at: string | null }, label: string, href?: string): Stat {
+        return {
+            value: v.value === null ? '—' : v.value.toLocaleString('he-IL'),
+            label,
+            href,
+            stale: v.stale,
+            staleAt: v.at,
+        };
+    }
     // המספר מגיע מ"קהילה בשכונה": שכונות שיש להן רכז
-    const stats = $derived([
-        { value: data.committeesCount === null ? '—' : data.committeesCount.toLocaleString('he-IL'), label: 'ועדי שכונות' },
+    const stats: Stat[] = $derived([
+        liveStat(data.committeesCount, 'ועדי שכונות'),
         { value: '10,000+', label: 'תושבים פעילים' },
-        { value: '4', label: 'מאבקים פעילים' },
+        { value: '4', label: 'מאבקים פעילים', href: '/struggles' },
         { value: '156', label: 'ניצחונות' }
     ]);
 
@@ -276,12 +289,22 @@
 <!-- Stats -->
 <section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
     {#each stats as s}
-        <div class="rounded-2xl bg-white/5 border border-white/10 p-4 text-center">
-            <div class="text-2xl md:text-3xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                {s.value}
+        <svelte:element
+            this={s.href ? 'a' : 'div'}
+            href={s.href}
+            class="block rounded-2xl bg-white/5 border border-white/10 p-4 text-center {s.href
+                ? 'hover:bg-white/10 hover:border-white/20 transition-colors'
+                : ''}"
+        >
+            <div class="relative text-2xl md:text-3xl font-black">
+                <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{s.value}</span>
+                {#if s.stale}
+                    <!-- המקור לא בקשר: מוצג הנתון האחרון שנשמר -->
+                    <StaleBadge at={s.staleAt} class="absolute top-0 left-0 -translate-x-1 -translate-y-1" />
+                {/if}
             </div>
             <div class="text-xs md:text-sm text-gray-400 mt-1">{s.label}</div>
-        </div>
+        </svelte:element>
     {/each}
 </section>
 

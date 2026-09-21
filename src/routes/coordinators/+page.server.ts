@@ -1,9 +1,10 @@
 import type { PageServerLoad } from './$types';
-import { fetchCoordinators } from '$lib/server/community';
+import { loadCoordinators } from '$lib/server/community';
 
 export type { CoordinatorRow } from '$lib/server/community';
 
 export const load: PageServerLoad = async ({ fetch }) => {
-    const coordinators = (await fetchCoordinators(fetch)) ?? [];
-    return { coordinators };
+    // כשהמקור לא בקשר מגיעה הרשימה האחרונה שנשמרה, ו-stale מסמן להציג אזהרה
+    const result = await loadCoordinators(fetch);
+    return { coordinators: result.value ?? [], stale: result.stale, staleAt: result.at };
 };

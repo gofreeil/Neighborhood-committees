@@ -1,5 +1,6 @@
 <script lang="ts">
     import PageHero from '$lib/components/PageHero.svelte';
+    import { formatStaleAt } from '$lib/liveValue';
     import { onMount } from 'svelte';
     import { invalidateAll } from '$app/navigation';
     import { SvelteSet } from 'svelte/reactivity';
@@ -148,6 +149,21 @@
     </button>
 </PageHero>
 
+{#if data.stale}
+    <!-- המקור ("קהילה בשכונה") לא בקשר: מוצגת הרשימה האחרונה שנשמרה -->
+    <div role="status" class="mb-3 flex items-center gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 px-3 py-2 text-sm text-amber-200">
+        <span aria-hidden="true">⚠️</span>
+        <span>
+            השרת של "קהילה בשכונה" לא בקשר.
+            {#if coordinators.length}
+                מוצגת הרשימה האחרונה שנשמרה{#if data.staleAt} ({formatStaleAt(data.staleAt)}){/if}.
+            {:else}
+                אין עדיין רשימה שמורה להצגה.
+            {/if}
+        </span>
+    </div>
+{/if}
+
 <!-- שורה אחת: חיפוש חופשי + בחירת עיר + כפתורי מיון -->
 {#if coordinators.length > 0}
     <div class="-mt-2 sm:mt-0 mb-2 sm:mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
@@ -226,8 +242,8 @@
 
 {#if coordinators.length === 0}
     <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
-        <div class="text-4xl mb-3">🗂️</div>
-        <p class="text-gray-300">עדיין לא הוגדרו רכזי שכונות.</p>
+        <div class="text-4xl mb-3">{data.stale ? '📡' : '🗂️'}</div>
+        <p class="text-gray-300">{data.stale ? 'לא ניתן להביא כרגע את רשימת הרכזים. נסו לרענן בעוד רגע.' : 'עדיין לא הוגדרו רכזי שכונות.'}</p>
     </div>
 {:else if filtered.length === 0}
     <div class="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
