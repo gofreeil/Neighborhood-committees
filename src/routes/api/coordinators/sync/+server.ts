@@ -1,12 +1,12 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
-import { refreshCommitteesCount } from '$lib/server/community';
+import { refreshHomeCounts } from '$lib/server/community';
 
 // ============================================================
-// webhook הסנכרון של מונה ועדי השכונות.
-// אתר "קהילה בשכונה" קורא לכאן כשמצטרף רכז חדש, וכרטיס "ועדי שכונות"
-// בדף הבית מתעדכן מיד במקום לחכות לרענון התקופתי.
+// webhook הסנכרון של מוני דף הבית ("ועדי שכונות" ו"תושבים פעילים").
+// אתר "קהילה בשכונה" קורא לכאן כשמצטרף רכז חדש, והכרטיסים בדף הבית
+// מתעדכנים מיד במקום לחכות לרענון התקופתי.
 //
 //   POST https://neighborhoods.gofreeil.com/api/coordinators/sync
 //   x-sync-secret: <COORDINATORS_SYNC_SECRET>
@@ -33,7 +33,7 @@ export const POST: RequestHandler = async ({ request }) => {
         ?? '';
     if (!safeEqual(header.trim(), expected)) return json({ ok: false }, { status: 401 });
 
-    const committees = await refreshCommitteesCount();
-    if (committees === null) return json({ ok: false, error: 'source_unavailable' }, { status: 502 });
-    return json({ ok: true, committees });
+    const counts = await refreshHomeCounts();
+    if (!counts) return json({ ok: false, error: 'source_unavailable' }, { status: 502 });
+    return json({ ok: true, ...counts });
 };

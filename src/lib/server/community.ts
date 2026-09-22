@@ -1,7 +1,7 @@
 // ============================================================
 // community.ts — הנתונים של אתר "קהילה בשכונה", שם מוגדרים הרכזים
-// ונרשמים התושבים. משמש גם את מסך הרכזים וגם את מונה ועדי השכונות
-// בדף הבית.
+// ונרשמים התושבים. משמש גם את מסך הרכזים וגם את המונים בדף הבית
+// ("ועדי שכונות" = מספר הרכזים, "תושבים פעילים" = כל הרשומים באתר).
 //
 // עמידות: הקריאה למקור מוגבלת בזמן (FETCH_TIMEOUT_MS), וכל משיכה
 // מוצלחת נשמרת גם ב-Strapi דרך lastKnown. כשהמקור לא עונה הדף לא
@@ -20,6 +20,7 @@ const DOWN_COOLDOWN_MS = 30_000;
 
 /** מפתחות ב-lastKnown */
 const KEY_COUNT = 'committees_count';
+const KEY_RESIDENTS = 'residents_count';
 const KEY_LIST = 'coordinators';
 
 export interface CoordinatorRow {
@@ -36,6 +37,13 @@ export interface CoordinatorRow {
 }
 
 type Fetch = typeof globalThis.fetch;
+
+/** מה שה-API של "קהילה בשכונה" מחזיר */
+interface CommunityPayload {
+    coordinators: CoordinatorRow[];
+    /** סך כל הרשומים באתר. null/חסר = המקור לא הצליח לספור (או API ישן) */
+    registeredUsers?: number | null;
+}
 
 /** true = הניסיון האחרון מול המקור נכשל (המקור "לא בקשר") */
 let sourceDown = false;
@@ -68,9 +76,9 @@ export async function fetchCoordinators(
             markDown();
             return null;
         }
-        const data = await res.json();
+        const data = (await res.json()) as CommunityPayload;
         const coordinators: CoordinatorRow[] = data.coordinators ?? [];
-        remember(coordinators);
+        remember(coordinators, typeof data.registeredUsers === 'number' ? data.registeredUsers : null);
         return coordinators;
     } catch (e) {
         console.warn('[coordinators] fetch failed:', e);
@@ -80,13 +88,16 @@ export async function fetchCoordinators(
 }
 
 /** משיכה מוצלחת: מעדכנים את הזיכרון ושומרים ב-Strapi ברקע */
-function remember(coordinators: CoordinatorRow[]): void {
+function remember(coordinators: CoordinatorRow[], residents: number | null): void {
     const at = new Date().toISOString();
     sourceDown = false;
     downAt = 0;
-    countCache = { at, value: countCommittees(coordinators) };
+    // המקור ענה אבל בלי מונה רשומים (API ישן / הספירה אצלו נכשלה): שומרים את
+    // הערך הקודם שבזיכרון כדי לא למחוק נתון טוב.
+    countCache = { at, committees: countCommittees(coordinators), residents: residents ?? countCache?.residents ?? null };
     void setLastKnown(KEY_LIST, coordinators, at).catch(() => {});
-    void setLastKnown(KEY_COUNT, countCache.value, at).catch(() => {});
+    void setLastKnown(KEY_COUNT, countCache.committees, at).catch(() => {});
+    if (residents !== null) void setLastKnown(KEY_RESIDENTS, residents, at).catch(() => {});
 }
 
 /**
@@ -109,35 +120,55 @@ export function countCommittees(coordinators: CoordinatorRow[]): number {
 }
 
 // ============================================================
-// המונה של דף הבית
+// המונים של דף הבית: "ועדי שכונות" (רכזים) ו"תושבים פעילים" (כל הרשומים)
 //
 // הסנכרון עובד בדחיפה: כשמצטרף רכז חדש ב"קהילה בשכונה" הוא קורא ל-
-// POST /api/coordinators/sync, וזה מרענן את המונה מיד. הקאש בזיכרון הוא
+// POST /api/coordinators/sync, וזה מרענן את המונים מיד. הקאש בזיכרון הוא
 // רשת ביטחון — הוא מגיש את הערך האחרון מיד ומרענן ברקע, כך שטעינת דף
 // הבית לא מחכה ל-181KB של ה-API. מתחתיו יש את lastKnown ב-Strapi,
 // שמחזיק את הערך גם בין הפעלות קרות של הפונקציה.
 // ============================================================
 
 const FRESH_MS = 5 * 60 * 1000;
-let countCache: { at: string; value: number } | null = null;
-let inFlight: Promise<LiveValue<number>> | null = null;
 
-function fromMemory(): LiveValue<number> | null {
-    if (!countCache) return null;
-    return sourceDown ? staleValue(countCache.value, countCache.at) : live(countCache.value, countCache.at);
+export interface HomeCounts {
+    /** מספר הרכזים = ועדי שכונות */
+    committees: LiveValue<number>;
+    /** כל הרשומים באתר "קהילה בשכונה" = תושבים פעילים */
+    residents: LiveValue<number>;
 }
 
-function reload(fetch: Fetch): Promise<LiveValue<number>> {
+let countCache: { at: string; committees: number; residents: number | null } | null = null;
+let inFlight: Promise<HomeCounts> | null = null;
+
+function fromMemory(): HomeCounts | null {
+    if (!countCache) return null;
+    const { at, committees, residents } = countCache;
+    return sourceDown
+        ? { committees: staleValue(committees, at), residents: staleValue(residents, at) }
+        : { committees: live(committees, at), residents: { value: residents, stale: false, at } };
+}
+
+/** הערכים השמורים ב-Strapi — כשהמקור נפל ואין כלום בזיכרון (הפעלה קרה) */
+async function fromLastKnown(): Promise<HomeCounts> {
+    const [committees, residents] = await Promise.all([
+        getLastKnown<number>(KEY_COUNT),
+        getLastKnown<number>(KEY_RESIDENTS),
+    ]);
+    return {
+        committees: staleValue(committees?.value ?? null, committees?.at ?? null),
+        residents: staleValue(residents?.value ?? null, residents?.at ?? null),
+    };
+}
+
+function reload(fetch: Fetch): Promise<HomeCounts> {
     if (inFlight) return inFlight;
     inFlight = (async () => {
         try {
-            const coordinators = await fetchCoordinators(fetch);
-            if (coordinators) return live(countCommittees(coordinators), countCache?.at);
-            // המקור נפל: קודם הערך שבזיכרון, אחריו הערך השמור ב-Strapi
-            const mem = fromMemory();
-            if (mem) return mem;
-            const saved = await getLastKnown<number>(KEY_COUNT);
-            return staleValue(saved?.value ?? null, saved?.at ?? null);
+            // המקור ענה: remember כבר עדכן את הזיכרון. נפל: הזיכרון (אם יש),
+            // ואחריו הערכים השמורים ב-Strapi.
+            await fetchCoordinators(fetch);
+            return fromMemory() ?? (await fromLastKnown());
         } finally {
             inFlight = null;
         }
@@ -146,7 +177,7 @@ function reload(fetch: Fetch): Promise<LiveValue<number>> {
 }
 
 /** value=null רק כשהמקור לא עונה ואין שום ערך שמור. */
-export async function getCommitteesCount(fetch: Fetch): Promise<LiveValue<number>> {
+export async function getHomeCounts(fetch: Fetch): Promise<HomeCounts> {
     const mem = fromMemory();
     if (!mem || !countCache) return reload(fetch);
     if (Date.now() - Date.parse(countCache.at) < FRESH_MS) return mem;
@@ -161,8 +192,8 @@ export async function getCommitteesCount(fetch: Fetch): Promise<LiveValue<number
  * שהרכז שזה עתה נרשם ייספר. מחזיר null אם המקור לא זמין — במקרה כזה
  * הערך הישן נשאר על כנו ורשת הביטחון תתפוס אותו בהמשך.
  */
-export async function refreshCommitteesCount(): Promise<number | null> {
+export async function refreshHomeCounts(): Promise<{ committees: number; residents: number | null } | null> {
     const coordinators = await fetchCoordinators(globalThis.fetch, { bypassCdn: true });
     if (!coordinators) return null;
-    return countCommittees(coordinators);
+    return { committees: countCommittees(coordinators), residents: countCache?.residents ?? null };
 }

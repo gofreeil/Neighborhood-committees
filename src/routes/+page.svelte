@@ -191,10 +191,10 @@
             staleAt: v.at,
         };
     }
-    // המספר מגיע מ"קהילה בשכונה": שכונות שיש להן רכז
+    // שני המספרים הראשונים מגיעים מ"קהילה בשכונה": מספר הרכזים וכל הרשומים באתר
     const stats: Stat[] = $derived([
         liveStat(data.committeesCount, 'ועדי שכונות'),
-        { value: '10,000+', label: 'תושבים פעילים' },
+        liveStat(data.residentsCount, 'תושבים פעילים'),
         { value: '4', label: 'מאבקים פעילים', href: '/struggles' },
         { value: '156', label: 'ניצחונות' }
     ]);
