@@ -210,6 +210,7 @@
                         src={ad.image}
                         alt={ad.title}
                         class="benefit-img"
+                        loading="lazy"
                         decoding="async"
                     />
                 </div>

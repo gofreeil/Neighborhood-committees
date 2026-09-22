@@ -291,7 +291,7 @@
                             <!-- תמונה (ריק אם לא הועלתה תמונה) -->
                             <td class="py-1 px-2 sm:py-3 sm:px-4">
                                 {#if c.avatar_url}
-                                    <img src={c.avatar_url} alt={c.name}
+                                    <img src={c.avatar_url} alt="תמונת הפרופיל של {c.name}" loading="lazy" decoding="async"
                                         class="w-7 h-7 sm:w-11 sm:h-11 rounded-full object-cover border border-white/20" />
                                 {:else}
                                     <div class="w-7 h-7 sm:w-11 sm:h-11" aria-hidden="true"></div>

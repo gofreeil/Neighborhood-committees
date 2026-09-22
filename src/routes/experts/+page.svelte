@@ -52,7 +52,7 @@
                         <div class="petal-inner" style="transform: rotate({-wheelAngle}deg)">
                             <div class="petal-face">
                                 {#if p.image}
-                                    <img src={p.image} alt={p.name} loading="lazy" />
+                                    <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
                                 {:else}
                                     <span class="petal-emoji">{p.emoji}</span>
                                 {/if}
@@ -70,7 +70,7 @@
             <a class="petal petal-center" style="--c:{flowerCenter.color}" href="/experts/{flowerCenter.slug}" target="_blank" rel="noopener" aria-label={flowerCenter.name}>
                 <div class="petal-face">
                     {#if flowerCenter.image}
-                        <img src={flowerCenter.image} alt={flowerCenter.name} loading="lazy" />
+                        <img src={flowerCenter.image} alt={flowerCenter.name} loading="lazy" decoding="async" />
                     {:else}
                         <span class="petal-emoji">{flowerCenter.emoji}</span>
                     {/if}

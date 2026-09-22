@@ -21,7 +21,7 @@ export const ads: Ad[] = [
         description: "מתנדבים לתת לך עזרה מלאה בדין / פיוס בכל סיכסוך",
         cta: "יש לך סיכסוך? לחץ לפתרון",
         href: "https://chachmim.gofreeil.com/",
-        image: "/images/bati-hapius.png",
+        image: "/images/bati-hapius.webp",
         color: "from-orange-600 to-red-600"
     },
     {
@@ -31,7 +31,7 @@ export const ads: Ad[] = [
         cta: 'לאתר הגמ"ח הארצי',
         hover: 'מצא כל גמח בקלות!',
         href: "https://gemach.gofreeil.com/",
-        image: "/images/gemach-harzi.png",
+        image: "/images/gemach-harzi.webp",
         color: "from-pink-600 via-fuchsia-600 to-purple-700",
     },
     {
@@ -40,7 +40,7 @@ export const ads: Ad[] = [
         description: "האתר השכונתי המוביל - חיבור תושבים, גמ\"חים, חוגים ועוד",
         cta: "תהנה מכל היתרונות של הקהילה בשכונה שלך",
         href: "https://community.gofreeil.com/",
-        image: "/images/community-neighborhood.png",
+        image: "/images/community-neighborhood.webp",
         color: "from-blue-500 to-purple-600"
     },
     {
@@ -49,7 +49,7 @@ export const ads: Ad[] = [
         description: "מבקרים את הרשויות, ממצים את זכות התושב",
         cta: "מבקרים את הרשויות, ממצים את זכות התושב",
         href: "https://criticism.gofreeil.com/",
-        image: "/images/mevaker-rashuyot.png",
+        image: "/images/mevaker-rashuyot.webp",
         color: "from-blue-700 to-indigo-700",
         imageHeight: "120px",
         imageScale: 1.2,
@@ -60,7 +60,7 @@ export const ads: Ad[] = [
         description: "העם מדרג את הרשויות ועובדי הציבור",
         cta: "העם מדרג את הרשויות ועובדי הציבור",
         href: "https://rating.gofreeil.com/",
-        image: "/images/public-rating.jpeg",
+        image: "/images/public-rating.webp",
         color: "from-indigo-600 to-blue-600",
         imageHeight: "200px",
         imageScale: 0.9,
@@ -72,7 +72,7 @@ export const ads: Ad[] = [
         cta: "הבע דעתך על הסוגיות האקטואליות",
         hover: "הבע דעתך על הסוגיות האקטואליות",
         href: "https://referendum.gofreeil.com/",
-        image: "/images/referendum.png",
+        image: "/images/referendum.webp",
         color: "from-purple-600 to-indigo-700"
     },
     {
@@ -81,7 +81,7 @@ export const ads: Ad[] = [
         description: "הוזל את ההוצאות שלך",
         cta: "הצטרף לקבוצת הרכישה שלנו והוזל מיד את ההוצאות!",
         href: "https://groups.gofreeil.com/",
-        image: "/images/whatsapp_cta.png",
+        image: "/images/whatsapp_cta.webp",
         color: "from-green-800 to-emerald-900"
     },
     {
@@ -90,7 +90,7 @@ export const ads: Ad[] = [
         description: "חתמו על תנאי הקהילה ונותנים לנו הנחות והטבות יחודיות",
         cta: "מחפש בעל מקצוע איכותי באזורך?",
         href: "https://index.gofreeil.com/",
-        image: "/images/professionals.png",
+        image: "/images/professionals.webp",
         color: "from-yellow-500 to-orange-500"
     },
     {
@@ -100,7 +100,7 @@ export const ads: Ad[] = [
         cta: "כנסו לחנות לחיים טובים יותר",
         hover: "החנות שלנו!",
         href: "https://shop.gofreeil.com/",
-        image: "/images/yotzim-lecherut.png",
+        image: "/images/yotzim-lecherut.webp",
         color: "from-emerald-600 to-teal-700"
     }
 ];

@@ -14,7 +14,7 @@
 
 	const WELCOME_MS = 7000;
 	// לוגו האתר — המשתנה היחיד שמשתנה בין אתרי הרשת
-	const LOGO_SRC = '/images/neighborhoods.png';
+	const LOGO_SRC = '/images/neighborhoods.webp';
 
 	let kind = $state<'new' | 'back' | null>(null);
 	let visible = $state(false);
@@ -78,7 +78,10 @@
 				{#if kind === 'new'}
 					<img
 						src={LOGO_SRC}
-						alt="לוגו האתר"
+						alt="לוגו ועדי שכונות ארצי"
+						width="400"
+						height="399"
+						decoding="async"
 						class="mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover bg-white ring-2 ring-purple-400/40 shadow-lg mb-4"
 					/>
 					<h2 class="flex items-center justify-center gap-2 text-white font-black text-3xl sm:text-4xl mb-3">
@@ -115,8 +118,9 @@
 							<div class="w-full aspect-[4/3] overflow-hidden rounded-lg bg-gradient-to-br {site.color}">
 								<img
 									src={site.image}
-									alt={site.title}
+									alt="אתר {site.title}"
 									loading="lazy"
+									decoding="async"
 									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
 								/>
 							</div>

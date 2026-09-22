@@ -79,7 +79,7 @@
         <div class="al-hero-inner" class:has-media={!!heroImage}>
             <div class="al-copy">
                 {#if ad.logo}
-                    <img src={ad.logo} alt="לוגו {ad.title}" class="al-logo" class:is-circle={logoCircle} />
+                    <img src={ad.logo} alt="לוגו {ad.title}" decoding="async" class="al-logo" class:is-circle={logoCircle} />
                 {/if}
                 <h1>{lp.headline || ad.title}</h1>
                 {#if lp.pitch}
@@ -110,7 +110,7 @@
 
             {#if heroImage}
                 <div class="al-media">
-                    <img src={heroImage} alt={ad.title} />
+                    <img src={heroImage} alt={ad.title} fetchpriority="high" decoding="async" />
                 </div>
             {/if}
         </div>
@@ -156,7 +156,7 @@
                 {#each lp.products as p}
                     <div class="al-product">
                         {#if p.image}
-                            <img src={p.image} alt={p.name} />
+                            <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
                         {/if}
                         <div class="al-product-info">
                             <p class="al-product-name">{p.name}</p>
@@ -262,19 +262,29 @@
     }
     .al-link:hover { background: rgba(255, 255, 255, 0.3); }
 
-    .al-media { min-width: 0; }
+    /* המקום לתמונה שמור מראש (יחס 4:3 עד לגובה המקסימלי) — אין קפיצת פריסה בטעינה */
+    .al-media {
+        min-width: 0;
+        aspect-ratio: 4 / 3;
+        max-height: 17rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .al-media img {
         display: block;
         width: auto;
+        height: auto;
         max-width: 100%;
-        max-height: 17rem;
+        max-height: 100%;
         margin-inline: auto;
         border-radius: 0.9rem;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
     }
     /* בדסקטופ התמונה גדלה עד לגובה של טור הטקסט שלידה — פרופורציה מאוזנת */
     @media (min-width: 860px) {
-        .al-media img { max-height: 27rem; border-radius: 1.1rem; }
+        .al-media { max-height: 27rem; }
+        .al-media img { border-radius: 1.1rem; }
     }
 
     .al-actions {

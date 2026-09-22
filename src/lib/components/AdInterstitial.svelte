@@ -47,8 +47,8 @@
                class="ad-int-creative bg-gradient-to-br {ad.color}"
                style={ad.gradientCss ? `background:${ad.gradientCss}` : undefined}>
                 {#if ad.image}
-                    <img class="ad-int-img" src={ad.image} alt={ad.title} draggable="false"
-                         style={`${ad.imageHeight ? `max-height:${ad.imageHeight};` : ''}${ad.imageScale ? `transform:scale(${ad.imageScale});` : ''}`} />
+                    <img class="ad-int-img" src={ad.image} alt={ad.title} draggable="false" decoding="async"
+                         style={`${ad.imageHeight ? `height:${ad.imageHeight};` : ''}${ad.imageScale ? `transform:scale(${ad.imageScale});` : ''}`} />
                 {:else}
                     <!-- משבצת פנויה (בלי קריאייטיב) — 📢 כמו בטור הדסקטופ -->
                     <div class="ad-int-emoji" aria-hidden="true">📢</div>
@@ -136,7 +136,9 @@
     .ad-int-creative:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
     .ad-int-img {
-        max-height: 130px;
+        /* גובה קבוע (לא max) — המקום שמור לפני שהתמונה נטענת, בלי קפיצת פריסה */
+        height: 130px;
+        width: auto;
         max-width: 100%;
         object-fit: contain;
         border-radius: 0.75rem;

@@ -253,6 +253,7 @@
     <meta name="description" content={SITE_DESCRIPTION} />
     <meta name="keywords" content="יוצאים לחירות, ועדי שכונות יוצאים לחירות, ועדי שכונות, ועד שכונה, ועדי שכונות ארצי, קול התושב, רכזי שכונות, מאבקים שכונתיים, דיונים והצבעות" />
     <link rel="canonical" href={canonical('/')} />
+    <link rel="preload" as="image" href="/images/Neighborhood-committees.webp" fetchpriority="high" />
 </svelte:head>
 <JsonLd schema={[websiteSchema(), organizationSchema()]} />
 
@@ -275,8 +276,12 @@
 >
     <img
         bind:this={parallaxImg}
-        src="/images/Neighborhood-committees.png"
-        alt="החזון שלנו ותוכנית הפעולה"
+        src="/images/Neighborhood-committees.webp"
+        alt="עיר ירוקה ומשגשגת – לחזון שלנו ולתוכנית הפעולה"
+        width="1537"
+        height="1023"
+        fetchpriority="high"
+        decoding="async"
         class="parallax-img absolute top-0 left-0 w-full min-h-[140%] object-cover object-left pointer-events-none select-none will-change-transform"
     />
     <div class="relative p-6 md:p-8 text-center">

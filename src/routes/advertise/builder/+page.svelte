@@ -1087,7 +1087,7 @@
                                 ondrop={(e) => handleDrop(e, "logo", (v) => (isDraggingLogo = v))}
                             >
                                 {#if logo}
-                                    <img src={logo} alt="לוגו" />
+                                    <img src={logo} alt="הלוגו שהועלה" decoding="async" />
                                     <button type="button" class="remove-x" onclick={(e) => { e.preventDefault(); clearImage("logo"); }} aria-label="הסר לוגו">✕</button>
                                 {:else}
                                     <div class="upload-sm-empty">
@@ -1163,7 +1163,7 @@
                                 >
                                     <img
                                         src={logoOriginal}
-                                        alt="לוגו"
+                                        alt="הלוגו שהועלה – חיתוך"
                                         class="crop-img"
                                         draggable="false"
                                         style:transform="translate({cropOffsetX}px, {cropOffsetY}px) scale({cropZoom})"
@@ -1376,13 +1376,13 @@
                                     <div class="mobile-popup">
                                         <div class="popup-title-row">
                                             {#if logo}
-                                                <img src={logo} alt="לוגו" class="popup-logo-above" class:circle={logoShape === "circle"} />
+                                                <img src={logo} alt="לוגו המפרסם" decoding="async" class="popup-logo-above" class:circle={logoShape === "circle"} />
                                             {/if}
                                             <h3 class="popup-title-above" style:color={titleColor}>{title || "כותרת הפרסומת"}</h3>
                                         </div>
                                         <div class="popup-img pro-img-wrap">
                                             {#if mainImage}
-                                                <img src={mainImage} alt={title} style:object-position="{mainImageObjectX}% {mainImageObjectY}%" use:adImgFit={mainImageFit} />
+                                                <img src={mainImage} alt={title || "התמונה הראשית"} decoding="async" style:object-position="{mainImageObjectX}% {mainImageObjectY}%" use:adImgFit={mainImageFit} />
                                             {:else}
                                                 <div class="img-placeholder">התמונה הראשית</div>
                                             {/if}
@@ -1413,7 +1413,7 @@
                             >
                                 <div class="pro-img-wrap clean-card-img">
                                     {#if mainImage}
-                                        <img src={mainImage} alt={title} class="ad-img" style:opacity={showHover ? 0 : 1} style:object-position="{mainImageObjectX}% {mainImageObjectY}%" use:adImgFit={mainImageFit} />
+                                        <img src={mainImage} alt={title || "התמונה הראשית"} decoding="async" class="ad-img" style:opacity={showHover ? 0 : 1} style:object-position="{mainImageObjectX}% {mainImageObjectY}%" use:adImgFit={mainImageFit} />
                                     {:else}
                                         <div class="img-placeholder">התמונה שלך</div>
                                     {/if}
@@ -1434,7 +1434,7 @@
                                              לו מקבילת מקלדת מלאה (חיצים מזיזים אותו) ולכן זה תקין נגישותית -->
                                         <img
                                             src={logo}
-                                            alt="לוגו"
+                                            alt="לוגו המפרסם – גררו כדי למקם"
                                             class="ad-logo ad-logo-draggable"
                                             class:circle={logoShape === "circle"}
                                             class:pos-left={!logoFree && logoPosition === "left"}
@@ -1509,7 +1509,8 @@
                             {#if mainImage}
                                 <img
                                     src={mainImage}
-                                    alt={title}
+                                    alt={title || "התמונה הראשית"}
+                                    decoding="async"
                                     class="ad-img"
                                     style:object-position="{mainImageObjectX}% {mainImageObjectY}%"
                                     style:opacity={activeStep === "hover" ? 0 : 1}
@@ -1541,7 +1542,7 @@
                                 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
                                 <img
                                     src={logo}
-                                    alt="לוגו"
+                                    alt="לוגו המפרסם – גררו כדי למקם"
                                     class="ad-logo ad-logo-draggable"
                                     class:circle={logoShape === "circle"}
                                     class:pos-left={!logoFree && logoPosition === "left"}

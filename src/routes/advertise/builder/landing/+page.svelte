@@ -601,7 +601,7 @@
                             ondrop={dropLanding}
                         >
                             {#if landingImage}
-                                <img src={landingImage} alt="תמונת דף הנחיתה" />
+                                <img src={landingImage} alt="תמונת דף הנחיתה שהועלתה" decoding="async" />
                                 <button type="button" class="remove-x" onclick={(e) => { e.preventDefault(); clearLandingImage(); }} aria-label="הסר תמונה">✕</button>
                             {:else}
                                 <div class="upload-empty-sm">
@@ -648,7 +648,7 @@
                                 ondrop={(e) => dropProduct(e, p.id)}
                             >
                                 {#if p.image}
-                                    <img src={p.image} alt={p.name} />
+                                    <img src={p.image} alt={p.name || "תמונת המוצר"} decoding="async" />
                                 {:else}
                                     <div class="pz-empty">
                                         {#if draggingProductId === p.id}✨<br />שחררו{:else}📷<br />תמונה{/if}
@@ -724,7 +724,7 @@
                             <div class="landing-hero-inner" class:has-media={!!(landingImage || mainImage)}>
                                 <div class="landing-hero-content">
                                     {#if logo}
-                                        <img src={logo} alt="לוגו" class="landing-logo" class:circle={logoShape === "circle"} />
+                                        <img src={logo} alt="לוגו המפרסם" decoding="async" class="landing-logo" class:circle={logoShape === "circle"} />
                                     {/if}
                                     <h1>{landingHeadline || title || "כותרת דף הנחיתה"}</h1>
                                     <p>{landingPitch || subtitle || "משפט הפתיחה יופיע כאן"}</p>
@@ -756,7 +756,7 @@
                                 </div>
                                 {#if landingImage || mainImage}
                                     <div class="landing-hero-media">
-                                        <img src={landingImage || mainImage} alt={title} />
+                                        <img src={landingImage || mainImage} alt={title || "תמונת דף הנחיתה"} decoding="async" />
                                     </div>
                                 {/if}
                             </div>
@@ -801,7 +801,7 @@
                                     {#each products as p}
                                         <div class="product-card">
                                             {#if p.image}
-                                                <img src={p.image} alt={p.name} />
+                                                <img src={p.image} alt={p.name || "תמונת המוצר"} loading="lazy" decoding="async" />
                                             {:else}
                                                 <div class="img-placeholder small">תמונה</div>
                                             {/if}
@@ -1530,18 +1530,27 @@
         }
     }
     .landing-hero-content { min-width: 0; }
-    .landing-hero-media { min-width: 0; }
+    /* כמו בדף האמיתי: המקום לתמונה שמור מראש — אין קפיצת פריסה בטעינה */
+    .landing-hero-media {
+        min-width: 0;
+        aspect-ratio: 4 / 3;
+        max-height: 12rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .landing-hero-media img {
         display: block;
         width: auto;
+        height: auto;
         max-width: 100%;
-        max-height: 12rem;
+        max-height: 100%;
         margin-inline: auto;
         border-radius: 0.7rem;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
     @media (min-width: 700px) {
-        .landing-hero-media img { max-height: 19rem; }
+        .landing-hero-media { max-height: 19rem; }
     }
     .landing-cta-row { margin-top: 0.9rem; }
     @media (min-width: 700px) {

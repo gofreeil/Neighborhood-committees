@@ -75,7 +75,7 @@
         <div class="md:hidden h-[72px] flex items-center justify-between">
             <a href="/" class="flex items-center gap-2.5 flex-1 min-w-0">
                 <div class="h-12 w-12 rounded-full overflow-hidden flex-shrink-0 bg-white/5 flex items-center justify-center">
-                    <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
+                    <img src="/images/neighborhoods.webp" alt="לוגו ועדי שכונות ארצי – לדף הבית" width="400" height="399" decoding="async" class="h-full w-full object-contain" />
                 </div>
                 <div class="min-w-0 flex-1">
                     <h1 class="bg-clip-text text-lg font-black text-transparent leading-tight" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
@@ -202,7 +202,7 @@
             <div class="flex items-center justify-between w-full">
                 <a href="/" class="logo-link flex items-center gap-4">
                     <div class="logo-circle h-20 w-20 rounded-full overflow-hidden bg-white/5 flex items-center justify-center shadow-lg">
-                        <img src="/images/neighborhoods.png" alt="ועדי שכונות ארצי" class="h-full w-full object-contain" />
+                        <img src="/images/neighborhoods.webp" alt="לוגו ועדי שכונות ארצי – לדף הבית" width="400" height="399" decoding="async" class="h-full w-full object-contain" />
                     </div>
                     <div class="logo-text">
                         <h1 class="bg-clip-text text-4xl font-black text-transparent tracking-tight drop-shadow-lg" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 8px rgba(15,162,233,0.35);">
