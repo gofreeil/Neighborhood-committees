@@ -154,12 +154,15 @@
                             </div>
                         </div>
                     </div>
+                    <!-- כרטיס מוצר מהחנות - בלי רצועת המחיר ("₪.. · לצפייה בחנות") -->
+                    {#if !item.ad.shop}
                     <div
                         class="p-2.5 text-center"
                         style="background: {item.ad.gradient || 'linear-gradient(135deg, #2563eb, #9333ea)'}"
                     >
                         <p class="text-white font-bold text-xs leading-tight">{item.ad.cta || 'לפרטים'}</p>
                     </div>
+                    {/if}
                 </a>
             {:else if item.kind === 'pending'}
                 <!-- שלד בזמן הטעינה הראשונה — ניטרלי, בלי "מקום פרסום זה"
