@@ -12,6 +12,11 @@
 	let emailValue      = $state('');
 	let passwordValue   = $state('');
 
+	// האימייל שהוקלד נשלח לדף השחזור - לא צריך להקליד אותו פעמיים.
+	const forgotHref = $derived(
+		emailValue.includes('@') ? `/forgot-password?email=${encodeURIComponent(emailValue.trim())}` : '/forgot-password'
+	);
+
 	// מוסיף welcome=back ליעד — מפעיל את מסך "ברוכים השבים" אחרי ההתחברות
 	function withWelcome(dest: string): string {
 		try {
@@ -116,6 +121,12 @@
 				{#if form?.error || credError}
 					<div id="login-error" role="alert" class="mb-6 rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-center">
 						<p class="text-red-400 text-sm font-medium">{credError ?? form?.error}</p>
+						{#if credError || form?.error}
+							<ul class="mt-2 list-disc space-y-1 pr-5 text-right text-xs leading-relaxed text-gray-300">
+								<li>נרשמתם בעבר עם <strong>Google</strong> או <strong>Facebook</strong>? אז אין לכם סיסמה — היכנסו עם הכפתורים שבדף.</li>
+								<li>שכחתם את הסיסמה? <a href={forgotHref} class="font-bold text-purple-300 underline">שלחו לי קישור לבחירת סיסמה חדשה</a></li>
+							</ul>
+						{/if}
 					</div>
 				{/if}
 				{#if data.registered}
@@ -232,7 +243,7 @@
 					</div>
 
 					<div class="text-left mb-4">
-						<a href="/forgot-password" class="text-purple-400 hover:text-purple-300 text-sm transition-colors">
+						<a href={forgotHref} class="text-purple-400 hover:text-purple-300 text-sm transition-colors">
 							שכחתי סיסמה
 						</a>
 					</div>
