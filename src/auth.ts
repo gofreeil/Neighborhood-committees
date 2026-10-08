@@ -6,6 +6,7 @@ import { createHash } from 'crypto';
 import type { Handle } from '@sveltejs/kit';
 import { upsertUser, getUserByEmail, getUserById } from '$lib/server/db';
 import { strapiLogin, strapiRegister, getStrapiMe, bestStrapiName, friendlyName } from '$lib/server/strapiClient';
+import { syncAvatar } from '$lib/server/userAvatar';
 
 /** קריאת ערך עוגייה מתוך כותרת Cookie גולמית (authorize מקבל Request, לא event.cookies) */
 function readCookie(cookieHeader: string | null | undefined, name: string): string | null {
@@ -259,6 +260,8 @@ export const { handle, signIn, signOut } = !AUTH_SECRET
                     }
                 } catch { /* ignore - fallback to 'user' */ }
             }
+            // תמונת הפרופיל לאווטאר בהדר — מ-avatar_url שב-Strapi המשותף (גם בכניסת SSO/סיסמה)
+            await syncAvatar(token, token.strapiJwt, getStrapiMe);
             return token;
         },
 

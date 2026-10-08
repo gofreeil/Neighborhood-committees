@@ -8,11 +8,13 @@
     let {
         userEmail = null,
         userName = null,
+        userImage = null,
         isAdmin = false,
         superAdmin = false,
     }: {
         userEmail?: string | null;
         userName?: string | null;
+        userImage?: string | null;
         isAdmin?: boolean;
         superAdmin?: boolean;
     } = $props();
@@ -21,6 +23,8 @@
     const isLoggedIn = $derived(!!userEmail);
     const displayName = $derived(userName?.trim() || userEmail?.split('@')[0] || 'המשתמש שלי');
     const initial = $derived(displayName.charAt(0).toUpperCase());
+    // תמונת הפרופיל לא נטענה (קישור שפג / חסום) → חוזרים לאות הראשונה
+    let avatarBroken = $state(false);
 
     // יציאה: Auth.js מוחק את הסשן ומפנה ל-/logout שמנקה גם את טוקן ה-Strapi
     let signingOut = $state(false);
@@ -63,6 +67,26 @@
         if (event.key === 'Escape') profileOpen = false;
     }
 </script>
+
+<!-- אווטאר: תמונת הפרופיל אם יש, אחרת האות הראשונה של השם -->
+{#snippet avatar()}
+    {#if userImage && !avatarBroken}
+        <img
+            src={userImage}
+            alt=""
+            width="28"
+            height="28"
+            decoding="async"
+            referrerpolicy="no-referrer"
+            onerror={() => (avatarBroken = true)}
+            class="h-7 w-7 shrink-0 rounded-full object-cover"
+        />
+    {:else}
+        <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
+            {initial}
+        </span>
+    {/if}
+{/snippet}
 
 <svelte:window onpointerdown={onWindowPointerDown} onkeydown={onWindowKeydown} />
 
@@ -114,9 +138,7 @@
                                     onclick={() => (mobileOpen = false)}
                                     class="flex min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-white/10 transition-colors"
                                 >
-                                    <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                        {initial}
-                                    </span>
+                                    {@render avatar()}
                                     <span class="min-w-0 flex-1 truncate text-right text-sm font-bold text-white">{displayName}</span>
                                 </a>
                                 <button
@@ -136,9 +158,7 @@
                                 aria-expanded={mobileProfileOpen}
                                 class="flex w-full items-center gap-2 px-3 py-2 text-right hover:bg-white/10 transition-colors"
                             >
-                                <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                    {initial}
-                                </span>
+                                {@render avatar()}
                                 <span class="min-w-0 flex-1 truncate text-sm font-bold text-white">{displayName}</span>
                                 <span class="shrink-0 text-[10px] text-gray-400">{mobileProfileOpen ? '▲' : '▼'}</span>
                             </button>
@@ -223,9 +243,7 @@
                                         title={userEmail}
                                         class="flex items-center gap-2 px-2 py-1.5 hover:bg-white/10 transition-colors"
                                     >
-                                        <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                            {initial}
-                                        </span>
+                                        {@render avatar()}
                                         <span class="max-w-[140px] truncate text-sm font-bold text-white">{displayName}</span>
                                     </a>
                                     <button
@@ -248,9 +266,7 @@
                                     title={userEmail}
                                     class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 hover:bg-white/10 transition-colors"
                                 >
-                                    <span class="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 grid place-items-center text-xs font-black text-white">
-                                        {initial}
-                                    </span>
+                                    {@render avatar()}
                                     <span class="max-w-[140px] truncate text-sm font-bold text-white">{displayName}</span>
                                     <span class="shrink-0 text-[10px] text-gray-400">{profileOpen ? '▲' : '▼'}</span>
                                 </button>

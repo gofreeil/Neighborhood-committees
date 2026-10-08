@@ -36,6 +36,8 @@ declare module '@auth/core/jwt' {
         dbUserId?: string;
         provider?: string;
         strapiJwt?: string;
+        /** מתי נמשכה תמונת הפרופיל מ-Strapi לאחרונה (userAvatar.ts) */
+        avatarAt?: number;
         // app_role של הרשומה המשותפת ב-Strapi, כפי ש-db.ts ממפה אותו.
         // nc_admin = אדמין האתר הזה; neighborhood_admin = רכז שכונה.
         role?: 'user' | 'nc_admin' | 'neighborhood_admin' | 'super_admin';

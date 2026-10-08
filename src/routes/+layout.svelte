@@ -32,6 +32,7 @@
 <Header
     userEmail={data?.userEmail ?? null}
     userName={data?.userName ?? null}
+    userImage={data?.userImage ?? null}
     isAdmin={data?.isAdmin ?? false}
     superAdmin={data?.superAdmin ?? false}
 />
