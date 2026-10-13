@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { withIntent } from '$lib/authIntent';
 
 export interface ToggleResponse { active: boolean; choice: string }
 
@@ -19,7 +20,8 @@ export async function toggleEngagement(
             body:    JSON.stringify({ kind, target, choice }),
         });
         if (res.status === 401) {
-            goto(`/login?redirect=${encodeURIComponent(redirectAfterLogin)}`);
+            // intent: מסך הפתיחה אחרי ההרשמה יציג "כעת תועבר לבקשתך — <הצבעה/הצטרפות...>"
+            goto(`/login?redirect=${encodeURIComponent(withIntent(redirectAfterLogin, kind))}`);
             return null;
         }
         const data = await res.json();

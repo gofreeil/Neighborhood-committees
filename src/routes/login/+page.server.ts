@@ -1,5 +1,6 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { strapiLogin, getStrapiMe, bestStrapiName, friendlyName } from '$lib/server/strapiClient';
+import { resolveReturn } from '$lib/server/authReturn';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -24,7 +25,8 @@ export const load: PageServerLoad = async (event) => {
 
     return {
         ssoName,
-        redirectTo:  event.url.searchParams.get('redirect') ?? '/',
+        // היעד, או הבקשה הממתינה מהעוגייה (נכנסו מכפתור ההתחברות הכללי אחרי אישור מייל)
+        redirectTo:  resolveReturn(event.url, event.cookies),
         error:       event.url.searchParams.get('error') ?? null,
         registered:  event.url.searchParams.get('registered') === '1',
     };

@@ -343,7 +343,7 @@
 
 				<p class="text-center text-sm text-gray-500 mb-4">
 					אין לך חשבון?
-					<a href="/register" class="text-purple-400 hover:text-purple-300 font-medium transition-colors">
+					<a href="/register?redirect={encodeURIComponent(data.redirectTo || '/')}" class="text-purple-400 hover:text-purple-300 font-medium transition-colors">
 						הירשם כאן
 					</a>
 				</p>

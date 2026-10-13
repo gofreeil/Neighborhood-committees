@@ -1,6 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { strapiRegister } from '$lib/server/strapiClient';
 import { registerWithCredentials, updateUserProfile } from '$lib/server/db';
+import { resolveReturn } from '$lib/server/authReturn';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -12,7 +13,8 @@ export const load: PageServerLoad = async (event) => {
     }
 
     return {
-        redirectTo: event.url.searchParams.get('redirect') ?? '/',
+        // היעד נשמר גם בעוגייה: אחרי אישור המייל והתחברות בלי יעד חוזרים אליו
+        redirectTo: resolveReturn(event.url, event.cookies),
     };
 };
 

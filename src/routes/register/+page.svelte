@@ -66,7 +66,7 @@
 							צריך רק ללחוץ על הקישור שבמייל, ואז אפשר להתחבר.
 						</p>
 						<a
-							href="/login"
+							href="/login?redirect={encodeURIComponent(data.redirectTo || '/')}"
 							class="block w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-black hover:opacity-90 transition-opacity"
 						>
 							למסך ההתחברות
@@ -224,7 +224,7 @@
 
 					<p class="text-center text-sm text-gray-500 mb-4">
 						כבר יש לך חשבון?
-						<a href="/login" class="text-purple-400 hover:text-purple-300 font-medium transition-colors">
+						<a href="/login?redirect={encodeURIComponent(data.redirectTo || '/')}" class="text-purple-400 hover:text-purple-300 font-medium transition-colors">
 							התחבר כאן
 						</a>
 					</p>

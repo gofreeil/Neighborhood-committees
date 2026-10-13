@@ -3,6 +3,7 @@
     // תוכנת המייל של התושב ומסמן בשרת שהוא שלח (רשומת מעורבות 'letter').
     // מי שאין לו תוכנת מייל מקבל חלופות: Gmail / Outlook בדפדפן, או העתקה.
     import { toggleEngagement } from '$lib/engagement';
+    import { withIntent } from '$lib/authIntent';
     import { buildMailto, buildGmailUrl, buildOutlookUrl, personalize } from '$lib/letters';
 
     interface Props {
@@ -104,7 +105,7 @@
     {#if loginHint && !loggedIn}
         <p class="mt-2 text-xs text-amber-200">
             המייל נפתח אצלך. כדי שהשליחה שלך תיספר -
-            <a href={`/login?redirect=${encodeURIComponent(returnTo)}`} class="underline font-bold">התחברו</a>
+            <a href={`/login?redirect=${encodeURIComponent(withIntent(returnTo, 'letter'))}`} class="underline font-bold">התחברו</a>
             ולחצו שוב.
         </p>
     {:else if isSent}
