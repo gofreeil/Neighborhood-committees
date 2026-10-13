@@ -13,6 +13,8 @@ import {
     removeAdExtraSlot,
     computeAdSlots,
     computeAdExtraSlots,
+    computeSchedules,
+    removeAd,
     setAdDuration,
     setAdExpiry,
     normalizeDurationDays,
@@ -133,7 +135,7 @@ export const load: PageServerLoad = async ({ locals }) => {
         }
     }
 
-    return { ads, inventory, backendUnavailable, superAdmin, communityAds, communityUnavailable };
+    return { ads, inventory, schedules: computeSchedules(raw.filter((a) => a.status === 'approved')), backendUnavailable, superAdmin, communityAds, communityUnavailable };
 };
 
 export const actions: Actions = {
@@ -215,6 +217,21 @@ export const actions: Actions = {
         } catch (err) {
             console.error('unapprove failed:', err);
             return fail(502, { error: `ההורדה נכשלה: ${failReason(err)}` });
+        }
+    },
+    // מחיקה לצמיתות שמורה לסופר-אדמין; אדמין שמונה מוריד מהאתר ולא מוחק
+    remove: async ({ request, locals }) => {
+        const { superAdmin } = await getAdminContext(locals);
+        if (!superAdmin) return fail(403, { error: 'מחיקה שמורה לסופר-אדמין' });
+        const form = await request.formData();
+        const id = String(form.get('id') ?? '');
+        if (!id) return fail(400, { error: 'חסר מזהה פרסומת' });
+        try {
+            await removeAd(id);
+            return { success: true, message: 'נמחקה לצמיתות' };
+        } catch (err) {
+            console.error('remove failed:', err);
+            return fail(502, { error: `המחיקה נכשלה: ${failReason(err)}` });
         }
     },
     // קציבת תקופת פרסום — נספרת מיום האישור
