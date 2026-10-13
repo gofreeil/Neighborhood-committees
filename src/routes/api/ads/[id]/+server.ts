@@ -2,6 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getAd, isAdOwner, updateAdContent, normalizeLanding } from '$lib/server/adsStore';
 import { ownerCandidateKeys } from '$lib/server/ownership';
+import { notifyAdminsAdEdited } from '$lib/server/adsNotify';
 import { resolveRole } from '$lib/server/adsAdmin';
 import { adPayloadIssue } from '$lib/server/adBudget';
 
@@ -60,6 +61,18 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
             throw error(413, 'התמונות כבדות מדי — הקטינו תמונה ונסו שוב');
         }
         throw error(502, 'העדכון נכשל — נסו שוב בעוד רגע');
+    }
+
+    // העריכה לא עוברת אישור (מודעה מאושרת מתעדכנת באתר מיד) — הצוות חייב
+    // לדעת עליה. best-effort: כשל בהתראה לא מפיל את העריכה.
+    if (isAdOwner(ownerCandidateKeys(session.user), ad)) {
+        await notifyAdminsAdEdited({
+            adTitle: payload.title,
+            previousTitle: ad.title,
+            status: ad.status,
+            editorName: session.user.name,
+            editorEmail: session.user.email,
+        });
     }
 
     return json({ ok: true, id: params.id, status: ad.status });
