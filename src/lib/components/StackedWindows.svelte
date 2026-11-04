@@ -9,6 +9,87 @@
     let noAnim = $state(true);
     let stackEl: HTMLElement | undefined = $state();
 
+    // Swipe state
+    let isDragging = $state(false);
+    let dragX = $state(0);
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let pointerId: number | null = null;
+    let dragAxis: 'none' | 'horizontal' | 'vertical' = 'none';
+    let suppressNextClick = false;
+    const SWIPE_THRESHOLD = 55;
+    const AXIS_THRESHOLD = 6;
+
+    function onPointerDown(e: PointerEvent) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        pointerId = e.pointerId;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        dragX = 0;
+        dragAxis = 'none';
+        isDragging = true;
+        if (noAnim) noAnim = false;
+    }
+
+    function onPointerMove(e: PointerEvent) {
+        if (!isDragging || e.pointerId !== pointerId) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+
+        if (dragAxis === 'none') {
+            if (Math.abs(dx) < AXIS_THRESHOLD && Math.abs(dy) < AXIS_THRESHOLD) return;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                dragAxis = 'horizontal';
+                try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch {}
+            } else {
+                // Vertical intent - bail out so the page can scroll
+                isDragging = false;
+                pointerId = null;
+                dragX = 0;
+                return;
+            }
+        }
+
+        if (dragAxis === 'horizontal') {
+            const max = 220;
+            const sign = Math.sign(dx);
+            const abs = Math.min(Math.abs(dx), max);
+            dragX = sign * abs;
+        }
+    }
+
+    function endDrag() {
+        const dx = dragX;
+        const wasHorizontal = dragAxis === 'horizontal';
+        isDragging = false;
+        pointerId = null;
+        dragAxis = 'none';
+        dragX = 0;
+
+        if (wasHorizontal) {
+            suppressNextClick = true;
+            setTimeout(() => { suppressNextClick = false; }, 50);
+            if (Math.abs(dx) > SWIPE_THRESHOLD) {
+                bringFront(active === 'vote' ? 'chat' : 'vote');
+            }
+        }
+    }
+
+    function safeBringFront(which: 'vote' | 'chat') {
+        if (suppressNextClick) return;
+        bringFront(which);
+    }
+
+    function onPointerUp(e: PointerEvent) {
+        if (!isDragging || e.pointerId !== pointerId) return;
+        endDrag();
+    }
+
+    function onPointerCancel(e: PointerEvent) {
+        if (!isDragging || e.pointerId !== pointerId) return;
+        endDrag();
+    }
+
     onMount(() => {
         let target: 'vote' | 'chat' = 'vote';
         try {
@@ -58,10 +139,19 @@
         <div class="h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent mt-2 md:mt-3"></div>
     </div>
 
-    <div bind:this={stackEl} class="relative h-[580px] md:h-[750px]" style="transform-style: preserve-3d;">
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+        bind:this={stackEl}
+        class="stack-inner relative h-[580px] md:h-[750px] {isDragging ? 'dragging' : ''}"
+        style="transform-style: preserve-3d; transform: translate3d({dragX}px, 0, 0);"
+        onpointerdowncapture={onPointerDown}
+        onpointermovecapture={onPointerMove}
+        onpointerupcapture={onPointerUp}
+        onpointercancelcapture={onPointerCancel}
+    >
         <button
             type="button"
-            onclick={() => bringFront(active === 'vote' ? 'chat' : 'vote')}
+            onclick={() => safeBringFront(active === 'vote' ? 'chat' : 'vote')}
             class="md:hidden absolute left-0 top-0 bottom-0 w-[16%] z-40 cursor-pointer bg-transparent"
             aria-label="עבור לחלון השני"
         ></button>
@@ -75,7 +165,7 @@
             {#if active !== 'vote'}
                 <button
                     type="button"
-                    onclick={() => bringFront('vote')}
+                    onclick={() => safeBringFront('vote')}
                     class="absolute inset-0 z-30 cursor-pointer"
                     aria-label="הבא להצבעות"
                 ></button>
@@ -100,7 +190,7 @@
             {#if active !== 'chat'}
                 <button
                     type="button"
-                    onclick={() => bringFront('chat')}
+                    onclick={() => safeBringFront('chat')}
                     class="absolute inset-0 z-30 cursor-pointer"
                     aria-label="הבא לשיח פתוח"
                 ></button>
@@ -118,6 +208,16 @@
         display: none;
         width: 0;
         height: 0;
+    }
+    .stack-inner {
+        touch-action: pan-y;
+        transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .stack-inner :global(*) {
+        touch-action: pan-y;
+    }
+    .stack-inner.dragging {
+        transition: none;
     }
     .card {
         backface-visibility: visible;
