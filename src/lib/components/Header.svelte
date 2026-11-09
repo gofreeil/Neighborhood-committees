@@ -102,9 +102,9 @@
                     <img src="/images/neighborhoods.webp" alt="לוגו ועדי שכונות ארצי – לדף הבית" width="400" height="399" decoding="async" class="h-full w-full object-contain" />
                 </div>
                 <div class="min-w-0 flex-1">
-                    <h1 class="bg-clip-text text-lg font-black text-transparent leading-tight" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <div class="bg-clip-text text-lg font-black text-transparent leading-tight" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                         ועדי שכונות ארצי
-                    </h1>
+                    </div>
                     <p class="text-xs text-gray-400 leading-tight">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                 </div>
             </a>
@@ -225,9 +225,9 @@
                         <img src="/images/neighborhoods.webp" alt="לוגו ועדי שכונות ארצי – לדף הבית" width="400" height="399" decoding="async" class="h-full w-full object-contain" />
                     </div>
                     <div class="logo-text">
-                        <h1 class="bg-clip-text text-4xl font-black text-transparent tracking-tight drop-shadow-lg" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 8px rgba(15,162,233,0.35);">
+                        <div class="bg-clip-text text-4xl font-black text-transparent tracking-tight drop-shadow-lg" style="background-image: linear-gradient(to left, #10abd5 0%, #0fa2e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 8px rgba(15,162,233,0.35);">
                             ועדי שכונות ארצי
-                        </h1>
+                        </div>
                         <p class="text-lg text-white font-extrabold drop-shadow">הפלטפורמה הארצית לפעילות ועדי השכונות בישראל</p>
                     </div>
                 </a>
