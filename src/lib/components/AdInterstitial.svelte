@@ -44,22 +44,25 @@
 
             {#if ad.card}
                 <!-- מודעה משולמת: אותו כרטיס בדיוק כמו התצוגה בשלב הנייד בבילדר (קריאה בלבד) -->
-                <MobileAdCard
-                    title={ad.title}
-                    subtitle={ad.description}
-                    cta={ad.cta}
-                    image={ad.image}
-                    imageFit={ad.card.imageFit ?? { x: 50, y: 50, z: 1 }}
-                    logo={ad.card.logo}
-                    gradientCss={ad.gradientCss}
-                    st={ad.card.style}
-                    showCta={!!ad.cta}
-                    countdown={$interstitial.remaining}
-                    href={ad.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onctaclick={() => trackAdClick(ad.adId)}
-                />
+                <!-- הכרטיס כולו הוא הקישור (כמו הקריאייטיב הישן): בלי זה מודעה שה-CTA
+                     שלה ריק/מוסתר נשארה בלי שום יעד לחיצה. ה-href לא מועבר לכרטיס,
+                     כך שכפתור ה-CTA מצויר כ-div ואין קישור בתוך קישור. -->
+                <a href={ad.href} target="_blank" rel="noopener noreferrer"
+                   onclick={() => trackAdClick(ad.adId)}
+                   class="ad-int-cardlink" aria-label={ad.title}>
+                    <MobileAdCard
+                        title={ad.title}
+                        subtitle={ad.description}
+                        cta={ad.cta}
+                        image={ad.image}
+                        imageFit={ad.card.imageFit ?? { x: 50, y: 50, z: 1 }}
+                        logo={ad.card.logo}
+                        gradientCss={ad.gradientCss}
+                        st={ad.card.style}
+                        showCta={!!ad.cta}
+                        countdown={$interstitial.remaining}
+                    />
+                </a>
             {:else}
             <!-- הקריאייטיב — קליק פותח את המפרסם בלשונית חדשה, בלי לעצור את הספירה -->
             <a href={ad.href} target="_blank" rel="noopener noreferrer"
@@ -155,6 +158,8 @@
         transition: transform 0.18s ease, filter 0.18s ease;
     }
     .ad-int-creative:hover { transform: translateY(-2px); filter: brightness(1.05); }
+
+    .ad-int-cardlink { display: block; color: inherit; text-decoration: none; cursor: pointer; }
 
     .ad-int-img {
         /* גובה קבוע (לא max) — המקום שמור לפני שהתמונה נטענת, בלי קפיצת פריסה */
