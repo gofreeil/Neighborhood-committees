@@ -14,7 +14,9 @@ register('he', () => Promise.resolve({
     nav_plan: "תוכנית פעולה",
     nav_ratings: "דירוג ערים",
     community_link: "קהילה בשכונה",
-    coordinators: "רכזי שכונות"
+    coordinators: "רכזי שכונות",
+    b_mobile_edit_hint: "לחיצה על טקסט לעריכה, גרירה להזזה.",
+    b_mobile_reset_pos: "אפס מיקומים"
 }));
 
 init({ fallbackLocale: 'he', initialLocale: 'he' });

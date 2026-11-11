@@ -1,3 +1,5 @@
+import type { AdStyle } from './adStyle';
+
 export interface Ad {
     id: number;
     title: string;
@@ -13,6 +15,8 @@ export interface Ad {
     gradientCss?: string;   // רקע כמחרוזת CSS מלאה (מודעות מהבילדר) — גובר על color
     /** מזהה המודעה ב-Strapi (רק למודעות מהבילדר) — למדידה בדשבורד המפרסם */
     adId?: string;
+    /** פרסומת משולמת מהבילדר — מצוירת ב-MobileAdCard בדיוק כמו התצוגה בבילדר */
+    card?: { logo: string; style: AdStyle; imageFit?: { x: number; y: number; z: number } };
 }
 
 export const ads: Ad[] = [

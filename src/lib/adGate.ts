@@ -19,6 +19,7 @@ import { goto } from '$app/navigation';
 import type { Ad } from './adsData';
 import { rightAds } from './rightAdsData';
 import { approvedAds, loadApprovedAds } from './adSlots';
+import { parseAdStyle, legacyAdStyle } from './adStyle';
 
 /** מתג ראשי — כיבוי חירום של כל מנגנון פרסומת-הביניים. */
 export const ADS_ENABLED = true;
@@ -57,6 +58,10 @@ function currentInterstitialAds(): Ad[] {
         image: a.mainImage,
         color: '',
         gradientCss: a.gradient || 'linear-gradient(135deg, #2563eb, #9333ea)',
+        // מודעת בילדר (לא כרטיס חנות) — הפופ-אפ מצויר מהעיצוב שהמפרסם קבע, כולל הזזות הנייד
+        card: a.shop
+            ? undefined
+            : { logo: a.logo ?? '', style: parseAdStyle(a.adStyle) ?? legacyAdStyle(a.title), imageFit: a.mainImageFit },
     }));
     return [...real, inviteAd];
 }
