@@ -6,7 +6,7 @@
     import { logoClearance } from "$lib/logoClearance";
     import MobileAdCard from "$lib/components/MobileAdCard.svelte";
     import {
-        parseAdStyle, DEFAULT_AD_STYLE,
+        parseAdStyle, DEFAULT_AD_STYLE, logoCornerSide,
         DEFAULT_SUB_FONT_SIZE, SUB_FONT_SIZE_MIN, SUB_FONT_SIZE_MAX,
         DEFAULT_SUB_LINE_HEIGHT, SUB_LINE_HEIGHT_MIN, SUB_LINE_HEIGHT_MAX,
     } from "$lib/adStyle";
@@ -350,6 +350,9 @@
         subFontSize, subLineHeight, subAlign,
         mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
     }) ?? DEFAULT_AD_STYLE);
+    // לוגו בפינה העליונה: הכותרת שומרת לו מקום - אותו helper שהאתר משתמש בו,
+    // כך שהכותרת נשברת בתצוגה המקדימה בדיוק כמו בטור הפרסומות
+    let titleCornerSide = $derived(logoCornerSide(mobileCardStyle, Boolean(logo)));
 
     // שדות דף הנחיתה - נטענים/נשמרים יחד עם הטיוטה, נערכים בדף ההמשך
     let landingHeadline = $state("");
@@ -1708,7 +1711,7 @@
                                         <div class="img-placeholder">התמונה שלך</div>
                                     {/if}
                                     <div class="pro-diag" style:background={gradient} style:opacity={showHover ? 0 : 1}></div>
-                                    <div class="pro-title-top" style:opacity={showHover ? 0 : 1} style:transform="translateY({titleOffsetY}px)">
+                                    <div class="pro-title-top" class:has-corner-logo-right={titleCornerSide === "right"} class:has-corner-logo-left={titleCornerSide === "left"} style:opacity={showHover ? 0 : 1} style:transform="translateY({titleOffsetY}px)">
                                         <h3 class="pro-title" style:color={titleColor} style:font-size={titleFontSize !== 1.15 ? `${titleFontSize}rem` : undefined}><span class="logo-avoid" aria-hidden="true"></span>{title || "כותרת הפרסומת"}</h3>
                                     </div>
                                     <div class="pro-title-wrap" style:opacity={showHover ? 0 : 1}>
@@ -1818,7 +1821,7 @@
                                 </div>
                             {/if}
                             <div class="pro-diag" style:background={gradient} style:opacity={activeStep === "hover" ? 0 : 1}></div>
-                            <div class="pro-title-top" style:transform="translateY({titleOffsetY}px)" style:opacity={activeStep === "hover" ? 0 : 1}>
+                            <div class="pro-title-top" class:has-corner-logo-right={titleCornerSide === "right"} class:has-corner-logo-left={titleCornerSide === "left"} style:transform="translateY({titleOffsetY}px)" style:opacity={activeStep === "hover" ? 0 : 1}>
                                 {#if title}
                                     <h3 class="pro-title" style:color={titleColor} style:font-size={titleFontSize !== 1.15 ? `${titleFontSize}rem` : undefined}><span class="logo-avoid" aria-hidden="true"></span>{title}</h3>
                                 {:else}
@@ -3081,6 +3084,10 @@
         background: linear-gradient(125deg, transparent 30%, rgba(255, 255, 255, 0.18) 45%, transparent 60%);
         pointer-events: none;
     }
+    /* לוגו בפינה העליונה יושב בגובה הכותרת, ולכן הכותרת שומרת לו מקום -
+       אותם כללים בדיוק ב-RightAdBanner */
+    .pro-title-top.has-corner-logo-right { padding-right: 46px; }
+    .pro-title-top.has-corner-logo-left  { padding-left: 46px; }
     .pro-title-top {
         position: absolute;
         left: 0;
