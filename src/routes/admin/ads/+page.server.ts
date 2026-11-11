@@ -103,6 +103,8 @@ export const load: PageServerLoad = async ({ locals }) => {
               : 0;
         return {
             ...a,
+            // התמונה לנייד לא מוצגת במסך הזה - לא סוחבים את ה-base64 שלה בנתוני הדף
+            mobileImage: '',
             totals: st?.totals ?? { ...EMPTY },
             week: sumDays(st),
             daysLeft,

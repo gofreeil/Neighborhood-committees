@@ -42,6 +42,10 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
             logo: ad.logo,
             mainImage: ad.mainImage,
             mainImageFit: ad.mainImageFit,
+            // התמונה לנייד עצמה לא נוסעת בנתוני הדף - "ערוך" מושך אותה
+            // מ-GET /api/ads/<id>?part=mobile רק כשבאמת פותחים את הבונה
+            hasMobileImage: Boolean(ad.mobileImage),
+            mobileImageFit: ad.mobileImageFit,
             // העיצוב (מיקום/צורת הלוגו, גובה הרצועה, צבע הכותרת) חוזר לבונה
             // בעריכה — בלעדיו הלוגו קפץ לברירת המחדל בכל עריכה
             adStyle: ad.adStyle,

@@ -55,13 +55,14 @@ function currentInterstitialAds(): Ad[] {
         cta: a.shop ? '' : (a.cta || 'לפרטים'),
         hover: a.hover || undefined,
         href: `/ads/${a.id}`,
-        image: a.mainImage,
+        // תמונה ייעודית לנייד שהמפרסם העלה בבילדר גוברת על הראשית
+        image: a.mobileImage || a.mainImage,
         color: '',
         gradientCss: a.gradient || 'linear-gradient(135deg, #2563eb, #9333ea)',
         // מודעת בילדר (לא כרטיס חנות) — הפופ-אפ מצויר מהעיצוב שהמפרסם קבע, כולל הזזות הנייד
         card: a.shop
             ? undefined
-            : { logo: a.logo ?? '', style: parseAdStyle(a.adStyle) ?? legacyAdStyle(a.title), imageFit: a.mainImageFit },
+            : { logo: a.logo ?? '', style: parseAdStyle(a.adStyle) ?? legacyAdStyle(a.title), imageFit: a.mobileImage ? a.mobileImageFit : a.mainImageFit },
     }));
     return [...real, inviteAd];
 }
