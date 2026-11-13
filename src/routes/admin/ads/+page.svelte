@@ -37,6 +37,7 @@
     let trash = $derived((data.trash ?? []) as any[]);
     // תצוגה מקדימה מהאשפה: הכרטיס המלא (פגות נמצאות ב-data.ads), ולמחוקות — נתוני האשפה
     let trashPreview = $state<any>(null);
+    let trashOpen = $state(false);
     function openTrashPreview(t: any) {
         trashPreview = (data.ads as any[]).find((a) => String(a.id) === t.id) ?? t;
     }
@@ -700,47 +701,7 @@
         {#if trash.length === 0}
             <p class="empty">האשפה ריקה.</p>
         {/if}
-        <div class="trash-list">
-            {#each trash as t (t.id)}
-                <div class="trash-row">
-                    <span class="trash-body">
-                        <button type="button" class="ad-title-btn trash-title" onclick={() => openTrashPreview(t)}
-                                title="תצוגה מקדימה של הפרסומת">{t.title}</button>
-                        <span class="trash-meta">
-                            <span class="status-pill {t.kind === 'deleted' ? 'rejected' : 'pending'}">{t.kind === 'deleted' ? 'נמחקה' : 'פג התוקף'}</span>
-                            {fmtDate(t.at)} · {t.advertiserName}
-                        </span>
-                    </span>
-                    <span class="trash-actions">
-                        {#if t.kind === 'deleted'}
-                            {#if data.superAdmin}
-                                <form method="POST" action="?/restore" use:enhance>
-                                    <input type="hidden" name="id" value={t.id} />
-                                    <button type="submit" class="a-btn approve" title="חזרה למצב שלפני המחיקה">♻ שחזר</button>
-                                </form>
-                                <form method="POST" action="?/purge" use:enhance>
-                                    <input type="hidden" name="id" value={t.id} />
-                                    <button type="submit" class="a-btn reject"
-                                            onclick={(e) => { if (!confirm(`למחוק לצמיתות את "${t.title}"? אין דרך חזרה.`)) e.preventDefault(); }}>✕ מחק לצמיתות</button>
-                                </form>
-                            {/if}
-                        {:else}
-                            <form method="POST" action="?/approve" use:enhance>
-                                    <input type="hidden" name="id" value={t.id} />
-                                    <input type="hidden" name="durationDays" value={t.requestedDurationDays ?? ''} />
-                                    <button type="submit" class="a-btn approve" title="פרסום מחדש לתקופה חדשה מהיום, באותו מקום בלוח">♻ חדש</button>
-                                </form>
-                            {#if data.superAdmin}
-                                <form method="POST" action="?/remove" use:enhance>
-                                    <input type="hidden" name="id" value={t.id} />
-                                    <button type="submit" class="a-btn ghost" title="העברה לאשפה — אפשר לשחזר">🗑 מחק</button>
-                                </form>
-                            {/if}
-                        {/if}
-                    </span>
-                </div>
-            {/each}
-        </div>
+        {@render trashRows()}
         {#if trashPreview}
             <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
             <div class="trash-preview-backdrop" role="presentation" onclick={() => (trashPreview = null)}>
@@ -1078,6 +1039,68 @@
             </div>
         {/if}
     {/if}
+    {#snippet trashRows()}
+            <div class="trash-list">
+                {#each trash as t (t.id)}
+                    <div class="trash-row">
+                        <span class="trash-body">
+                            <button type="button" class="ad-title-btn trash-title" onclick={() => openTrashPreview(t)}
+                                    title="תצוגה מקדימה של הפרסומת">{t.title}</button>
+                            <span class="trash-meta">
+                                <span class="status-pill {t.kind === 'deleted' ? 'rejected' : 'pending'}">{t.kind === 'deleted' ? 'נמחקה' : 'פג התוקף'}</span>
+                                {fmtDate(t.at)} · {t.advertiserName}
+                            </span>
+                        </span>
+                        <span class="trash-actions">
+                            {#if t.kind === 'deleted'}
+                                {#if data.superAdmin}
+                                    <form method="POST" action="?/restore" use:enhance>
+                                        <input type="hidden" name="id" value={t.id} />
+                                        <button type="submit" class="a-btn approve" title="חזרה למצב שלפני המחיקה">♻ שחזר</button>
+                                    </form>
+                                    <form method="POST" action="?/purge" use:enhance>
+                                        <input type="hidden" name="id" value={t.id} />
+                                        <button type="submit" class="a-btn reject"
+                                                onclick={(e) => { if (!confirm(`למחוק לצמיתות את "${t.title}"? אין דרך חזרה.`)) e.preventDefault(); }}>✕ מחק לצמיתות</button>
+                                    </form>
+                                {/if}
+                            {:else}
+                                <form method="POST" action="?/approve" use:enhance>
+                                        <input type="hidden" name="id" value={t.id} />
+                                        <input type="hidden" name="durationDays" value={t.requestedDurationDays ?? ''} />
+                                        <button type="submit" class="a-btn approve" title="פרסום מחדש לתקופה חדשה מהיום, באותו מקום בלוח">♻ חדש</button>
+                                    </form>
+                                {#if data.superAdmin}
+                                    <form method="POST" action="?/remove" use:enhance>
+                                        <input type="hidden" name="id" value={t.id} />
+                                        <button type="submit" class="a-btn ghost" title="העברה לאשפה — אפשר לשחזר">🗑 מחק</button>
+                                    </form>
+                                {/if}
+                            {/if}
+                        </span>
+                    </div>
+                {/each}
+            </div>
+    {/snippet}
+
+    <!-- אשפה - קומה מתקפלת: כל המחוקים + שחזור -->
+    <section class="trash-floor">
+        <button type="button" class="trash-floor-head" onclick={() => (trashOpen = !trashOpen)} aria-expanded={trashOpen}>
+            <span>🗑</span>
+            <span class="trash-floor-title">אשפה</span>
+            <span class="trash-floor-count">{trash.length}</span>
+            <span class="trash-floor-arrow">{trashOpen ? '▲' : '▼'}</span>
+        </button>
+        {#if trashOpen}
+            <div class="trash-floor-body">
+                {#if trash.length === 0}
+                    <p class="empty">האשפה ריקה</p>
+                {:else}
+                    {@render trashRows()}
+                {/if}
+            </div>
+        {/if}
+    </section>
 </div>
 
 <svelte:window onkeydown={(e) => { if (e.key === 'Escape') { durationModal = null; modalPreviewId = null; hoverPreview = null; } }} />
@@ -1622,6 +1645,17 @@
     .a-btn.approve:hover { background: #22c55e; }
 
     /* האשפה — שורה קומפקטית לכל פרסומת */
+    .trash-floor { margin-top: 1.5rem; }
+    .trash-floor-head {
+        display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: right;
+        padding: 0.5rem 0.75rem; border-radius: 0.75rem; cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff;
+    }
+    .trash-floor-head:hover { background: rgba(255,255,255,0.1); }
+    .trash-floor-title { font-weight: 900; }
+    .trash-floor-count { font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 999px; background: rgba(255,255,255,0.1); color: #d1d5db; }
+    .trash-floor-arrow { margin-inline-start: auto; font-size: 0.75rem; color: #9ca3af; }
+    .trash-floor-body { margin-top: 0.5rem; }
     .trash-list { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.5rem; }
     .trash-row {
         display: flex;
