@@ -3,6 +3,7 @@ import { strapiRegister } from '$lib/server/strapiClient';
 import { registerWithCredentials, updateUserProfile } from '$lib/server/db';
 import { resolveReturn } from '$lib/server/authReturn';
 import type { PageServerLoad, Actions } from './$types';
+import { SHARED_COOKIE, sharedCookieOptions } from '$lib/server/recovery';
 
 export const load: PageServerLoad = async (event) => {
     const session = await event.locals.auth();
@@ -92,6 +93,8 @@ export const actions: Actions = {
             path: '/',
             maxAge: 60 * 60 * 24 * 365,
         });
+        // מזוהה מיד בכל אתרי הרשת (*.gofreeil.com)
+        cookies.set(SHARED_COOKIE, jwt, sharedCookieOptions(event.url));
 
         return { success: true, needsConfirmation: false };
     },
