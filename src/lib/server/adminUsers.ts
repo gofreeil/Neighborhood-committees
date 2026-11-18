@@ -191,8 +191,10 @@ export async function searchUsersDeep(q: string): Promise<DeepSearchResult> {
         const fuzzyHits: { u: unknown; d: number }[] = [];
         for (let start = 0; start < MAX_SCAN; start += SCAN_PAGE_SIZE) {
             const batch = await findStrapiUpUsers({
-                'pagination[start]': String(start),
-                'pagination[limit]': String(SCAN_PAGE_SIZE),
+                start: String(start),
+                limit: String(SCAN_PAGE_SIZE),
+                // סדר קבוע — אחרת עמודים עוקבים יכולים לחפוף או לדלג
+                sort:  'id:asc',
             });
             for (const u of batch) {
                 if (matchesLocally(u, q)) {
