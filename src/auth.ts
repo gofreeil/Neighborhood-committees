@@ -21,11 +21,21 @@ function readCookie(cookieHeader: string | null | undefined, name: string): stri
     return null;
 }
 
-const AUTH_SECRET         = process.env.AUTH_SECRET         ?? '';
-const AUTH_GOOGLE_ID      = process.env.AUTH_GOOGLE_ID      ?? '';
-const AUTH_GOOGLE_SECRET  = process.env.AUTH_GOOGLE_SECRET  ?? '';
-const AUTH_FACEBOOK_ID    = process.env.AUTH_FACEBOOK_ID    ?? '';
-const AUTH_FACEBOOK_SECRET= process.env.AUTH_FACEBOOK_SECRET?? '';
+// .trim() — ערך שהודבק ל-Vercel עם שורה חדשה/רווח בסוף שולח ל-Google client_id שבור.
+const AUTH_SECRET         = (process.env.AUTH_SECRET         ?? '').trim();
+const AUTH_GOOGLE_ID      = (process.env.AUTH_GOOGLE_ID      ?? '').trim();
+const AUTH_GOOGLE_SECRET  = (process.env.AUTH_GOOGLE_SECRET  ?? '').trim();
+const AUTH_FACEBOOK_ID    = (process.env.AUTH_FACEBOOK_ID    ?? '').trim();
+const AUTH_FACEBOOK_SECRET= (process.env.AUTH_FACEBOOK_SECRET?? '').trim();
+
+/**
+ * אילו ספקי OAuth באמת מוגדרים. דפי הכניסה קוראים מכאן כדי לא להציג כפתור
+ * לספק בלי מפתחות — לחיצה עליו הייתה מובילה ל-Google/Facebook עם client_id ריק.
+ */
+export const oauthEnabled = {
+    google:   Boolean(AUTH_GOOGLE_ID   && AUTH_GOOGLE_SECRET),
+    facebook: Boolean(AUTH_FACEBOOK_ID && AUTH_FACEBOOK_SECRET),
+};
 
 // ============================================================
 // Defensive fallback - אם AUTH_SECRET חסר (preview deployment ללא env,
@@ -92,14 +102,12 @@ export const { handle, signIn, signOut } = !AUTH_SECRET
     },
 
     providers: [
-        Google({
-            clientId:     AUTH_GOOGLE_ID,
-            clientSecret: AUTH_GOOGLE_SECRET,
-        }),
-        Facebook({
-            clientId:     AUTH_FACEBOOK_ID,
-            clientSecret: AUTH_FACEBOOK_SECRET,
-        }),
+        ...(oauthEnabled.google
+            ? [Google({ clientId: AUTH_GOOGLE_ID, clientSecret: AUTH_GOOGLE_SECRET })]
+            : []),
+        ...(oauthEnabled.facebook
+            ? [Facebook({ clientId: AUTH_FACEBOOK_ID, clientSecret: AUTH_FACEBOOK_SECRET })]
+            : []),
         // ============================================================
         // יוצאים לחירות (SSO) - זיהוי מיידי לפי העוגייה המשותפת gofreeil-auth.
         // אתר אחר תחת gofreeil.com (community/sso) כבר שתל JWT של ה-Strapi המשותף;

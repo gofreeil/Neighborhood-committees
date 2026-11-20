@@ -1,6 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { strapiLogin, getStrapiMe, bestStrapiName, friendlyName } from '$lib/server/strapiClient';
 import { resolveReturn } from '$lib/server/authReturn';
+import { oauthEnabled } from '../../auth';
 import type { PageServerLoad, Actions } from './$types';
 import { SHARED_COOKIE, sharedCookieOptions } from '$lib/server/recovery';
 
@@ -26,6 +27,8 @@ export const load: PageServerLoad = async (event) => {
 
     return {
         ssoName,
+        // כפתור Google/Facebook מוצג רק אם הספק באמת מוגדר (מפתחות ב-env)
+        oauth: oauthEnabled,
         // היעד, או הבקשה הממתינה מהעוגייה (נכנסו מכפתור ההתחברות הכללי אחרי אישור מייל)
         redirectTo:  resolveReturn(event.url, event.cookies),
         error:       event.url.searchParams.get('error') ?? null,

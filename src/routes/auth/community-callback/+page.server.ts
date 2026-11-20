@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { oauthEnabled } from '../../../auth';
 
 /**
  * חזרה מ-SSO של "יוצאים לחירות" (community.gofreeil.com/sso).
@@ -11,5 +12,6 @@ export const load: PageServerLoad = async ({ url }) => {
     // הגנה מ-open-redirect: רק נתיב פנימי
     const returnTo = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/';
     const error = url.searchParams.get('error');
-    return { returnTo, error };
+    // oauth: מסך "עדיין אין חשבון" מציע כניסה עם Google/Facebook רק לספק שמוגדר
+    return { returnTo, error, oauth: oauthEnabled };
 };

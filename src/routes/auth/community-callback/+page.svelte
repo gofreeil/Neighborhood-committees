@@ -98,6 +98,7 @@
 						לחיצה אחת למטה יוצרת לכם חשבון, ומשם אתם מזוהים בכל אתרי יוצאים לחירות בלי להירשם שוב.
 					</p>
 					<div class="flex flex-col gap-2.5">
+						{#if data.oauth?.google}
 						<button
 							type="button"
 							onclick={() => joinWith('google')}
@@ -116,6 +117,8 @@
 							{/if}
 							<span>המשך עם Google</span>
 						</button>
+						{/if}
+						{#if data.oauth?.facebook}
 						<button
 							type="button"
 							onclick={() => joinWith('facebook')}
@@ -131,6 +134,7 @@
 							{/if}
 							<span>המשך עם Facebook</span>
 						</button>
+						{/if}
 						<a
 							href="/register?redirect={encodeURIComponent(data.returnTo || '/')}"
 							class="mt-1 text-sm text-gray-400 hover:text-gray-200 underline"

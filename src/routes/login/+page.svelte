@@ -12,6 +12,9 @@
 	let emailValue      = $state('');
 	let passwordValue   = $state('');
 
+	// כפתורי Google/Facebook מוצגים רק לספק שמפתחותיו מוגדרים (oauthEnabled)
+	const anyOauth = $derived(Boolean(data.oauth?.google || data.oauth?.facebook));
+
 	// האימייל שהוקלד נשלח לדף השחזור - לא צריך להקליד אותו פעמיים.
 	const forgotHref = $derived(
 		emailValue.includes('@') ? `/forgot-password?email=${encodeURIComponent(emailValue.trim())}` : '/forgot-password'
@@ -107,7 +110,7 @@
 				</div>
 
 				<!-- הודעה למשתמש חדש: הכניסה עם Google/Facebook היא גם ההרשמה -->
-				{#if !data.ssoName}
+				{#if !data.ssoName && anyOauth}
 					<p class="mb-6 text-center text-amber-200 text-[13px] sm:text-sm font-bold leading-relaxed">
 						👋 פעם ראשונה כאן? כניסה עם Google או Facebook יוצרת לך חשבון בלחיצה אחת.
 					</p>
@@ -269,12 +272,14 @@
 					</button>
 				</form>
 
+				{#if anyOauth}
 				<div class="flex items-center gap-3 mb-6">
 					<div class="flex-1 h-px bg-white/10"></div>
 					<span class="text-xs text-gray-500">או</span>
 					<div class="flex-1 h-px bg-white/10"></div>
 				</div>
 
+					{#if data.oauth?.google}
 				<button
 					type="button"
 					onclick={() => loginWith('google')}
@@ -296,7 +301,9 @@
 					{/if}
 					<span>המשך עם Google</span>
 				</button>
+					{/if}
 
+					{#if data.oauth?.facebook}
 				<button
 					type="button"
 					onclick={() => loginWith('facebook')}
@@ -315,6 +322,8 @@
 					{/if}
 					<span>המשך עם Facebook</span>
 				</button>
+					{/if}
+				{/if}
 
 				{#if !data.ssoName}
 				<!-- יוצאים לחירות (SSO) - אפשרות משנית למי שכבר יש לו חשבון באתר הקהילה.
