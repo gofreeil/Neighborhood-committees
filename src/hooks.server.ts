@@ -1,5 +1,6 @@
 import { handle as authHandle } from './auth';
 import { shareSessionHandle } from '$lib/server/sharedSession';
+import { ssoAutoAdopt } from '$lib/server/ssoAdopt';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
 
@@ -96,7 +97,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         return await resolve(event);
     }
     try {
-        return await sequence(authHandle, skipAuthWhenAnonymous, shareSessionHandle, checkBanned, setStrApiCookie)({ event, resolve });
+        return await sequence(ssoAutoAdopt, authHandle, skipAuthWhenAnonymous, shareSessionHandle, checkBanned, setStrApiCookie)({ event, resolve });
     } catch (err) {
         console.warn('[hooks] auth handle threw - continuing anonymously:', err);
         // fallback: מגדיר auth בטוח כדי שקוד downstream לא יזרוק TypeError
